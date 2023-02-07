@@ -1,0 +1,211 @@
+
+.container_radio {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    margin-right: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    /*display: block;*/
+    /*position: relative;*/
+    /*padding-left: 35px;*/
+    /*margin-bottom: 12px;*/
+    /*cursor: pointer;*/
+    /*font-size: 22px;*/
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container_radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: rgb(215, 220, 222);
+    border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container_radio:hover input ~ .checkmark {
+
+}
+
+/* When the radio button is checked, add a blue background */
+.container_radio input:checked ~ .checkmark {
+    background-color: rgb(26, 188, 156);
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container_radio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container_radio .checkmark:after {
+    top: 5px;
+    left: 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: white;
+}
+.paginate-footer ul {
+    margin: 0;
+    float: right;
+}
+.form-check {
+    margin-top: 9px;
+}
+.headings>th {
+    text-align: center;
+}
+.margin-0{
+    margin:0px;
+}
+
+.container_checkbox {
+    display: inline-block;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container_checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark_checkbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: rgb(215, 220, 222);;
+}
+
+/* On mouse-over, add a grey background color */
+.container_checkbox:hover input ~ .checkmark_checkbox {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container_checkbox input:checked ~ .checkmark_checkbox {
+    background-color: rgb(26, 188, 156);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark_checkbox:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container_checkbox input:checked ~ .checkmark_checkbox:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container_checkbox .checkmark_checkbox:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.well .container_checkbox{
+    padding-left: 27px;
+    font-size: 14px;
+}
+.role_block .well {
+    padding-left: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.country_block .container_checkbox{
+    padding-left: 27px;
+    font-size: 14px;
+}
+
+.login_input {
+    margin-bottom: 5px !important;
+}
+.login_top {
+    margin-top: 20px !important;
+}
+
+.custom-file-upload .choose-file {
+    background: #FFFFFF;
+    border: 1px solid #DEDEDE;
+    box-sizing: border-box;
+    border-radius: 4px;
+    color: #333333;
+    font-weight: normal;
+    padding: 5px 14px;
+    margin-right: 7px;
+    cursor: pointer;
+}
+.custom-file-upload {
+    color: #666;
+    font-weight: 400;
+    display: inline-block;
+    margin-left: 15px;
+    margin-bottom: 7px;
+}
+.table_header {
+    background: rgb(42, 63, 84);
+    color: white;
+}
+.color-8d{
+    color: #8d8d8d;
+}
+.title-red-back-end{
+    color: #CC1F26;
+    margin-bottom: 10px;
+}
+.text-18{
+    font-size: 18px;
+}
+.red-50{
+    color: #CC1F26;
+    font-size: 50px;
+}
+.padding-top10{
+    padding-top: 10px;
+}
+.break-word{
+    word-break: break-all;
+}

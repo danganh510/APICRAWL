@@ -1,0 +1,14 @@
+[09-Apr-2010 10:21:34] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[09-Apr-2010 10:21:34] PHP Warning:  fread(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 90
+[09-Apr-2010 10:21:34] PHP Warning:  fclose(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 91
+[09-Apr-2010 10:21:57] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[09-Apr-2010 10:21:57] PHP Warning:  fread(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 90
+[09-Apr-2010 10:21:57] PHP Warning:  fclose(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 91
+[21-Apr-2010 16:42:54] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[21-Apr-2010 16:42:54] PHP Warning:  fread(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 90
+[21-Apr-2010 16:42:54] PHP Warning:  fclose(): supplied argument is not a valid stream resource in /home/bsderick/public_html/new/js/fckeditor/editor/filemanager/connectors/php/util.php on line 91
+[26-May-2010 13:58:28] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[26-May-2010 14:33:14] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[26-May-2010 17:42:21] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[26-May-2010 17:42:27] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
+[26-May-2010 17:42:34] PHP Warning:  fopen() [<a href='function.fopen'>function.fopen</a>]: Filename cannot be empty in /home/bsderick/public_html/js/fckeditor/editor/filemanager/connectors/php/util.php on line 89
