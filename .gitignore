@@ -1,22 +1,22 @@
 db_data
-# crawler-score/.idea
-# crawler-score/.htaccess
-# crawler-score/public/index.php
-# crawler-score/public/sitemap.xml
-# crawler-score/public/.htaccess
-# crawler-score/public/sitemap-*
-# crawler-score/config/config.php
-# crawler-score/apps/backend/cache/
-# crawler-score/apps/frontend/cache/
-# crawler-score/apps/caches/
-# crawler-score/apps/messages/
-# crawler-score/cybersource_logs/
-# crawler-score/apps/library/cybersource/conf/cybs_*
-# crawler-score/apps/library/phpqrcode/cache
-# crawler-score/db_logs/
-# crawler-score/stripe_logs/
-# crawler-score/apps/logs/
-# crawler-score/pdf/*
-# crawler-score/uploadsitemap/
-# crawler-score/uploadsitemapcsv/
-# crawler-score/apps/library/Google/path/
+crawler-score/.idea
+crawler-score/.htaccess
+crawler-score/public/index.php
+crawler-score/public/sitemap.xml
+crawler-score/public/.htaccess
+crawler-score/public/sitemap-*
+crawler-score/config/config.php
+crawler-score/apps/backend/cache/
+crawler-score/apps/frontend/cache/
+crawler-score/apps/caches/
+crawler-score/apps/messages/
+crawler-score/cybersource_logs/
+crawler-score/apps/library/cybersource/conf/cybs_*
+crawler-score/apps/library/phpqrcode/cache
+crawler-score/db_logs/
+crawler-score/stripe_logs/
+crawler-score/apps/logs/
+crawler-score/pdf/*
+crawler-score/uploadsitemap/
+crawler-score/uploadsitemapcsv/
+crawler-score/apps/library/Google/path/
