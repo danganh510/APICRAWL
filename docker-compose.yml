@@ -33,9 +33,31 @@ services:
     links:
       - db:db
   cron:
-    image: alpine:3.12
-    command: crond -f -d 8
-    volumes:
-      - ./cronjobs:/etc/crontabs
-    entrypoint: ["crond", "-f", "-d", "8"]
+    image: willfarrell/crontab
+    build: .
     restart: always
+    volumes:
+     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+     - "./config.json:/opt/crontab/config.json:rw"
+    # command: crond -f -d 8
+    # volumes:
+    #   - ./cronjobs:/etc/crontabs
+    # entrypoint: ["crond", "-f", "-d", "8"]
+    # restart: always
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   entrypoint: gunicorn -w 3 --bind=0.0.0.0:8000 plan_app.wsgi
+  #   container_name: plan-django
+  #   volumes:
+  #     - .:/app/
+  #   expose:
+  #     - "8000"
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - DJANGO_SETTINGS_MODULE=plan_app.settings
+  #   depends_on:
+  #     - db

@@ -19,5 +19,5 @@
 #
 # For more information see the manual pages of crontab(5) and cron(8)
 #
-# m h  dom mon dow   command
-* * * * * * curl http://18.143.100.236:81/crawler
+# m h  dom mon dow   command1
+* * * * * curl http://18.143.100.236:81/crawler

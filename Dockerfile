@@ -1,11 +1,7 @@
-FROM alpine:3.12
+FROM willfarrell/crontab
 
-RUN apk update && apk upgrade
-RUN apk add --no-cache tzdata cron
-
-COPY job1 /etc/cron.d/job1
-
-
-RUN chmod 0644 /etc/cron.d/job1
+RUN apk add --no-cache logrotate
+RUN echo "* * * * *  curl https://reqbin.com/echo" >> /etc/crontabs/logrotate
+COPY logrotate.conf /etc/logrotate.conf
 
 CMD ["crond", "-f"]
