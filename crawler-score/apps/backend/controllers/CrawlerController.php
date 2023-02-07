@@ -24,7 +24,7 @@ class CrawlerController extends ControllerBase
         $link =  'https://www.livescores.com';
         $param_time = "/football/{$this->my->formatDateYMD($start_time_cron)}/?tz=7";
         $param_live = "/football/live/?tz=7";
-        $url = $link . $param_time;
+        $url = $link . $param_live;
         // $urlbasesofa = "https://api.sofascore.com";
         // $paramApiSofa = "/api/v1/sport/football/events/live";
 
