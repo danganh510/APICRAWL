@@ -61,7 +61,7 @@ class CrawlerScore extends Component
                 //bb là class lấy giải đấu, xf là class lấy trận đấu
                 if ($item->filter(".bb > span")->count() > 0) {
                     $title = $item->filter(".bb > span")->text();
-                    $country = explode("-",$title)[0];
+                    $country = explode("-",$title)[0];                  
                     $tournament = explode("-",$title)[1];
                     $list_live_tournaments[] = [
                         'country' => mb_ereg_replace('[^\x20-\x7E]+', '', $country),

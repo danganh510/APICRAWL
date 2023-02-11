@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => 'dea8f0998b357a944b87bc864af1707b92a66bea',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '5603fc818a609b300465969d854c033f921dc28e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'dea8f0998b357a944b87bc864af1707b92a66bea',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '5603fc818a609b300465969d854c033f921dc28e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -36,6 +36,12 @@
             'install_path' => __DIR__ . '/../fabpot/goutte',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'facebook/webdriver' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
         ),
         'fig/http-message-util' => array(
             'pretty_version' => '1.1.5',
@@ -88,6 +94,15 @@
             'reference' => 'f35764503f6828908fd1108c960080edf915eabe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../jonnyw/php-phantomjs',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'php-webdriver/webdriver' => array(
+            'pretty_version' => '1.13.1',
+            'version' => '1.13.1.0',
+            'reference' => '6dfe5f814b796c1b5748850aa19f781b9274c36c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../php-webdriver/webdriver',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -343,6 +358,15 @@
             'reference' => '7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/process' => array(
+            'pretty_version' => 'v4.4.44',
+            'version' => '4.4.44.0',
+            'reference' => '5cee9cdc4f7805e2699d9fd66991a0e6df8252a2',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/process',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

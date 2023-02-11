@@ -1,63 +1,50 @@
 version: '3.3'
 services:
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      ports:
-          - '8080:80'
-      restart: always
-      environment:
-          PMA_HOST: db
-      depends_on:
-          - db    
-  db:
-    image: mysql:5.7
-    volumes:
-      - ./db_data:/var/lib/mysql
-    ports:
-      - 3308:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: live_score
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
-  php:
-    image: sethsandaru/php73-phalcon-laravel-fpm:1.0.0
-    container_name: crawler
-    ports:
-      - 81:80
-    environment:
-      XDEBUG_ENABLE: 1
-      XDEBUG_PORT: 9200
-    volumes:
-      - ./crawler-score:/var/www/html
-    links:
-      - db:db
-  cron:
-    image: willfarrell/crontab
-    build: .
-    restart: always
-    volumes:
-     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-     - "./config.json:/opt/crontab/config.json:rw"
-    # command: crond -f -d 8
-    # volumes:
-    #   - ./cronjobs:/etc/crontabs
-    # entrypoint: ["crond", "-f", "-d", "8"]
-    # restart: always
-  # web:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #     - '8080:80'
   #   restart: always
-  #   entrypoint: gunicorn -w 3 --bind=0.0.0.0:8000 plan_app.wsgi
-  #   container_name: plan-django
-  #   volumes:
-  #     - .:/app/
-  #   expose:
-  #     - "8000"
-  #   env_file:
-  #     - .env
   #   environment:
-  #     - DJANGO_SETTINGS_MODULE=plan_app.settings
+  #     PMA_HOST: db
   #   depends_on:
   #     - db
+  # db:
+  #   image: mysql:5.7
+  #   volumes:
+  #     - ./db_data:/var/lib/mysql
+  #   ports:
+  #     - 3308:3306
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: live_score
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: user
+  # php:
+  #   image: sethsandaru/php73-phalcon-laravel-fpm:1.0.0
+  #   container_name: crawler
+  #   ports:
+  #     - 81:80
+  #   environment:
+  #     XDEBUG_ENABLE: 1
+  #     XDEBUG_PORT: 9200
+  #   volumes:
+  #     - ./crawler-score:/var/www/html
+  #   links:
+  #     - db:db
+  selenium-hub:
+      image: selenium/hub:3.141.59-20210105
+      ports:
+        - "4444:4444"
+  # selenium-chrome:
+  #     image: selenium/node-chrome-debug:3.141.59-20210105
+  #     shm_size: '2gb'
+  #     ports:
+  #       - "15900:5900"
+  #     environment:
+  #       HUB_PORT_4444_TCP_ADDR: selenium-hub
+  #       HUB_PORT_4444_TCP_PORT: 4444
+  #       NODE_MAX_INSTANCES: 10
+  #       NODE_MAX_SESSION: 10
+  #       SCREEN_WIDTH: 1920
+  #       SCREEN_HEIGHT: 1200
