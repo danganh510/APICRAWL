@@ -90,7 +90,9 @@ class CrawlerController extends ControllerBase
         }
         $seleniumDriver->quit();
         end:
-        echo "finish in " . time() - $start_time_cron, " second";
+        echo "---total: ". $total;
+
+        echo "---finish in " . (time() - $start_time_cron) . " second";
         die();
     }
     public function detailAction()

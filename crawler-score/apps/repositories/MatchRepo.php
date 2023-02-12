@@ -46,11 +46,16 @@ class MatchRepo extends Component
                 $start_time = $this->my->formatDateTimeSendEmail(time()) . " " . $match->getTime();
                 $start_time = strtotime($start_time);
             }
-
-            $day_start = date('d', $start_time);
-            $month_start = date('m', $start_time);
-            $year_start = date('Y', $start_time);
-    
+            if (!$start_time) {
+                $start_time = $match->getTime();
+                $day_start = date('d', time());
+                $month_start = date('m', time());
+                $year_start = date('Y', time());
+            } else {
+                $day_start = date('d', $start_time);
+                $month_start = date('m', $start_time);
+                $year_start = date('Y', $start_time);
+            }
             $matchSave->setMatchStartDay($day_start);
             $matchSave->setMatchStartMonth($month_start);
             $matchSave->setMatchStartYear($year_start);
@@ -83,7 +88,11 @@ class MatchRepo extends Component
             $matchSave->setMatchLinkDetailFlashscore($match->getHrefDetail());
         }
         $matchSave->setMatchOrder(1);
-        return $matchSave->save();
+        if ($matchSave->save()) {
+            return true;
+        }
+        var_dump($matchSave->getMessages());
+        return false;
     }
     public function getMatch($time, $status = "", $tournament = "")
     {

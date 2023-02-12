@@ -17,16 +17,17 @@ class Selenium extends Component
         $ip = 'selenium-hub';
 
          //$ip = "13.250.21.188";
-        // $port = 4444;
+        $port = 4444;
 
-        // $connection = @fsockopen($ip, $port);
+        $connection = @fsockopen($ip, $port);
 
-        // if (is_resource($connection)) {
-        //     echo 'Server is up and running.';
-        //     fclose($connection);
-        // } else {
-        //     echo 'Server is down.';
-        // }
+        if (is_resource($connection)) {
+            echo 'Server is up and running.';
+            fclose($connection);
+        } else {
+            echo 'Server is down.';
+            die();
+        }
         // exit;
         $host = "http://$ip:4444/wd/hub"; // URL của máy chủ Selenium
         $this->driver = RemoteWebDriver::create($host, DesiredCapabilities::chrome());

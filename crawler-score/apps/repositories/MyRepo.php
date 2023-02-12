@@ -53,5 +53,11 @@ class MyRepo extends Component
         $string = strtolower($string);
         return $string;
     }
+    public static function saveText($text, $key)
+    {
+        $fp = fopen(__DIR__ . "/../test/div_$key.html", 'w'); //mở file ở chế độ write-only
+        fwrite($fp, $text);
+        fclose($fp);
+    }
 }
  

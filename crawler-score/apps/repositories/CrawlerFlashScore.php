@@ -16,14 +16,39 @@ class CrawlerFlashScore extends Component
     {
 
         //click button LIVE cho lần đầu
-        $divFilters = $seleniumDriver->findElements(".filters__text--short");
-        foreach ($divFilters as $div) {
-            if ($div->getText() === 'LIVE') {
+        // $divFilters = $seleniumDriver->findElements(".filters__text--short");
+        // foreach ($divFilters as $div) {
+        //     if ($div->getText() === 'LIVE') {
+        //         $div->click();
+        //         break;
+        //     }
+        // }
+        $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
+        //click button time cho lần đầu
+        $seleniumDriver->clickButton("#calendarMenu");
+         sleep(1);
+        $divTimes = $seleniumDriver->findElements(".calendar__day");
+        foreach ($divTimes as $div) {
+            $text = $div->getText();
+            if (explode(' ',$text)[0] == strftime('%d/%m', time() + 96 * 60 * 60)) {
                 $div->click();
                 break;
             }
         }
         sleep(1);
+        //click close
+        $divClose = $seleniumDriver->findElements(".event__expander--close");
+        foreach ($divClose as $div) {
+            try {
+                $div->click();
+                sleep(0.2);
+
+            } catch (Exception $e) {
+            }
+
+        }
+        sleep(2);
+
         //  $seleniumDriver->clickButton('.filters__tab > .filters');
         $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
         return $parentDiv;
@@ -40,6 +65,7 @@ class CrawlerFlashScore extends Component
         // exit;
         foreach ($parentDiv as $key => $div) {
 
+         //   goto test;
             try {
                 //check tournament
                 $divTuornaments = $div->findElements(WebDriverBy::cssSelector('.event__title--type'));
@@ -73,13 +99,20 @@ class CrawlerFlashScore extends Component
                 }
 
                 //match
-                $divMatch = $div->findElements(WebDriverBy::cssSelector('.event__stage--block'));
+                $divMatch = $div->findElements(WebDriverBy::cssSelector('.event__participant'));
+               
                 if (count($divMatch)) {
                     $id_insite = $div->getAttribute("id");
                     $id_insite = explode("_", $id_insite);
                     $id_insite = $id_insite[count($id_insite) - 1];
                     $href_detail = "/match/" . $id_insite;
-                    $time = $div->findElement(WebDriverBy::cssSelector(".event__stage--block"))->getText();
+                    try {
+                        $time = $div->findElement(WebDriverBy::cssSelector(".event__stage--block"))->getText();
+
+                    } catch (Exception $e) {
+                        $time = $div->findElement(WebDriverBy::cssSelector(".event__time"))->getText();
+                    }
+
 
                     $home = $div->findElement(WebDriverBy::cssSelector(".event__participant--home"))->getText();
                     $home_image = $div->findElement(WebDriverBy::cssSelector(".event__logo--home"))->getAttribute("src");
@@ -92,22 +125,24 @@ class CrawlerFlashScore extends Component
                     $liveMatch = new MatchCrawl();
                     $liveMatch->setTime(MyRepo::replace_space($time));
                     $liveMatch->setHome($home);
-                    $liveMatch->setHomeScore($home_score);
+                    $liveMatch->setHomeScore(is_numeric($home_score) ? $home_score : 0);
                     $liveMatch->setHomeImg($home_image);
                     $liveMatch->setAway($away);
-                    $liveMatch->setAwayScore($away_score);
+                    $liveMatch->setAwayScore(is_numeric($away_score) ? $away_score : 0);
                     $liveMatch->setAwayImg($away_image);
                     $liveMatch->setHrefDetail($href_detail);
                     $liveMatch->setTournament($list_live_tournaments[count($list_live_tournaments) - 1]);
                     $list_live_match[] =  $liveMatch;
+                } else {
+                    echo "1-";
                 }
             } catch (Exception $e) {
 
                 continue;
             }
-
-            // $text = $div->getAttribute("outerHTML");
-            // $this->saveText($text, $key);
+            test:
+            $text = $div->getAttribute("outerHTML");
+            $this->saveText($text, $key);
         }
         return $list_live_match;
     }

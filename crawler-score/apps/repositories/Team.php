@@ -37,11 +37,11 @@ class Team extends Component
         $team->setTeamLogo($image);
         $team->setTeamSlug(MyRepo::create_slug($team_name));
         if($type == MatchCrawl::TYPE_FLASH_SCORE) {
-            $team->setTeamNameFlashscore($team_name);
-            $team->setTeamActive("Y");
-            $team->save();
-            return $team;
+            $team->setTeamNameFlashscore($team_name);           
         }
+        $team->setTeamActive("Y");
+        $team->save();
+        return $team;
      
     }
     public static function getTeamById($team_id)
