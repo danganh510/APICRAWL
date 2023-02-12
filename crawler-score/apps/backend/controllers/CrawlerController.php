@@ -33,9 +33,14 @@ class CrawlerController extends ControllerBase
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
     
    
-        $crawler = new CrawlerFlashScore();
-        $seleniumDriver = new Selenium($crawler->url_fb);
-        $divParent = $crawler->getDivParent($seleniumDriver);
+        try {
+            $crawler = new CrawlerFlashScore();
+            $seleniumDriver = new Selenium($crawler->url_fb);
+            $divParent = $crawler->getDivParent($seleniumDriver);
+          
+        } catch (Exception $e) {
+           var_dump($e);
+        }
         $total = 0;
         //start crawler
         try {
