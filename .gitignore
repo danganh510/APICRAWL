@@ -8,6 +8,7 @@ crawler-score/public/.htaccess
 crawler-score/public/sitemap-*
 crawler-score/config/config.php
 crawler-score/apps/backend/cache/
+crawler-score/apps/test
 crawler-score/apps/frontend/cache/
 crawler-score/apps/caches/
 crawler-score/apps/messages/
