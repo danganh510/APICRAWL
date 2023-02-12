@@ -31,15 +31,15 @@ class CrawlerController extends ControllerBase
 
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
-    
-   
+
+
         try {
             $crawler = new CrawlerFlashScore();
             $seleniumDriver = new Selenium($crawler->url_fb);
             $divParent = $crawler->getDivParent($seleniumDriver);
-          
         } catch (Exception $e) {
-           var_dump($e);
+            echo $e->getMessage();
+            goto end;
         }
         $total = 0;
         //start crawler
@@ -48,17 +48,17 @@ class CrawlerController extends ControllerBase
             $list_match = $crawler->CrawlFlashScore($divParent);
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
-                $home = Team::findByName($match->getHome(),MyRepo::create_slug($match->getHome()),$this->type_crawl);
+                $home = Team::findByName($match->getHome(), MyRepo::create_slug($match->getHome()), $this->type_crawl);
                 if (!$home) {
                     $home = Team::saveTeam($match->getHome(), $match->getAwayImg(), $this->type_crawl);
                 }
-                $away = Team::findByName($match->getAway(),MyRepo::create_slug($match->getAway()),$this->type_crawl);
+                $away = Team::findByName($match->getAway(), MyRepo::create_slug($match->getAway()), $this->type_crawl);
                 if (!$away) {
                     $away = Team::saveTeam($match->getAway(), $match->getAwayImg(), $this->type_crawl);
                 }
                 $tournament = Tournament::findByName($match->getTournament()->getTournamentName());
                 if (!$tournament) {
-                    $tournament = Tournament::saveTournament($match->getTournament(),$this->type_crawl);
+                    $tournament = Tournament::saveTournament($match->getTournament(), $this->type_crawl);
                 }
                 if (!$home) {
                     echo "can't save home team";
@@ -72,13 +72,12 @@ class CrawlerController extends ControllerBase
                     echo "can't save tournament team";
                     continue;
                 }
-               $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
-               if ($result) {
-                echo "Save match success --- ";
-               } else {
-                echo "Save match false ---";
-    
-               }
+                $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
+                if ($result) {
+                    echo "Save match success --- ";
+                } else {
+                    echo "Save match false ---";
+                }
             }
             $total++;
             // if ($total < 10) {
@@ -87,10 +86,11 @@ class CrawlerController extends ControllerBase
             // }
         } catch (Exception $e) {
             echo $total;
-           var_dump($e);
+            echo $e->getMessage();
         }
         $seleniumDriver->quit();
-        echo "finish in ". time() - $start_time_cron , " second";
+        end:
+        echo "finish in " . time() - $start_time_cron, " second";
         die();
     }
     public function detailAction()
