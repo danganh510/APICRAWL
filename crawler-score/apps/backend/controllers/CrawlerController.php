@@ -76,10 +76,10 @@ class CrawlerController extends ControllerBase
                }
             }
             $total++;
-            if ($total < 10) {
-                sleep(5);
-                goto statCrawler;
-            }
+            // if ($total < 10) {
+            //     sleep(5);
+            //     goto statCrawler;
+            // }
         } catch (Exception $e) {
             echo $total;
            var_dump($e);
