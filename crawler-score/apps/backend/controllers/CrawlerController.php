@@ -39,7 +39,7 @@ class CrawlerController extends ControllerBase
             $divParent = $crawler->getDivParent($seleniumDriver);
         } catch (Exception $e) {
             echo $e->getMessage();
-            goto end;
+            die();
         }
         $total = 0;
         //start crawler
