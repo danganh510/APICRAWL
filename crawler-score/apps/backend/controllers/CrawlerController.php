@@ -30,7 +30,7 @@ class CrawlerController extends ControllerBase
         ini_set('max_execution_time', -1);
 
         $start_time_cron = time() + 0 * 24 * 60 * 60;
-        echo "Start crawl data in " . $this->my->formatDateTime(time()) . "/n/r";
+        echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
     
    
         $crawler = new CrawlerFlashScore();
@@ -85,7 +85,7 @@ class CrawlerController extends ControllerBase
            var_dump($e);
         }
         $seleniumDriver->quit();
-        echo "finish ---";
+        echo "finish in ". time() - $start_time_cron , " second";
         die();
     }
     public function detailAction()
