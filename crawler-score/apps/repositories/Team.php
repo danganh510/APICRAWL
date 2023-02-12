@@ -9,30 +9,49 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Team extends Component
 {
-    public static function findByName($name) {
-        return ScTeam::findFirst([
-            'team_name = :name:',
-            'bind' => [
-                'name' => $name
-            ]
-        ]);
+    public static function findByName($name,$name_slug, $type_crawl)
+    {
+        switch ($type_crawl) {
+            case "flashScore":
+                return ScTeam::findFirst([
+                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug:',
+                    'bind' => [
+                        'name' => $name,
+                        'slug' => $name_slug
+                    ]
+                ]);
+            default:
+                return ScTeam::findFirst([
+                    'team_name = :name:  OR team_slug= :slug:',
+                    'bind' => [
+                        'name' => $name,
+                        'slug' => $name_slug
+                    ]
+                ]);
+        }
     }
-    public static function saveTeam($team_name,$image) {
+    public static function saveTeam($team_name, $image,$type)
+    {
         $team = new ScTeam();
         $team->setTeamName($team_name);
-        $team->setTeamSvg($image);
-        $team->setTeamActive("Y");
-        $team->save();
-        return $team;
+        $team->setTeamLogo($image);
+        $team->setTeamSlug(MyRepo::create_slug($team_name));
+        if($type == MatchCrawl::TYPE_FLASH_SCORE) {
+            $team->setTeamNameFlashscore($team_name);
+            $team->setTeamActive("Y");
+            $team->save();
+            return $team;
+        }
+     
     }
-    public static function getTeamById($team_id) {
+    public static function getTeamById($team_id)
+    {
         $team = ScTeam::findFirst([
             'team_id = :id:',
             'bind' => [
                 'id' => $team_id
             ]
         ]);
-        return $team ;
+        return $team;
     }
 }
- 

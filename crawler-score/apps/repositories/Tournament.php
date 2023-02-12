@@ -17,13 +17,18 @@ class Tournament extends Component
             ]
         ]);
     }
-    public static function saveTournament($tournamentInfo) {
+    public static function saveTournament($tournamentInfo,$type_crawl) {
         $tournament = new ScTournament();
-        $tournament->setTournamentName($tournamentInfo['tournament']);
+        $tournament->setTournamentName($tournamentInfo->getTournamentName());
+        $tournament->setTournamentSlug(MyRepo::create_slug($tournamentInfo->getTournamentName()));
         $tournament->setTournamentImage("");
-        $tournament->setTournamentCountry($tournamentInfo['country']);
+        $tournament->setTournamentCountry($tournamentInfo->getCountryName());
+        if ($type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
+            $tournament->setTournamentNameFlashScore($tournamentInfo->getTournamentName());
+            $tournament->setTournamentHrefFlashscore($tournamentInfo->getTournamentHref());
+        }
         $tournament->setTournamentActive("Y");
-        $tournament->setTournamentOrder($tournamentInfo['index']);
+        $tournament->setTournamentOrder($tournamentInfo->getId());
         $tournament->save();
       
         return $tournament;

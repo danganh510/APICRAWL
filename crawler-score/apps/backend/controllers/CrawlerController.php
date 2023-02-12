@@ -2,6 +2,7 @@
 
 namespace Score\Backend\Controllers;
 
+use Exception;
 use Goutte\Client;
 use GuzzleHttp\Psr7\Request;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
@@ -10,57 +11,81 @@ use Score\Repositories\CrawlerScore;
 use Score\Repositories\Team;
 
 use Score\Models\ScMatch;
+use Score\Repositories\CrawlerFlashScore;
+use Score\Repositories\CrawlerSofa;
+use Score\Repositories\MatchCrawl;
 use Score\Repositories\MatchRepo;
+use Score\Repositories\MyRepo;
+use Score\Repositories\Selenium;
 use Score\Repositories\Tournament;
 
 
 class CrawlerController extends ControllerBase
 {
 
+    public $type_crawl = MatchCrawl::TYPE_FLASH_SCORE;
     public function indexAction()
     {
+
+        ini_set('max_execution_time', -1);
+
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime(time()) . "/n/r";
-        $link =  'https://www.livescores.com';
-        $param_time = "/football/{$this->my->formatDateYMD($start_time_cron)}/?tz=7";
-        $param_live = "/football/live/?tz=7";
-        $url = $link . $param_live;
-        // $urlbasesofa = "https://api.sofascore.com";
-        // $paramApiSofa = "/api/v1/sport/football/events/live";
-
-
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
- 
-        $list_match = CrawlerScore::CrawlLivescores($crawler);
-        $matchRepo = new MatchRepo();
-        foreach ($list_match as $match) {
-            $home = Team::findByName($match['home']);
-            if (!$home) {
-                $home = Team::saveTeam($match['home'], $match['home_svg']);
+    
+   
+        $crawler = new CrawlerFlashScore();
+        $seleniumDriver = new Selenium($crawler->url_fb);
+        $divParent = $crawler->getDivParent($seleniumDriver);
+        $total = 0;
+        //start crawler
+        try {
+            statCrawler:
+            $list_match = $crawler->CrawlFlashScore($divParent);
+            $matchRepo = new MatchRepo();
+            foreach ($list_match as $match) {
+                $home = Team::findByName($match->getHome(),MyRepo::create_slug($match->getHome()),$this->type_crawl);
+                if (!$home) {
+                    $home = Team::saveTeam($match->getHome(), $match->getAwayImg(), $this->type_crawl);
+                }
+                $away = Team::findByName($match->getAway(),MyRepo::create_slug($match->getAway()),$this->type_crawl);
+                if (!$away) {
+                    $away = Team::saveTeam($match->getAway(), $match->getAwayImg(), $this->type_crawl);
+                }
+                $tournament = Tournament::findByName($match->getTournament()->getTournamentName());
+                if (!$tournament) {
+                    $tournament = Tournament::saveTournament($match->getTournament(),$this->type_crawl);
+                }
+                if (!$home) {
+                    echo "can't save home team";
+                    continue;
+                }
+                if (!$away) {
+                    echo "can't save away team";
+                    continue;
+                }
+                if (!$tournament) {
+                    echo "can't save tournament team";
+                    continue;
+                }
+               $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
+               if ($result) {
+                echo "Save match success --- ";
+               } else {
+                echo "Save match false ---";
+    
+               }
             }
-            $away = Team::findByName($match['away']);
-            if (!$away) {
-                $away = Team::saveTeam($match['away'], $match['away_svg']);
+            $total++;
+            if ($total < 10) {
+                sleep(5);
+                goto statCrawler;
             }
-            $tournament = Tournament::findByName($match['tournament']['tournament']);
-            if (!$tournament) {
-                $tournament = Tournament::saveTournament($match['tournament']);
-            }
-            if (!$home) {
-                echo "can't save home team";
-                continue;
-            }
-            if (!$away) {
-                echo "can't save away team";
-                continue;
-            }
-            if (!$tournament) {
-                echo "can't save tournament team";
-                continue;
-            }
-            $matchRepo->saveMatch($match, $home, $away, $tournament);
+        } catch (Exception $e) {
+            echo $total;
+           var_dump($e);
         }
+        $seleniumDriver->quit();
+        echo "finish ---";
         die();
     }
     public function detailAction()

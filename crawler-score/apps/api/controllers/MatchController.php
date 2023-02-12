@@ -31,7 +31,7 @@ class MatchController extends ControllerBase
         }
         $events = [];
         $matchRepo = new MatchRepo();
-        $arrMatch = $matchRepo->getMatch($time);
+        $arrMatch = $matchRepo->getMatch($time,"S");
         foreach ($arrMatch as $key=> $match) {
            
             $home = Team::getTeamById($match['match_home_id']);

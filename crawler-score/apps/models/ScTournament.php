@@ -4,10 +4,13 @@ namespace Score\Models;
 
 class ScTournament extends \Phalcon\Mvc\Model
 {
-    protected $tournament_id ;
+    protected $tournament_id;
     protected $tournament_name;
+    protected $tournament_slug;
+    protected $tournament_name_flash_score;
     protected $tournament_country;
     protected $tournament_image;
+    protected $tournament_href_flashscore;
     protected $tournament_order;
     protected $tournament_active;
 
@@ -18,15 +21,15 @@ class ScTournament extends \Phalcon\Mvc\Model
      */
     public function getTournamentId()
     {
-        return $this->tournament_id ;
+        return $this->tournament_id;
     }
 
     /**
      * @param mixed $tournament_id 
      */
-    public function setTournamentId($tournament_id )
+    public function setTournamentId($tournament_id)
     {
-        $this->tournament_id  = $tournament_id ;
+        $this->tournament_id  = $tournament_id;
     }
 
     /**
@@ -43,6 +46,36 @@ class ScTournament extends \Phalcon\Mvc\Model
     public function setTournamentName($tournament_name)
     {
         $this->tournament_name = $tournament_name;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTournamentSlug()
+    {
+        return $this->tournament_slug;
+    }
+
+    /**
+     * @param mixed $tournament_slug
+     */
+    public function setTournamentSlug($tournament_slug)
+    {
+        $this->tournament_slug = $tournament_slug;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTournamentNameFlashScore()
+    {
+        return $this->tournament_name_flash_score;
+    }
+
+    /**
+     * @param mixed $tournament_name_flash_score
+     */
+    public function setTournamentNameFlashScore($tournament_name_flash_score)
+    {
+        $this->tournament_name_flash_score = $tournament_name_flash_score;
     }
     /**
      * @return mixed
@@ -74,6 +107,21 @@ class ScTournament extends \Phalcon\Mvc\Model
     {
         $this->tournament_image = $tournament_image;
     }
+        /**
+     * @return mixed
+     */
+    public function getTournamentHrefFlashscore()
+    {
+        return $this->tournament_href_flashscore;
+    }
+
+    /**
+     * @param mixed $tournament_href_flashscore
+     */
+    public function setTournamentHrefFlashscore($tournament_href_flashscore)
+    {
+        $this->tournament_href_flashscore = $tournament_href_flashscore;
+    }
     /**
      * @return mixed
      */
@@ -95,18 +143,18 @@ class ScTournament extends \Phalcon\Mvc\Model
      */
     public function getTournamentActive()
     {
-        return $this->tournament_active	;
+        return $this->tournament_active;
     }
 
     /**
      * @param mixed $tournament_active	
      */
-    public function setTournamentActive($tournament_active	)
+    public function setTournamentActive($tournament_active)
     {
-        $this->tournament_active	 = $tournament_active	;
+        $this->tournament_active     = $tournament_active;
     }
 
-   
+
 
     /**
      * Allows to query a set of records that Tournament the specified conditions
@@ -129,6 +177,4 @@ class ScTournament extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
- 
 }

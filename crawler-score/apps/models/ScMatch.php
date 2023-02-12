@@ -12,6 +12,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_away_id;
     protected $match_home_score;
     protected $match_away_score;
+    protected $match_round;
     protected $match_insert_time;
     protected $match_time;
     protected $match_start_time;
@@ -19,7 +20,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_start_month;
     protected $match_start_year;
     protected $match_order;
-    protected $match_link_detail;
+    protected $match_link_detail_flashscore;
 
 
     /**
@@ -147,6 +148,22 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_away_score = $match_away_score;
     }
+    
+    /**
+     * @return mixed
+     */
+    public function getMatchRound()
+    {
+        return $this->match_round;
+    }
+
+    /**
+     * @param mixed $match_round
+     */
+    public function setMatchRound($match_round)
+    {
+        $this->match_round = $match_round;
+    }
 
     /**
      * @return mixed
@@ -260,18 +277,18 @@ class ScMatch extends \Phalcon\Mvc\Model
    /**
      * @return mixed
      */
-    public function getMatchLinkDetail()
+    public function getMatchLinkDetailFlashscore()
     {
-        return $this->match_link_detail;
+        return $this->match_link_detail_flashscore;
     }
 
 
     /**
-     * @param mixed $match_link_detail
+     * @param mixed $match_link_detail_flashscore
      */
-    public function setMatchLinkDetail($match_link_detail)
+    public function setMatchLinkDetailFlashscore($match_link_detail_flashscore)
     {
-        $this->match_link_detail = $match_link_detail;
+        $this->match_link_detail_flashscore = $match_link_detail_flashscore;
     }
 
     /**

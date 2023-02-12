@@ -9,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class MatchRepo extends Component
 {
-    public  function saveMatch($match, $home, $away, $tournament)
+    public  function saveMatch($match, $home, $away, $tournament, $type_crawl)
     {
 
         $matchSave = ScMatch::findFirst([
@@ -19,25 +19,31 @@ class MatchRepo extends Component
                 'away_id' => $away->getTeamId(),
             ]
         ]);
+
         if (!$matchSave) {
             $matchSave = new ScMatch();
-            $matchSave->setMatchName($match['home'] . " - " . $match['away']);
+            $matchSave->setMatchName($home->getTeamName() . "-vs-" . $away->getTeamName());
             $matchSave->setMatchHomeId($home->getTeamId());
             $matchSave->setMatchAwayId($away->getTeamId());
             $matchSave->setMatchInsertTime(time());
-            if (strpos($match['time'], "'")) {
-                $time = str_replace("'", "", $match['time']);
+            if (is_numeric($match->getTime())) {
+                $time = $match->getTime();
                 $start_time = time() - $time * 60;
-            } elseif ($match['time'] == "FT") {
+            } elseif (strpos($match->getTime(), "'")) {
+                $time = str_replace("'", "", $match->getTime());
+                $start_time = time() - $time * 60;
+            }  elseif (strpos($match->getTime(), "+")) {
+                $time = str_replace("+", "", $match->getTime());
+                $start_time = time() - $time * 60;
+                $matchSave->setMatchStatus("S");
+            } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time") {
                 $time = 45;
                 $start_time = time() - $time * 60;
-            } elseif ($match['time'] == "HT" || $match['time'] == "AET") {
+            } elseif ($match->getTime() == "FT" || $match->getTime() == "AET" || $match->getTime() == "Finished") {
                 $time = 90;
                 $start_time = time() - $time * 60;
             } else {
-
-                $start_time = $this->my->formatDateTimeSendEmail(time()) . " " . $match['time'];
-
+                $start_time = $this->my->formatDateTimeSendEmail(time()) . " " . $match->getTime();
                 $start_time = strtotime($start_time);
             }
 
@@ -47,31 +53,36 @@ class MatchRepo extends Component
     
             $matchSave->setMatchStartDay($day_start);
             $matchSave->setMatchStartMonth($month_start);
-
             $matchSave->setMatchStartYear($year_start);
             $matchSave->setMatchStartTime($start_time);
-
         }
-        if (strpos($match['time'], "'")) {
-            $time_live = str_replace("'", "", $match['time']);
+        if (is_numeric($match->getTime())) {
+            $time_live = $match->getTime();
             $matchSave->setMatchStatus("S");
-        } elseif ($match['time'] == "FT") {
-            $time_live = $match['time'];
+        } elseif (strpos($match->getTime(), "'")) {
+            $time_live = str_replace("'", "", $match->getTime());
+            $matchSave->setMatchStatus("S");
+        }  elseif (strpos($match->getTime(), "+")) {
+            $time_live = str_replace("+", "", $match->getTime());
+            $matchSave->setMatchStatus("S");
+        } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time") {
+            $time_live = $match->getTime();
             $matchSave->setMatchStatus("F");
-        } elseif ($match['time'] == "HT" || $match['time'] == "AET") {
-            $time_live = $match['time'];
+        } elseif ($match->getTime() == "FT" || $match->getTime() == "AET" || $match->getTime() == "Finished") {
+            $time_live = $match->getTime();
             $matchSave->setMatchStatus("S");
         } else {
             $time_live = 0;
             $matchSave->setMatchStatus("W");
         }
         $matchSave->setMatchTime($time_live);
-        $matchSave->setMatchHomeScore(is_numeric($match['home_score']) ? $match['home_score'] : 0);
-        $matchSave->setMatchAwayScore(is_numeric($match['away_score']) ? $match['away_score'] : 0);
+        $matchSave->setMatchHomeScore(is_numeric($match->getHomeScore()) ? $match->getHomeScore() : 0);
+        $matchSave->setMatchAwayScore(is_numeric($match->getAwayScore()) ? $match->getAwayScore() : 0);
         $matchSave->setMatchTournamentId($tournament->getTournamentId());
-        $matchSave->setMatchLinkDetail($match['href_detail']);
+        if ($type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
+            $matchSave->setMatchLinkDetailFlashscore($match->getHrefDetail());
+        }
         $matchSave->setMatchOrder(1);
-
         return $matchSave->save();
     }
     public function getMatch($time, $status = "", $tournament = "")

@@ -46,7 +46,10 @@ $loader = new Loader();
 $loader->registerNamespaces(array(
     'General\Models' => __DIR__ . '/../apps/models/general/',
     'Score\Models' => __DIR__ . '/../apps/models/',
-    'Score\Repositories' => __DIR__ . '/../apps/repositories/',
+    'Score\Repositories' => [
+    __DIR__ . '/../apps/repositories/',
+    __DIR__ . '/../apps/repositories/Crawler/',
+],
     'Score\Utils' => __DIR__ . '/../apps/library/Utils/'
 ));
 

@@ -6,7 +6,12 @@ class ScTeam extends \Phalcon\Mvc\Model
 {
     protected $team_id;
     protected $team_name;
-    protected $team_svg;
+    protected $team_slug;
+    protected $team_name_sofa;
+    protected $team_name_livescore;
+
+    protected $team_name_flashscore;
+    protected $team_logo;
     protected $team_active;
 
 
@@ -46,17 +51,81 @@ class ScTeam extends \Phalcon\Mvc\Model
     /**
      * @return mixed
      */
-    public function getTeamSvg()
+    public function getTeamSlug()
     {
-        return $this->team_svg;
+        return $this->team_slug;
     }
 
     /**
-     * @param mixed $team_svg
+     * @param mixed $team_slug
      */
-    public function setTeamSvg($team_svg)
+    public function setTeamSlug($team_slug)
     {
-        $this->team_svg = $team_svg;
+        $this->team_slug = $team_slug;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getTeamNameSofa()
+    {
+        return $this->team_name_sofa;
+    }
+
+    /**
+     * @param mixed $team_name_sofa
+     */
+    public function setTeamNameSofa($team_name_sofa)
+    {
+        $this->team_name_sofa = $team_name_sofa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeamNameLivescore()
+    {
+        return $this->team_name_livescore;
+    }
+
+    /**
+     * @param mixed $team_name_livescore
+     */
+    public function setTeamNameLivescore($team_name_livescore)
+    {
+        $this->team_name_livescore = $team_name_livescore;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTeamNameFlashscore()
+    {
+        return $this->team_name_flashscore;
+    }
+
+    /**
+     * @param mixed $team_name_flashscore
+     */
+    public function setTeamNameFlashscore($team_name_flashscore)
+    {
+        $this->team_name_flashscore = $team_name_flashscore;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTeamLogo()
+    {
+        return $this->team_logo;
+    }
+
+    /**
+     * @param mixed $team_logo
+     */
+    public function setTeamLogo($team_logo)
+    {
+        $this->team_logo = $team_logo;
     }
 
     /**
@@ -64,18 +133,18 @@ class ScTeam extends \Phalcon\Mvc\Model
      */
     public function getTeamActive()
     {
-        return $this->team_active	;
+        return $this->team_active;
     }
 
     /**
      * @param mixed $team_active	
      */
-    public function setTeamActive($team_active	)
+    public function setTeamActive($team_active)
     {
-        $this->team_active	 = $team_active	;
+        $this->team_active     = $team_active;
     }
 
-       /**
+    /**
      * Returns table name mapped in the model.
      *
      * @return string
@@ -106,6 +175,4 @@ class ScTeam extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
- 
 }
