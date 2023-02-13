@@ -52,6 +52,12 @@ services:
       NODE_MAX_SESSION: 10
       SCREEN_WIDTH: 1920
       SCREEN_HEIGHT: 1200
+  # socket.io:
+  #   image: node:alpine
+  #   volumes:
+  #     - ./socket.io:/app
+  #   working_dir: /app
+  #   command: npm start
 networks:
   default:
     name: end-to-end-test
