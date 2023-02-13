@@ -36,7 +36,7 @@ class MatchRepo extends Component
                 $time = str_replace("+", "", $match->getTime());
                 $start_time = time() - $time * 60;
                 $matchSave->setMatchStatus("S");
-            } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time" ) {
+            } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time" || $match->getTime() == "HalfTime") {
                 $time = 45;
                 $start_time = time() - $time * 60;
             } elseif ($match->getTime() == "FT" || $match->getTime() == "AET" || $match->getTime() == "Finished") {
