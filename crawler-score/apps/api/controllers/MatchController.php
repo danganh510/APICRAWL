@@ -32,7 +32,7 @@ class MatchController extends ControllerBase
         $events = [];
         $matchRepo = new MatchRepo();
         $arrMatch = $matchRepo->getMatch($time,"S");
-        var_dump($arrMatch);exit;
+
         foreach ($arrMatch as $key=> $match) {
            
             $home = Team::getTeamById($match['match_home_id']);
@@ -100,7 +100,6 @@ class MatchController extends ControllerBase
          
            
         }
-      
         return $events;
         //get match and tournament
 
