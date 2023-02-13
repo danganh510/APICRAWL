@@ -105,7 +105,7 @@ class MatchRepo extends Component
             ->innerJoin('Score\Models\ScTournament', 'match_tournament_id = t.tournament_id', 't')
             ->columns("match_id,match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,
             match_insert_time,match_time,match_start_time,match_order,match_status,
-            t.tournament_id,t.tournament_name,t.tournament_round,t.tournament_country,t.tournament_image,t.tournament_order")
+            t.tournament_id,t.tournament_name,t.tournament_country,t.tournament_image,t.tournament_order")
             ->andWhere(
                 "match_start_day = :day: AND match_start_month = :month: AND match_start_year = :year:",
                 [
