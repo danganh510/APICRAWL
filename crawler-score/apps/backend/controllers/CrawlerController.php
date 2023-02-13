@@ -29,6 +29,7 @@ class CrawlerController extends ControllerBase
 
         ini_set('max_execution_time', -1);
 
+        $time_plus = $this->request->get("timePlus");
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
 
@@ -36,7 +37,7 @@ class CrawlerController extends ControllerBase
         try {
             $crawler = new CrawlerFlashScore();
             $seleniumDriver = new Selenium($crawler->url_fb);
-            $divParent = $crawler->getDivParent($seleniumDriver);
+            $divParent = $crawler->getDivParent($seleniumDriver,$time_plus);
         } catch (Exception $e) {
             echo $e->getMessage();
             die();

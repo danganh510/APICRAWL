@@ -12,10 +12,25 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerFlashScore extends Component
 {
     public $url_fb = "https://www.flashscore.com";
-    public function getDivParent($seleniumDriver)
+    public function getDivParent($seleniumDriver, $time_plus = 0)
     {
 
-      //  click button LIVE cho lần đầu
+     
+        if ($time_plus) {
+          //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
+            //click button time cho lần đầu
+            $seleniumDriver->clickButton("#calendarMenu");
+             sleep(1);
+            $divTimes = $seleniumDriver->findElements(".calendar__day");
+            foreach ($divTimes as $div) {
+                $text = $div->getText();
+                if (explode(' ',$text)[0] == strftime('%d/%m', time() + $time_plus * 24 * 60 * 60)) {
+                    $div->click();
+                    break;
+                }
+            }
+        } else {
+               //  click button LIVE cho lần đầu
         $divFilters = $seleniumDriver->findElements(".filters__text--short");
         foreach ($divFilters as $div) {
             if ($div->getText() === 'LIVE') {
@@ -23,19 +38,8 @@ class CrawlerFlashScore extends Component
                 break;
             }
         }
-       // $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
-        //click button time cho lần đầu
-        // $seleniumDriver->clickButton("#calendarMenu");
-        
-        //  sleep(1);
-        // $divTimes = $seleniumDriver->findElements(".calendar__day");
-        // foreach ($divTimes as $div) {
-        //     $text = $div->getText();
-        //     if (explode(' ',$text)[0] == strftime('%d/%m', time() + (-2) * 24 * 60 * 60)) {
-        //         $div->click();
-        //         break;
-        //     }
-        // }
+        }
+
 
         sleep(1);
         //click close
@@ -44,10 +48,8 @@ class CrawlerFlashScore extends Component
             try {
                 $div->click();
                 sleep(0.1);
-
             } catch (Exception $e) {
             }
-
         }
         sleep(1);
 
@@ -67,7 +69,7 @@ class CrawlerFlashScore extends Component
         // exit;
         foreach ($parentDiv as $key => $div) {
 
-         //   goto test;
+            //   goto test;
             try {
                 //check tournament
                 $divTuornaments = $div->findElements(WebDriverBy::cssSelector('.event__title--type'));
@@ -103,7 +105,7 @@ class CrawlerFlashScore extends Component
 
                 //match
                 $divMatch = $div->findElements(WebDriverBy::cssSelector('.event__participant'));
-               
+
                 if (count($divMatch)) {
                     $id_insite = $div->getAttribute("id");
                     $id_insite = explode("_", $id_insite);
@@ -111,7 +113,6 @@ class CrawlerFlashScore extends Component
                     $href_detail = "/match/" . $id_insite;
                     try {
                         $time = $div->findElement(WebDriverBy::cssSelector(".event__stage--block"))->getText();
-
                     } catch (Exception $e) {
                         $time = $div->findElement(WebDriverBy::cssSelector(".event__time"))->getText();
                     }
