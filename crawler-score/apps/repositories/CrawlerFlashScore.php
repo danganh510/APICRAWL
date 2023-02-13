@@ -15,39 +15,41 @@ class CrawlerFlashScore extends Component
     public function getDivParent($seleniumDriver)
     {
 
-        //click button LIVE cho lần đầu
-        // $divFilters = $seleniumDriver->findElements(".filters__text--short");
-        // foreach ($divFilters as $div) {
-        //     if ($div->getText() === 'LIVE') {
-        //         $div->click();
-        //         break;
-        //     }
-        // }
-        $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
-        //click button time cho lần đầu
-        $seleniumDriver->clickButton("#calendarMenu");
-         sleep(1);
-        $divTimes = $seleniumDriver->findElements(".calendar__day");
-        foreach ($divTimes as $div) {
-            $text = $div->getText();
-            if (explode(' ',$text)[0] == strftime('%d/%m', time() + (-1) * 24 * 60 * 60)) {
+      //  click button LIVE cho lần đầu
+        $divFilters = $seleniumDriver->findElements(".filters__text--short");
+        foreach ($divFilters as $div) {
+            if ($div->getText() === 'LIVE') {
                 $div->click();
                 break;
             }
         }
+       // $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
+        //click button time cho lần đầu
+        // $seleniumDriver->clickButton("#calendarMenu");
+        
+        //  sleep(1);
+        // $divTimes = $seleniumDriver->findElements(".calendar__day");
+        // foreach ($divTimes as $div) {
+        //     $text = $div->getText();
+        //     if (explode(' ',$text)[0] == strftime('%d/%m', time() + (-2) * 24 * 60 * 60)) {
+        //         $div->click();
+        //         break;
+        //     }
+        // }
+
         sleep(1);
         //click close
         $divClose = $seleniumDriver->findElements(".event__expander--close");
         foreach ($divClose as $div) {
             try {
                 $div->click();
-                sleep(0.2);
+                sleep(0.1);
 
             } catch (Exception $e) {
             }
 
         }
-        sleep(2);
+        sleep(1);
 
         //  $seleniumDriver->clickButton('.filters__tab > .filters');
         $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
@@ -82,7 +84,7 @@ class CrawlerFlashScore extends Component
                         $name = $nameDetail[0];
                         $group = $nameDetail[1];
                     }
-                    $hrefTour = "/football/" . $country_name . "/" . $this->create_slug(strtolower($name));
+                    $hrefTour = "/football/" . MyRepo::create_slug($country_name) . "/" . $this->create_slug(strtolower($name));
 
 
                     $tournamentModel = new MatchTournament();
