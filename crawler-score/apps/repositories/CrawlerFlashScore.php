@@ -80,6 +80,7 @@ class CrawlerFlashScore extends Component
                     $country_name =  strtolower($country_name);
                     $group = "";
                     if (strpos($name, "Group")) {
+                        echo $name;
                         $nameDetail = explode(" - ", $name);
                         $name = $nameDetail[0];
                         $group = $nameDetail[1];
