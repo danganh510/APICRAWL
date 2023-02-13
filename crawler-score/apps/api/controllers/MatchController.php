@@ -37,9 +37,7 @@ class MatchController extends ControllerBase
            
             $home = Team::getTeamById($match['match_home_id']);
             $away = Team::getTeamById($match['match_away_id']);
-            if (!$home || !$away) {
-                continue;
-            }
+           
             $matchInfo = [
                 'status' => [
                     'description' => $match['match_status'],
@@ -97,7 +95,6 @@ class MatchController extends ControllerBase
      
                 ];
             }
-         
            
         }
         return $events;

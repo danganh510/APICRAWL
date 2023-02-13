@@ -123,6 +123,6 @@ class MatchRepo extends Component
 
         $match = $match->orderBy("match_order")
             ->execute();
-        return $match;
+        return $match->toArray();
     }
 }
