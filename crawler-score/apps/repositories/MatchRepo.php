@@ -71,10 +71,18 @@ class MatchRepo extends Component
             $time_live = str_replace("+", "", $match->getTime());
             $matchSave->setMatchStatus("S");
         } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time" || $match->getTime() == "HalfTime") {
-            $time_live = $match->getTime();
+            if ($match->getTime() == "HT" ||  $match->getTime() == "HalfTime") {
+                $time_live = "FHTT";
+            } else {
+                $time_live = $match->getTime();
+            }
             $matchSave->setMatchStatus("F");
         } elseif ($match->getTime() == "FT" || $match->getTime() == "AET" || $match->getTime() == "Finished") {
-            $time_live = $match->getTime();
+            if ($match->getTime() == "FT" ||  $match->getTime() == "Finished") {
+                $time_live = "FT";
+            } else {
+                $time_live = $match->getTime();
+            }
             $matchSave->setMatchStatus("S");
         } else {
             $time_live = 0;
