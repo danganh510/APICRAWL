@@ -36,7 +36,7 @@ class MatchRepo extends Component
                 $time = str_replace("+", "", $match->getTime());
                 $start_time = time() - $time * 60;
                 $matchSave->setMatchStatus("S");
-            } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time") {
+            } elseif ($match->getTime() == "HT" || $match->getTime() == "Half Time" ) {
                 $time = 45;
                 $start_time = time() - $time * 60;
             } elseif ($match->getTime() == "FT" || $match->getTime() == "AET" || $match->getTime() == "Finished") {
@@ -92,6 +92,7 @@ class MatchRepo extends Component
             return true;
         }
         var_dump($matchSave->getMessages());
+        var_dump($match);
         return false;
     }
     public function getMatch($time, $status = "", $tournament = "")

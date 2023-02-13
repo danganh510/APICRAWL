@@ -30,7 +30,7 @@ class CrawlerFlashScore extends Component
         $divTimes = $seleniumDriver->findElements(".calendar__day");
         foreach ($divTimes as $div) {
             $text = $div->getText();
-            if (explode(' ',$text)[0] == strftime('%d/%m', time() + 96 * 60 * 60)) {
+            if (explode(' ',$text)[0] == strftime('%d/%m', time() + (-1) * 24 * 60 * 60)) {
                 $div->click();
                 break;
             }
@@ -141,8 +141,8 @@ class CrawlerFlashScore extends Component
                 continue;
             }
             test:
-            $text = $div->getAttribute("outerHTML");
-            $this->saveText($text, $key);
+            // $text = $div->getAttribute("outerHTML");
+            // $this->saveText($text, $key);
         }
         return $list_live_match;
     }
