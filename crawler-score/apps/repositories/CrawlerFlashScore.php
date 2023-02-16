@@ -65,7 +65,7 @@ class CrawlerFlashScore extends Component
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
-            $this->saveText($htmlDiv, time());
+           // $this->saveText($htmlDiv, time());
         } catch (Exception $e) {
         }
         $seleniumDriver->quit();
@@ -152,7 +152,7 @@ class CrawlerFlashScore extends Component
                     $home = str_replace(['GOAL','CORRECTION'],['',''],$home);
                     $home = trim($home);
 
-                    $away = str_replace(['GOAL','CORRECTION'],['',''],$away);
+                    $away = str_replace(['GOAL','CORRECTION','&nbsp;'],['','',''],$away);
                     $away = trim($away);
 
                     //loai bo ten nuoc ra khoi ten:
