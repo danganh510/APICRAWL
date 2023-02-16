@@ -52,14 +52,28 @@ class CrawlerFlashScore extends Component
 
         sleep(1);
         //click close
-        $divClose = $seleniumDriver->findElements(".event__expander--close");
-        foreach ($divClose as $div) {
-            try {
-                $div->click();
-                sleep(0.01);
-            } catch (Exception $e) {
+        while(empty($seleniumDriver->findElements(".event__expander--close"))) {
+            $divClose = $seleniumDriver->findElements(".event__expander--close");
+            foreach ($divClose as $key =>  $div) {
+                try {
+                    $div->click();
+                    sleep(0.1);
+                    echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+                    break;
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                }
             }
         }
+        // foreach ($divClose as $key =>  $div) {
+        //     try {
+        //         $div->click();
+        //         sleep(1);
+        //         echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+        //     } catch (Exception $e) {
+        //         echo $e->getMessage();
+        //     }
+        // }
         echo "time click icon: ". (microtime(true) - $time_1). "</br>";
 
         sleep(1);
