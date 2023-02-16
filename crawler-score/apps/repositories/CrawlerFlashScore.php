@@ -141,11 +141,11 @@ class CrawlerFlashScore extends Component
                     $time = str_replace('&nbsp;',"",$time);   
                     $time = trim($time); 
 
-                    $home = $div->find(".event__participant--home")[0]->innertext();
+                    $home = $div->find(".event__participant--home")[0]->text();
                     $home_image = $div->find(".event__logo--home")[0]->getAttribute("src");
                     $home_score = $div->find(".event__score--home")[0]->innertext();
 
-                    $away = $div->find(".event__participant--away")[0]->innertext();
+                    $away = $div->find(".event__participant--away")[0]->text();
                     $away_image = $div->find(".event__logo--away")[0]->getAttribute("src");
                     $away_score = $div->find(".event__score--away")[0]->innertext();
 
