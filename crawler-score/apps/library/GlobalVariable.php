@@ -4,6 +4,7 @@ use Phalcon\Mvc\User\Component;
 
 class GlobalVariable extends Component
 {
+    public $preg_match;
 	public $acceptUploadTypes;
     public $timeZone;
     public $curTime;
@@ -30,14 +31,21 @@ class GlobalVariable extends Component
     public $mainCurrency;
     public $tableSEO;
 
+    public $time_size_low_start ;
+    public $time_size_low_end ;
+
 
     public function __construct()
 	{
+        $this->time_size_low_start = 18;
+        $this->time_size_low_end = 6;
+
+        $this->preg_match = "[/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$/]";
         date_default_timezone_set('UTC');//default for Application - NOT ONLY for current script
         $this->timeZone = -4*3600;
         $this->curTime = time();
         $this->localTime = time() + $this->timeZone;
-        $this->timeZoneStr = 'UTC -04:00';
+        //$this->timeZoneStr = 'UTC -04:00';
         $this->defaultLocation ='gx';
         $this->defaultLanguage ='en';
         $this->defaultCountry = "gb";

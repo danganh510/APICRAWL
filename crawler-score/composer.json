@@ -1,7 +1,7 @@
 {
     "require": {
-        "simple-html-dom/simple-html-dom": "^1.5",
         "fabpot/goutte": "^4.0",
-        "php-webdriver/webdriver": "^1.14"
+        "php-webdriver/webdriver": "^1.14",
+        "sunra/php-simple-html-dom-parser": "^1.5"
     }
 }

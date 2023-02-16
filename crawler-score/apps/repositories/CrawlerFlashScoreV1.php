@@ -15,17 +15,13 @@ class CrawlerFlashScore extends Component
     public $url_fb = "https://www.flashscore.com";
     public function getDivParent($seleniumDriver, $time_plus = 0)
     {
-        $time_delay = 1;
 
-        if (date("H", time()) > $this->globalVariable->time_size_low_start && date("H", time()) < $this->globalVariable->time_size_low_end) {
-            $time_delay = 2;
-        }
 
         if ($time_plus) {
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
             //click button time cho lần đầu
             $seleniumDriver->clickButton("#calendarMenu");
-            sleep(2);
+            sleep(1);
             $divTimes = $seleniumDriver->findElements(".calendar__day");
             foreach ($divTimes as $div) {
                 $text = $div->getText();
@@ -46,7 +42,7 @@ class CrawlerFlashScore extends Component
         }
 
 
-        sleep(2);
+        sleep(1);
         //click close
         $divClose = $seleniumDriver->findElements(".event__expander--close");
         foreach ($divClose as $div) {
@@ -56,46 +52,47 @@ class CrawlerFlashScore extends Component
             } catch (Exception $e) {
             }
         }
-        sleep(1);
+        sleep(0.2);
         $htmlDiv = "";
         try {
             //  $seleniumDriver->clickButton('.filters__tab > .filters');
             $parentDiv = $seleniumDriver->findElement('div[id="live-table"] > section > div > div');
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
-            $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
+            $htmlDiv = "<!DOCTYPE html>".$htmlDiv;
             //khai bao cho the svg
-            $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
+            $htmlDiv = str_replace("<svg ","<svg xmlns='http://www.w3.org/2000/svg'",$htmlDiv);
             $this->saveText($htmlDiv, time());
         } catch (Exception $e) {
         }
         $seleniumDriver->quit();
 
-        return ($htmlDiv);
+        return $htmlDiv;
     }
     public function CrawlFlashScore($parentDiv)
     {
-        require_once(__DIR__ . "/../library/simple_html_dom.php");
         $list_live_match = [];
         $list_live_tournaments = [];
         $index = 0;
         $tournaments = [];
-        $parentDiv =  str_get_html($parentDiv);
-
-        $parentDivs = $parentDiv->find("div");
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true); // Tắt thông báo lỗi
+        $dom->loadHTML($parentDiv);
+        libxml_use_internal_errors(false); // Bật lại thông báo lỗi
+        $parentDiv = $dom->getElementsByTagName("div");
         // var_dump(count($parentDiv));
         // $seleniumDriver->quit();
         // exit;
-        foreach ($parentDivs as $key => $div) {
+        foreach ($parentDiv as $key => $div) {
+
             //   goto test;
             try {
                 //check tournament
-                $divTuornaments = $div->find('.event__title--type');
-              
-                if (!empty($divTuornaments)) {
-                    //đây là div chứa tournament
-                    $country_name = $div->find('.event__title--type')[0]->innertext();
+                $divTuornaments = $div->findElements(WebDriverBy::cssSelector('.event__title--type'));
 
-                    $name = $div->find(".event__title--name")[0]->innertext();
+                if (count($divTuornaments)) {
+                    //đây là div chứa tournament
+                    $country_name = $div->findElement(WebDriverBy::cssSelector('.event__title--type'))->getText();
+                    $name = $div->findElement(WebDriverBy::cssSelector('.event__title--name'))->getText();
 
                     $country_name =  strtolower($country_name);
                     $group = "";
@@ -122,48 +119,27 @@ class CrawlerFlashScore extends Component
                 }
 
                 //match
-                $divMatch = $div->find(".event__participant");
+                $divMatch = $div->findElements(WebDriverBy::cssSelector('.event__participant'));
 
-                if (!empty($divMatch)) {
+                if (count($divMatch)) {
                     $id_insite = $div->getAttribute("id");
                     $id_insite = explode("_", $id_insite);
                     $id_insite = $id_insite[count($id_insite) - 1];
                     $href_detail = "/match/" . $id_insite;
                     try {
-                        if (count($div->find(".event__stage--block"))) {
-                            $time = $div->find(".event__stage--block")[0]->text();
-                        }
-                        else {
-                            $time = $div->find(".event__time")[0]->text();
-                        }
+                        $time = $div->findElement(WebDriverBy::cssSelector(".event__stage--block"))->getText();
                     } catch (Exception $e) {
+                        $time = $div->findElement(WebDriverBy::cssSelector(".event__time"))->getText();
                     }
-                    $time = str_replace('&nbsp;',"",$time);   
-                    $time = trim($time); 
 
-                    $home = $div->find(".event__participant--home")[0]->innertext();
-                    $home_image = $div->find(".event__logo--home")[0]->getAttribute("src");
-                    $home_score = $div->find(".event__score--home")[0]->innertext();
 
-                    $away = $div->find(".event__participant--away")[0]->innertext();
-                    $away_image = $div->find(".event__logo--away")[0]->getAttribute("src");
-                    $away_score = $div->find(".event__score--away")[0]->innertext();
+                    $home = $div->findElement(WebDriverBy::cssSelector(".event__participant--home"))->getText();
+                    $home_image = $div->findElement(WebDriverBy::cssSelector(".event__logo--home"))->getAttribute("src");
+                    $home_score = $div->findElement(WebDriverBy::cssSelector(".event__score--home"))->getText();
 
-                    $home = str_replace(['GOAL','CORRECTION'],['',''],$home);
-                    $home = trim($home);
-
-                    $away = str_replace(['GOAL','CORRECTION'],['',''],$away);
-                    $away = trim($away);
-
-                    //loai bo ten nuoc ra khoi ten:
-                    if(strpos('(',$home) && strpos(')',$home)) {
-                        $home = explode('(',$home);
-                        $home = trim($home[0]);
-                    }
-                    if(strpos('(',$away) && strpos(')',$away)) {
-                        $away = explode('(',$away);
-                        $away = trim($away[0]);
-                    }
+                    $away = $div->findElement(WebDriverBy::cssSelector(".event__participant--away"))->getText();
+                    $away_image = $div->findElement(WebDriverBy::cssSelector(".event__logo--away"))->getAttribute("src");
+                    $away_score = $div->findElement(WebDriverBy::cssSelector(".event__score--away"))->getText();
 
                     $liveMatch = new MatchCrawl();
                     $liveMatch->setTime(MyRepo::replace_space($time));
@@ -176,9 +152,10 @@ class CrawlerFlashScore extends Component
                     $liveMatch->setHrefDetail($href_detail);
                     $liveMatch->setTournament($list_live_tournaments[count($list_live_tournaments) - 1]);
                     $list_live_match[] =  $liveMatch;
-                } 
+                } else {
+                    echo "1-";
+                }
             } catch (Exception $e) {
-                echo "1-";
 
                 continue;
             }

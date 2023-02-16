@@ -37,16 +37,21 @@ class CrawlerController extends ControllerBase
         try {
             $crawler = new CrawlerFlashScore();
             $seleniumDriver = new Selenium($crawler->url_fb);
+            //time plus = 1  crawl all to day
             $divParent = $crawler->getDivParent($seleniumDriver,$time_plus);
+            $seleniumDriver->quit();
         } catch (Exception $e) {
             echo $e->getMessage();
+            $seleniumDriver->quit();
             die();
         }
         $total = 0;
         //start crawler
         try {
             statCrawler:
+            $start_time = microtime(true);
             $list_match = $crawler->CrawlFlashScore($divParent);
+
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
                 $home = Team::findByName($match->getHome(), MyRepo::create_slug($match->getHome()), $this->type_crawl);
@@ -75,6 +80,7 @@ class CrawlerController extends ControllerBase
                 }
                 $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
                 if ($result) {
+                    $total++;
                     echo "Save match success --- ";
                 } else {
                     echo "Save match false ---";
@@ -90,6 +96,7 @@ class CrawlerController extends ControllerBase
             echo $e->getMessage();
         }
         $seleniumDriver->quit();
+
         end:
         echo "---total: ". $total;
 

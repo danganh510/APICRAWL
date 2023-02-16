@@ -46,6 +46,12 @@ class Selenium extends Component
         $button->click();
         sleep(2);
     }
+    public function findElement($domElement)
+    {
+        //$domElement = 'div[aria-readonly="true"] > div >div ';
+        $elements = $this->driver->findElement(WebDriverBy::cssSelector($domElement));
+        return $elements;
+    }
     public function findElements($domElement)
     {
         //$domElement = 'div[aria-readonly="true"] > div >div ';

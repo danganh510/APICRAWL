@@ -12,6 +12,7 @@ class ControllerBase extends \Phalcon\Mvc\Controller
 {
 	protected $auth;
 
+
 	public function initialize()
     {
         //current user
@@ -34,4 +35,5 @@ class ControllerBase extends \Phalcon\Mvc\Controller
         ]);
 
     }
+
 }
