@@ -33,13 +33,14 @@ class CrawlerController extends ControllerBase
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
 
-
+        $start_time = microtime(true);
         try {
             $crawler = new CrawlerFlashScore();
             $seleniumDriver = new Selenium($crawler->url_fb);
             //time plus = 1  crawl all to day
             $divParent = $crawler->getDivParent($seleniumDriver,$time_plus);
             $seleniumDriver->quit();
+            echo ( microtime(true) - $start_time). "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
             $seleniumDriver->quit();
@@ -49,9 +50,9 @@ class CrawlerController extends ControllerBase
         //start crawler
         try {
             statCrawler:
-            $start_time = microtime(true);
+            
             $list_match = $crawler->CrawlFlashScore($divParent);
-
+            echo ( microtime(true) - $start_time). "</br>";
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
                 $home = Team::findByName($match->getHome(), MyRepo::create_slug($match->getHome()), $this->type_crawl);
@@ -96,7 +97,7 @@ class CrawlerController extends ControllerBase
             echo $e->getMessage();
         }
         $seleniumDriver->quit();
-
+        echo ( microtime(true) - $start_time). "</br>";
         end:
         echo "---total: ". $total;
 

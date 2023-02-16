@@ -16,6 +16,7 @@ class CrawlerFlashScore extends Component
     public function getDivParent($seleniumDriver, $time_plus = 0)
     {
         $time_delay = 1;
+        $time_1 = microtime(true);
 
         if (date("H", time()) > $this->globalVariable->time_size_low_start && date("H", time()) < $this->globalVariable->time_size_low_end) {
             $time_delay = 2;
@@ -38,6 +39,8 @@ class CrawlerFlashScore extends Component
             //  click button LIVE cho lần đầu
             $divFilters = $seleniumDriver->findElements(".filters__text--short");
             foreach ($divFilters as $div) {
+                echo "time find div: ". (microtime(true) - $time_1). "</br>";
+
                 if ($div->getText() === 'LIVE') {
                     $div->click();
                     break;
@@ -45,6 +48,7 @@ class CrawlerFlashScore extends Component
             }
         }
 
+        echo "time lick button: ". (microtime(true) - $time_1). "</br>";
 
         sleep(1);
         //click close
@@ -52,28 +56,40 @@ class CrawlerFlashScore extends Component
         foreach ($divClose as $div) {
             try {
                 $div->click();
-                sleep(0.1);
+                sleep(0.01);
             } catch (Exception $e) {
             }
         }
+        echo "time click icon: ". (microtime(true) - $time_1). "</br>";
+
         sleep(1);
         $htmlDiv = "";
         try {
             //  $seleniumDriver->clickButton('.filters__tab > .filters');
+            echo "time before find parent div: ". (microtime(true) - $time_1). "</br>";
             $parentDiv = $seleniumDriver->findElement('div[id="live-table"] > section > div > div');
+            echo "time after find parent div: ". (microtime(true) - $time_1). "</br>";
+
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
+            echo "time get html parent div: ". (microtime(true) - $time_1). "</br>";
+
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
-           // $this->saveText($htmlDiv, time());
+            echo "time replace: ". (microtime(true) - $time_1). "</br>";
+
+            // $this->saveText($htmlDiv, time());
         } catch (Exception $e) {
         }
         $seleniumDriver->quit();
+        echo "time get button: ". (microtime(true) - $time_1). "</br>";
 
         return ($htmlDiv);
     }
     public function CrawlFlashScore($parentDiv)
     {
+        $time_1 = microtime(true);
+
         require_once(__DIR__ . "/../library/simple_html_dom.php");
         $list_live_match = [];
         $list_live_tournaments = [];
@@ -90,7 +106,7 @@ class CrawlerFlashScore extends Component
             try {
                 //check tournament
                 $divTuornaments = $div->find('.event__title--type');
-              
+
                 if (!empty($divTuornaments)) {
                     //đây là div chứa tournament
                     $country_name = $div->find('.event__title--type')[0]->innertext();
@@ -132,14 +148,13 @@ class CrawlerFlashScore extends Component
                     try {
                         if (count($div->find(".event__stage--block"))) {
                             $time = $div->find(".event__stage--block")[0]->text();
-                        }
-                        else {
+                        } else {
                             $time = $div->find(".event__time")[0]->text();
                         }
                     } catch (Exception $e) {
                     }
-                    $time = str_replace('&nbsp;',"",$time);   
-                    $time = trim($time); 
+                    $time = str_replace('&nbsp;', "", $time);
+                    $time = trim($time);
 
                     $home = $div->find(".event__participant--home")[0]->text();
                     $home_image = $div->find(".event__logo--home")[0]->getAttribute("src");
@@ -149,19 +164,19 @@ class CrawlerFlashScore extends Component
                     $away_image = $div->find(".event__logo--away")[0]->getAttribute("src");
                     $away_score = $div->find(".event__score--away")[0]->innertext();
 
-                    $home = str_replace(['GOAL','CORRECTION'],['',''],$home);
+                    $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
                     $home = trim($home);
 
-                    $away = str_replace(['GOAL','CORRECTION','&nbsp;'],['','',''],$away);
+                    $away = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $away);
                     $away = trim($away);
 
                     //loai bo ten nuoc ra khoi ten:
-                    if(strpos('(',$home) && strpos(')',$home)) {
-                        $home = explode('(',$home);
+                    if (strpos('(', $home) && strpos(')', $home)) {
+                        $home = explode('(', $home);
                         $home = trim($home[0]);
                     }
-                    if(strpos('(',$away) && strpos(')',$away)) {
-                        $away = explode('(',$away);
+                    if (strpos('(', $away) && strpos(')', $away)) {
+                        $away = explode('(', $away);
                         $away = trim($away[0]);
                     }
 
@@ -176,7 +191,9 @@ class CrawlerFlashScore extends Component
                     $liveMatch->setHrefDetail($href_detail);
                     $liveMatch->setTournament($list_live_tournaments[count($list_live_tournaments) - 1]);
                     $list_live_match[] =  $liveMatch;
-                } 
+                    echo "time get match: ". (microtime(true) - $time_1). "</br>";
+
+                }
             } catch (Exception $e) {
                 echo "1-";
 
