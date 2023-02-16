@@ -27,7 +27,7 @@ class CrawlerController extends ControllerBase
     public function indexAction()
     {
 
-        ini_set('max_execution_time', -1);
+        ini_set('max_execution_time', 20);
 
         $time_plus = $this->request->get("timePlus");
         $start_time_cron = time() + 0 * 24 * 60 * 60;

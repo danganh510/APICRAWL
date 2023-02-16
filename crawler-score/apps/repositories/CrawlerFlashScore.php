@@ -46,7 +46,7 @@ class CrawlerFlashScore extends Component
         }
 
 
-        sleep(2);
+        sleep(1);
         //click close
         $divClose = $seleniumDriver->findElements(".event__expander--close");
         foreach ($divClose as $div) {
