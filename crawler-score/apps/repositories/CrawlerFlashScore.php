@@ -183,7 +183,7 @@ class CrawlerFlashScore extends Component
 
                     $away = $div->find(".event__participant--away")[0]->text();
                     $away_image = $div->find(".event__logo--away")[0]->getAttribute("src");
-                    $away_score = $div->find(".event__score--away")[0];
+                    $away_score = $div->find(".event__score--away");
                     $away_score = isset($away_score[0]) ? $away_score[0]->innertext() : 0;
 
                     $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
