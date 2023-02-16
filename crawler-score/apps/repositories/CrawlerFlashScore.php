@@ -49,6 +49,7 @@ class CrawlerFlashScore extends Component
         }
 
         echo "time lick button: ". (microtime(true) - $time_1). "</br>";
+        sleep(2);
 
         sleep(1);
         //click close
@@ -82,6 +83,7 @@ class CrawlerFlashScore extends Component
             //  $seleniumDriver->clickButton('.filters__tab > .filters');
             echo "time before find parent div: ". (microtime(true) - $time_1). "</br>";
             $parentDiv = $seleniumDriver->findElement('div[id="live-table"] > section > div > div');
+            
             echo "time after find parent div: ". (microtime(true) - $time_1). "</br>";
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
@@ -92,8 +94,9 @@ class CrawlerFlashScore extends Component
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
             echo "time replace: ". (microtime(true) - $time_1). "</br>";
 
-            // $this->saveText($htmlDiv, time());
+             $this->saveText($htmlDiv, time());
         } catch (Exception $e) {
+            echo $e->getMessage();
         }
         $seleniumDriver->quit();
         echo "time get button: ". (microtime(true) - $time_1). "</br>";
@@ -110,6 +113,9 @@ class CrawlerFlashScore extends Component
         $index = 0;
         $tournaments = [];
         $parentDiv =  str_get_html($parentDiv);
+        if (!$parentDiv) {
+            return [];
+        }
 
         $parentDivs = $parentDiv->find("div");
         // var_dump(count($parentDiv));
@@ -172,11 +178,13 @@ class CrawlerFlashScore extends Component
 
                     $home = $div->find(".event__participant--home")[0]->text();
                     $home_image = $div->find(".event__logo--home")[0]->getAttribute("src");
-                    $home_score = $div->find(".event__score--home")[0]->innertext();
+                    $home_score = $div->find(".event__score--home");
+                    $home_score = empty($home_score) ? $home_score[0]->innertext() : 0;
 
                     $away = $div->find(".event__participant--away")[0]->text();
                     $away_image = $div->find(".event__logo--away")[0]->getAttribute("src");
-                    $away_score = $div->find(".event__score--away")[0]->innertext();
+                    $away_score = $div->find(".event__score--away")[0];
+                    $away_score = empty($away_score) ? $away_score[0]->innertext() : 0;
 
                     $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
                     $home = trim($home);
