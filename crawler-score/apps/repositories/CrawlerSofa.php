@@ -76,7 +76,7 @@ class CrawlerSofa extends Component
                     $name = $aTuornaments->text();
 
                     $arrHref = explode("/", $hrefTour);
-                    $country_name = $arrHref[5];
+                    $country_name = $arrHref[count($arrHref) - 3];
 
                     $country_name =  strtolower($country_name);
                     $group = "";
@@ -171,7 +171,7 @@ continue;
             // $text = $div->getAttribute("outerHTML");
             // $this->saveText($text, $key);
         }
-        var_dump($list_live_match);exit;
+        var_dump($list_live_tournaments);exit;
         return $list_live_match;
     }
     public function saveText($text, $key)
