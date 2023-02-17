@@ -8,6 +8,7 @@ class ScTournament extends \Phalcon\Mvc\Model
     protected $tournament_name;
     protected $tournament_slug;
     protected $tournament_name_flash_score;
+    protected $tournament_country_code;
     protected $tournament_country;
     protected $tournament_image;
     protected $tournament_href_flashscore;
@@ -91,6 +92,21 @@ class ScTournament extends \Phalcon\Mvc\Model
     public function setTournamentCountry($tournament_country)
     {
         $this->tournament_country = $tournament_country;
+    }
+     /**
+     * @return mixed
+     */
+    public function getTournamentCountryCode()
+    {
+        return $this->tournament_country_code;
+    }
+
+    /**
+     * @param mixed $tournament_country_code
+     */
+    public function setTournamentCountryCode($tournament_country_code)
+    {
+        $this->tournament_country_code = $tournament_country_code;
     }
     /**
      * @return mixed

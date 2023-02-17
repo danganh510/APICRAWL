@@ -35,8 +35,12 @@ class CrawlerController extends ControllerBase
 
         $start_time = microtime(true);
         try {
-            $crawler = new CrawlerFlashScore();
-            $seleniumDriver = new Selenium($crawler->url_fb);
+            // $crawler = new CrawlerFlashScore();
+            // $seleniumDriver = new Selenium($crawler->url_fb);
+
+            //sofa
+            $crawler = new CrawlerSofa();
+            $seleniumDriver = new Selenium($crawler->url_sf);
             //time plus = 1  crawl all to day
             $divParent = $crawler->getDivParent($seleniumDriver,$time_plus);
             $seleniumDriver->quit();

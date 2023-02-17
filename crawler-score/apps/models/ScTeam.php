@@ -7,6 +7,7 @@ class ScTeam extends \Phalcon\Mvc\Model
     protected $team_id;
     protected $team_name;
     protected $team_slug;
+    protected $team_country_code;
     protected $team_name_sofa;
     protected $team_name_livescore;
 
@@ -64,6 +65,21 @@ class ScTeam extends \Phalcon\Mvc\Model
         $this->team_slug = $team_slug;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTeamCountryCode()
+    {
+        return $this->team_country_code;
+    }
+
+    /**
+     * @param mixed $team_country_code
+     */
+    public function setTeamCountryCode($team_country_code)
+    {
+        $this->team_country_code = $team_country_code;
+    }
 
     /**
      * @return mixed

@@ -13,6 +13,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class CrawlerFlashScore extends Component
 {
     public $url_fb = "https://www.flashscore.com";
+    public $url_sf = "https://www.sofascore.com/football";
     public function getDivParent($seleniumDriver, $time_plus = 0)
     {
         $time_delay = 1;
@@ -49,35 +50,38 @@ class CrawlerFlashScore extends Component
         }
 
         echo "time lick button: ". (microtime(true) - $time_1). "</br>";
-        sleep(2);
-
         sleep(1);
+
+        // sleep(1);
         //click close
-        while(empty($seleniumDriver->findElements(".event__expander--close"))) {
-            $divClose = $seleniumDriver->findElements(".event__expander--close");
-            foreach ($divClose as $key =>  $div) {
-                try {
-                    $div->click();
-                    sleep(0.1);
-                    echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
-                    break;
-                } catch (Exception $e) {
-                    echo $e->getMessage();
-                }
-            }
-        }
-        // foreach ($divClose as $key =>  $div) {
-        //     try {
-        //         $div->click();
-        //         sleep(1);
-        //         echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
-        //     } catch (Exception $e) {
-        //         echo $e->getMessage();
+        $total = 0;
+        // while(!empty($seleniumDriver->findElements(".event__expander--close"))) {
+        //     $divClose = $seleniumDriver->findElements(".event__expander--close");
+        //     foreach ($divClose as $key =>  $div) {
+        //         try {
+        //             $div->click();
+        //             sleep(0.1);
+        //             echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+        //             break;
+        //         } catch (Exception $e) {
+        //             echo $e->getMessage();
+        //         }
         //     }
         // }
+        $divClose = $seleniumDriver->findElements(".event__expander--close");
+        $divClose = array_reverse($divClose);
+      
+        foreach ($divClose as $key =>  $div) {
+            try {
+                $div->click();
+                echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+        }
         echo "time click icon: ". (microtime(true) - $time_1). "</br>";
 
-        sleep(1);
+        sleep(0.1);
         $htmlDiv = "";
         try {
             //  $seleniumDriver->clickButton('.filters__tab > .filters');
@@ -196,11 +200,11 @@ class CrawlerFlashScore extends Component
                     $away = trim($away);
 
                     //loai bo ten nuoc ra khoi ten:
-                    if (strpos('(', $home) && strpos(')', $home)) {
-                        $home = explode('(', $home);
-                        $home = trim($home[0]);
+                    if (strpos($home,'(')) {
+                        $home = explode( '(',$home);
+                        $home = trim($home[0]);          
                     }
-                    if (strpos('(', $away) && strpos(')', $away)) {
+                    if (strpos($away,'(')) {
                         $away = explode('(', $away);
                         $away = trim($away[0]);
                     }
@@ -232,6 +236,10 @@ class CrawlerFlashScore extends Component
     }
     public function saveText($text, $key)
     {
+        $dir_test = __DIR__."/../test";
+        if ( !is_dir( $dir_test ) ) {
+            mkdir( $dir_test );       
+        }
         $fp = fopen(__DIR__ . "/../test/div_$key.html", 'w'); //mở file ở chế độ write-only
         fwrite($fp, $text);
         fclose($fp);
