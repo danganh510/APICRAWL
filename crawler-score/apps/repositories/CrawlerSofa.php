@@ -24,7 +24,7 @@ class CrawlerSofa extends Component
             if (!$time_plus) {
                 $seleniumDriver->clickButton('button[data-tabid="mobileSportListType.true"]');
             } else {
-                $buttonDayTimes = $seleniumDriver->findElements(".react-calendar__month-view__days__day");
+                $buttonDayTimes = $seleniumDriver->findElements(".react-calendar__month-view__days__day > div > span");
                 foreach ($buttonDayTimes as $button) {
                     echo $button->getText()."</br>";
                     if ($button->getText() == 19) {
