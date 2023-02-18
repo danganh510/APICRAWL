@@ -107,7 +107,7 @@ class CrawlerFlashScore extends Component
 
         return ($htmlDiv);
     }
-    public function CrawlFlashScore($parentDiv)
+    public function CrawlMatchScore($parentDiv)
     {
         $time_1 = microtime(true);
 

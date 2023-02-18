@@ -20,10 +20,24 @@ class CrawlerSofa extends Component
         $time_1 = microtime(true);
         $htmlDiv = "";
         try {
-            $seleniumDriver->clickButton('button[data-tabid="mobileSportListType.true"]');
+            //click button live: react-calendar__month-view__days__day
+            if (!$time_plus) {
+                $seleniumDriver->clickButton('button[data-tabid="mobileSportListType.true"]');
+            } else {
+                $buttonDayTimes = $seleniumDriver->findElements(".react-calendar__month-view__days__day");
+                foreach ($buttonDayTimes as $button) {
+                    echo $button->getText()."</br>";
+                    if ($button->getText() == 19) {
+                        $button->click();
+                        echo "clicked</br>";
+                        break;
+                    }
+                }
+
+            }
+            sleep(0.5);
             $parentDiv = $seleniumDriver->findElement('div[aria-readonly="true"] > div  ');
 
-            sleep(0.5);
             //open button show more or scroll bot
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
 
@@ -40,7 +54,7 @@ class CrawlerSofa extends Component
         echo "time get button: " . (microtime(true) - $time_1) . "</br>";
         return ($htmlDiv);
     }
-    public function CrawlFlashScore($parentDiv)
+    public function CrawlMatchScore($parentDiv)
     {
     
         $time_1 = microtime(true);
