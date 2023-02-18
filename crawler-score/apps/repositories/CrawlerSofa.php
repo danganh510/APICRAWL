@@ -141,7 +141,7 @@ class CrawlerSofa extends Component
                  
                     
                     score0:
-                    $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
+                    $home = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '',''], $home);
                     $home = trim($home);
 
                     $away = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $away);
