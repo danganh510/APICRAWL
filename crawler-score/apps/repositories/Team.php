@@ -9,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Team extends Component
 {
-    public static function findByName($name,$name_slug, $type_crawl)
+    public static function findByName($name, $name_slug, $type_crawl)
     {
         switch ($type_crawl) {
             case "flashScore":
@@ -30,19 +30,26 @@ class Team extends Component
                 ]);
         }
     }
-    public static function saveTeam($team_name, $image,$type)
+    public static function saveTeam($team_name, $image, $type)
     {
         $team = new ScTeam();
         $team->setTeamName($team_name);
         $team->setTeamLogo($image);
         $team->setTeamSlug(MyRepo::create_slug($team_name));
-        if($type == MatchCrawl::TYPE_FLASH_SCORE) {
-            $team->setTeamNameFlashscore($team_name);           
+        switch ($type) {
+            case MatchCrawl::TYPE_FLASH_SCORE:
+                $team->setTeamNameFlashscore($team_name);
+                break;
+            case MatchCrawl::TYPE_SOFA:
+                $team->getTeamNameSofa($team_name);
+                break;
+            case MatchCrawl::TYPE_LIVE_SCORES:
+                $team->setTeamNameLivescore($team_name);
+                break;
         }
         $team->setTeamActive("Y");
         $team->save();
         return $team;
-     
     }
     public static function getTeamById($team_id)
     {

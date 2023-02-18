@@ -24,6 +24,7 @@ class CrawlerController extends ControllerBase
 {
 
     public $type_crawl = MatchCrawl::TYPE_FLASH_SCORE;
+    
     public function indexAction()
     {
 
@@ -32,6 +33,7 @@ class CrawlerController extends ControllerBase
         $time_plus = $this->request->get("timePlus");
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
+        $this->type_crawl = MatchCrawl::TYPE_SOFA;
 
         $start_time = microtime(true);
         try {
@@ -54,7 +56,6 @@ class CrawlerController extends ControllerBase
         //start crawler
         try {
             statCrawler:
-            
             $list_match = $crawler->CrawlFlashScore($divParent);
             echo ( microtime(true) - $start_time). "</br>";
             $matchRepo = new MatchRepo();
