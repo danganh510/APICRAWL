@@ -42,6 +42,7 @@ class CrawlerSofa extends Component
     }
     public function CrawlFlashScore($parentDiv)
     {
+    
         $time_1 = microtime(true);
 
         require_once(__DIR__ . "/../library/simple_html_dom.php");
@@ -53,27 +54,28 @@ class CrawlerSofa extends Component
         if (!$parentDiv) {
             return [];
         }
+       
+        $parentDivs = $parentDiv->find("div > ");
 
-        $parentDivs = $parentDiv->find("div");
 
         foreach ($parentDivs as $key => $div) {
-            //   goto test; 
+           // goto test;
             try {
                 //check tournament
-                $divTuornaments = $div->find('a');
-                foreach ($divTuornaments as $link) {
-                    if (strpos($link->href, 'tournament') !== false) {
-                      $hrefTour = $link->href;
-                      $aTuornaments = $link;
-                    }
-                  }
+                $aTuornaments = $div->find('div > div > div a[href*="tournament"]',0);
+                // foreach ($divTuornaments as $link) {
+                //     if (strpos($link->href, 'tournament') !== false) {
+                //         $hrefTour = $link->href;
+                //         $aTuornaments = $link;
+                //     }
+                // }
 
-                if (isset($hrefTour)) {
-             
+                if ($aTuornaments) {
                     //đây là div chứa tournament
-               //     $country_name = $div->find('.event__title--type')[0]->innertext();
+                    //     $country_name = $div->find('.event__title--type')[0]->innertext();
 
                     $name = $aTuornaments->text();
+                    $hrefTour = $aTuornaments->href;
 
                     $arrHref = explode("/", $hrefTour);
                     $country_name = $arrHref[count($arrHref) - 3];
@@ -100,39 +102,45 @@ class CrawlerSofa extends Component
 
                     continue;
                 }
-continue;
+                // echo "123";exit;
+   
                 //match
-                $divMatch = $div->find(".event__participant");
+                
+                $aMatch = $div->find('a[data-id]',0);
 
-                if (!empty($divMatch)) {
-                    $id_insite = $div->getAttribute("id");
-                    $id_insite = explode("_", $id_insite);
-                    $id_insite = $id_insite[count($id_insite) - 1];
-                    $href_detail = "/match/" . $id_insite;
-                    try {
-                        if (count($div->find(".event__stage--block"))) {
-                            $time = $div->find(".event__stage--block")[0]->text();
-                        } else {
-                            $time = $div->find(".event__time")[0]->text();
-                        }
-                    } catch (Exception $e) {
+                if (($aMatch)) {
+                 
+                    $href_detail = $aMatch->href;
+                    $spanTime = $div->find("a[data-id] > div > div > div > div >span > span", 0 );
+                    if (!$spanTime) {
+                        continue;
                     }
+                   
+                    $time = $spanTime->text();
                     $time = str_replace('&nbsp;', "", $time);
                     $time = trim($time);
 
-                    $home = $div->find(".event__participant--home")[0]->text();
-                    $home_image = $div->find(".event__logo--home");
-                    $home_image = isset($home_image[0]) ? $home_image[0]->getAttribute("src") : '';
-                    $home_score = $div->find(".event__score--home");
-                    $home_score = isset($home_score[0]) ? $home_score[0]->innertext() : 0;
 
-                    $away = $div->find(".event__participant--away")[0]->text();
-                    $away_image = $div->find(".event__logo--away");
-                    $away_image = isset($away_image[0]) ? $away_image[0]->getAttribute("src") : '';
+                    $divTeams =  $div->find("a[data-id] > div > div > div > div >div");
+                    if (count($divTeams) <1) {
+                        continue;
+                    }
+                    $home =  $divTeams[0]->text();
+                    $home_image = "";      
+                    $away = $divTeams[1]->text();
+                    $away_image = "";
 
-                    $away_score = $div->find(".event__score--away");
-                    $away_score = isset($away_score[0]) ? $away_score[0]->innertext() : 0;
-
+                    $spanScore =  $div->find("a[data-id] > div > div > div > div >div > div > .currentScore");
+                    if (count($spanScore) < 2) {
+                        $home_score = 0;
+                        $away_score =  0;
+                    } else {
+                        $home_score = $spanScore[0]->text();
+                        $away_score =   $spanScore[1]->text();
+                    }
+                 
+                    
+                    score0:
                     $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
                     $home = trim($home);
 
@@ -168,10 +176,10 @@ continue;
                 continue;
             }
             test:
-            // $text = $div->getAttribute("outerHTML");
-            // $this->saveText($text, $key);
+            $text = $div->innertext();
+            $this->saveText($text, $key);
         }
-        var_dump($list_live_tournaments);exit;
+       
         return $list_live_match;
     }
     public function saveText($text, $key)
