@@ -47,7 +47,11 @@ class MatchRepo extends Component
             $matchSave->setMatchStartDay($day_start);
             $matchSave->setMatchStartMonth($month_start);
             $matchSave->setMatchStartYear($year_start);
-            $matchSave->setMatchStartTime($timeInfo['start_time']);
+            if ($match->getStartTime()) {
+
+                //use crawl api
+                $matchSave->setMatchStartTime($match->getStartTime());
+            }
         }
         $matchSave->setMatchTime($timeInfo['time_live']);
         $matchSave->setMatchStatus($timeInfo['status']);
@@ -58,11 +62,14 @@ class MatchRepo extends Component
         if ($type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
             $matchSave->setMatchLinkDetailFlashscore($match->getHrefDetail());
         }
+        if ($type_crawl == MatchCrawl::TYPE_SOFA || $type_crawl == MatchCrawl::TYPE_API_SOFA) {
+            $matchSave->setMatchLinkDetailSofa($match->getHrefDetail());
+        }
+        
         $matchSave->setMatchOrder(1);
         if ($matchSave->save()) {
             return true;
         }
-
         var_dump($matchSave->getMessages());
         var_dump($match);
         return false;

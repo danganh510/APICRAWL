@@ -7,6 +7,7 @@ use Goutte\Client;
 use GuzzleHttp\Psr7\Request;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
+use Score\Repositories\CrawlerApiSofa;
 use Score\Repositories\CrawlerScore;
 use Score\Repositories\Team;
 
@@ -37,7 +38,7 @@ class CrawlerController extends ControllerBase
         }
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
-
+        $total = 0;
         $start_time = microtime(true);
         try {
             if ($this->type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
@@ -45,8 +46,14 @@ class CrawlerController extends ControllerBase
                 $seleniumDriver = new Selenium($crawler->url_fb);
             } elseif ($this->type_crawl == MatchCrawl::TYPE_SOFA) {
                 //sofa
+                $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
                 $crawler = new CrawlerSofa();
-                $seleniumDriver = new Selenium($crawler->url_sf);
+                $seleniumDriver = new Selenium($crawler->url_sf."/".$day_time);
+            } elseif ($this->type_crawl == MatchCrawl::TYPE_API_SOFA) {
+                $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
+                $crawler = new CrawlerApiSofa($day_time);
+                $list_match = $crawler->CrawlMatchScore();
+                goto listMatch;
             }
 
             //time plus = 1  crawl all to day
@@ -58,12 +65,13 @@ class CrawlerController extends ControllerBase
             $seleniumDriver->quit();
             die();
         }
-        $total = 0;
+    
         //start crawler
         try {
             statCrawler:
             $list_match = $crawler->CrawlMatchScore($divParent);
             echo (microtime(true) - $start_time) . "</br>";
+            listMatch: 
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
                 $home = Team::findByName($match->getHome(), MyRepo::create_slug($match->getHome()), $this->type_crawl);
@@ -107,7 +115,7 @@ class CrawlerController extends ControllerBase
             echo $total;
             echo $e->getMessage();
         }
-        $seleniumDriver->quit();
+       // $seleniumDriver->quit();
         echo (microtime(true) - $start_time) . "</br>";
         end:
         echo "---total: " . $total;

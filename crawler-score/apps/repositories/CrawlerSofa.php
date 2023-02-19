@@ -4,6 +4,7 @@ namespace Score\Repositories;
 
 use DOMDocument;
 use Exception;
+use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Phalcon\Mvc\User\Component;
@@ -23,19 +24,30 @@ class CrawlerSofa extends Component
             //click button live: react-calendar__month-view__days__day
             if (!$time_plus) {
                 $seleniumDriver->clickButton('button[data-tabid="mobileSportListType.true"]');
-            } else {
-                $buttonDayTimes = $seleniumDriver->findElements(".react-calendar__month-view__days__day > div > span");
-                foreach ($buttonDayTimes as $button) {
-                    echo $button->getText()."</br>";
-                    if ($button->getText() == 19) {
-                        $button->click();
-                        echo "clicked</br>";
-                        break;
-                    }
-                }
-
+                sleep(0.5);
             }
-            sleep(0.5);
+            sleep(1);
+
+            //scroll to bottom
+            //  $page_height = $seleniumDriver->executeScript("return document.body.scrollHeight;");
+            try {
+                $seleniumDriver->executeScript("window.scrollTo(0, 1200);");
+                sleep(1);
+                $seleniumDriver->executeScript("window.scrollTo(0, 1200);");
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+            sleep(1);
+            //showmore:
+            $buttons = $seleniumDriver->findElements("button");
+            foreach ($buttons as $button) {
+                if ($button->getText() == "SHOW ALL MATCHES") {
+                    $button->click();
+                    echo "clicked2</br>";
+                    break;
+                }
+            }
+            sleep(1);
             $parentDiv = $seleniumDriver->findElement('div[aria-readonly="true"] > div  ');
 
             //open button show more or scroll bot
@@ -56,7 +68,7 @@ class CrawlerSofa extends Component
     }
     public function CrawlMatchScore($parentDiv)
     {
-    
+
         $time_1 = microtime(true);
 
         require_once(__DIR__ . "/../library/simple_html_dom.php");
@@ -68,15 +80,15 @@ class CrawlerSofa extends Component
         if (!$parentDiv) {
             return [];
         }
-       
+
         $parentDivs = $parentDiv->find("div > ");
 
 
         foreach ($parentDivs as $key => $div) {
-           // goto test;
+            // goto test;
             try {
                 //check tournament
-                $aTuornaments = $div->find('div > div > div a[href*="tournament"]',0);
+                $aTuornaments = $div->find('div > div > div a[href*="tournament"]', 0);
                 // foreach ($divTuornaments as $link) {
                 //     if (strpos($link->href, 'tournament') !== false) {
                 //         $hrefTour = $link->href;
@@ -117,30 +129,30 @@ class CrawlerSofa extends Component
                     continue;
                 }
                 // echo "123";exit;
-   
+
                 //match
-                
-                $aMatch = $div->find('a[data-id]',0);
+
+                $aMatch = $div->find('a[data-id]', 0);
 
                 if (($aMatch)) {
-                 
+
                     $href_detail = $aMatch->href;
-                    $spanTime = $div->find("a[data-id] > div > div > div > div >span > span", 0 );
+                    $spanTime = $div->find("a[data-id] > div > div > div > div >span > span", 0);
                     if (!$spanTime) {
                         continue;
                     }
-                   
+
                     $time = $spanTime->text();
                     $time = str_replace('&nbsp;', "", $time);
                     $time = trim($time);
 
 
                     $divTeams =  $div->find("a[data-id] > div > div > div > div >div");
-                    if (count($divTeams) <1) {
+                    if (count($divTeams) < 1) {
                         continue;
                     }
                     $home =  $divTeams[0]->text();
-                    $home_image = "";      
+                    $home_image = "";
                     $away = $divTeams[1]->text();
                     $away_image = "";
 
@@ -152,10 +164,10 @@ class CrawlerSofa extends Component
                         $home_score = $spanScore[0]->text();
                         $away_score =   $spanScore[1]->text();
                     }
-                 
-                    
+
+
                     score0:
-                    $home = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '',''], $home);
+                    $home = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $home);
                     $home = trim($home);
 
                     $away = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $away);
@@ -193,7 +205,7 @@ class CrawlerSofa extends Component
             $text = $div->innertext();
             $this->saveText($text, $key);
         }
-       
+
         return $list_live_match;
     }
     public function saveText($text, $key)

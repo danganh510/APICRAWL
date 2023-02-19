@@ -39,6 +39,9 @@ class Selenium extends Component
         //wait javascript load
         sleep(3);
     }
+    public function getPageSource() {
+        return $this->driver->getPageSource();
+    }
     public function clickButton($domButton)
     {
         //$doomButton = 'button[data-tabid="mobileSportListType.true"]';
@@ -57,6 +60,9 @@ class Selenium extends Component
         //$domElement = 'div[aria-readonly="true"] > div >div ';
         $elements = $this->driver->findElements(WebDriverBy::cssSelector($domElement));
         return $elements;
+    }
+    public function executeScript($script) {
+        return $this->driver->executeScript($script);
     }
     public function quit()
     {

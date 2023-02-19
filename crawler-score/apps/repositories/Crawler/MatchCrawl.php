@@ -7,12 +7,15 @@ class MatchCrawl extends Component
 {
     const TYPE_FLASH_SCORE = "flashScore";
     const TYPE_SOFA = "sofa";
+    const TYPE_API_SOFA = "apisofa";
     const TYPE_LIVE_SCORES = "liveScores";
 
     const TYPE_default = "default";
 
     
     private $time;
+    private $start_time;
+
     private $home;
     private $home_score;
     private $home_img;
@@ -23,6 +26,9 @@ class MatchCrawl extends Component
     private $tournament;
     public function getTime() {
         return $this->time;
+    }
+    public function getStartTime() {
+        return $this->start_time;
     }
     public function getHome() {
         return $this->home;
@@ -51,6 +57,10 @@ class MatchCrawl extends Component
     public function setTime($time) {
         $this->time = $time;
         return $this->time;
+    }
+    public function setStartTime($start_time) {
+        $this->start_time = $start_time;
+        return $this->start_time;
     }
     public function setHome($home) {
         $this->home = $home;

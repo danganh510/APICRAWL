@@ -30,7 +30,7 @@ class My extends Phalcon\Mvc\User\Component
     }
     function formatDateYMD($time)
     {
-        return strftime('%Y-%m-%d', $this->localTime($time));
+        return strftime('%Y-%m-%d', $time);
     }
     function formatDateTimeSendEmail($time)
     {

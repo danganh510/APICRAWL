@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Request;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 use Score\Repositories\CrawlerScore;
+use Score\Repositories\CrawlerSofaDetail;
 use Score\Repositories\Team;
 
 use Score\Models\ScMatch;
@@ -35,23 +36,23 @@ class CrawlerdetailController extends ControllerBase
 
         $start_time = microtime(true);
         try {
-            $crawler = new CrawlerFlashScore();
-            $seleniumDriver = new Selenium($crawler->url_fb);
+            $url = "https://www.sofascore.com/bayern-munchen-paris-saint-germain/UHsxdb";
+
             //time plus = 1  crawl all to day
-            $divParent = $crawler->getDivParent($seleniumDriver,$time_plus);
-            $seleniumDriver->quit();
+            $crawler = new CrawlerSofaDetail();
+            $crawler->CrawlDetailScore($url);
+
             echo ( microtime(true) - $start_time). "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
-            $seleniumDriver->quit();
             die();
         }
         $total = 0;
         //start crawler
         try {
             statCrawler:
-            
-            $list_match = $crawler->CrawlFlashScore($divParent);
+            echo "123";exit;
+            $list_match = [];
             echo ( microtime(true) - $start_time). "</br>";
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
@@ -96,7 +97,6 @@ class CrawlerdetailController extends ControllerBase
             echo $total;
             echo $e->getMessage();
         }
-        $seleniumDriver->quit();
         echo ( microtime(true) - $start_time). "</br>";
         end:
         echo "---total: ". $total;

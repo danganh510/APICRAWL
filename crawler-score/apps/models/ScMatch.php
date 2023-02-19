@@ -21,6 +21,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_start_year;
     protected $match_order;
     protected $match_link_detail_flashscore;
+    protected $match_link_detail_sofa;
 
 
     /**
@@ -289,6 +290,22 @@ class ScMatch extends \Phalcon\Mvc\Model
     public function setMatchLinkDetailFlashscore($match_link_detail_flashscore)
     {
         $this->match_link_detail_flashscore = $match_link_detail_flashscore;
+    }
+   /**
+     * @return mixed
+     */
+    public function getMatchLinkDetailSofa()
+    {
+        return $this->match_link_detail_sofa;
+    }
+
+
+    /**
+     * @param mixed $match_link_detail_sofa
+     */
+    public function setMatchLinkDetailSofa($match_link_detail_sofa)
+    {
+        $this->match_link_detail_sofa = $match_link_detail_sofa;
     }
 
     /**
