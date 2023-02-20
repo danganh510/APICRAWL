@@ -32,6 +32,7 @@ class CrawlerController extends ControllerBase
         ini_set('max_execution_time', 20);
 
         $time_plus = $this->request->get("timePlus");
+        $is_live =  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
         if (!$this->type_crawl) {
             $this->type_crawl = MatchCrawl::TYPE_SOFA;
@@ -50,7 +51,12 @@ class CrawlerController extends ControllerBase
                 $crawler = new CrawlerSofa();
                 $seleniumDriver = new Selenium($crawler->url_sf."/".$day_time);
             } elseif ($this->type_crawl == MatchCrawl::TYPE_API_SOFA) {
-                $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
+                if ($is_live) {
+                    $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
+
+                } else {
+                    $day_time = "live";
+                }
                 $crawler = new CrawlerApiSofa($day_time);
                 $list_match = $crawler->CrawlMatchScore();
                 goto listMatch;
