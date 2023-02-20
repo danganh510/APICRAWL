@@ -17,7 +17,11 @@ class CrawlerApiSofa extends Component
     public $data;
     public function __construct($dateTime)
     {
-        $this->url_sf = $this->url_sf . "/" . $dateTime;
+        if ($dateTime == "live") {
+            $this->url_sf = "https://api.sofascore.com/api/v1/sport/football/events/live";
+        } else {
+            $this->url_sf = $this->url_sf . "/" . $dateTime;
+        }
         $this->data = json_decode(MyRepo::getApiByPassCloudFalre($this->url_sf));
     }
 
@@ -26,6 +30,7 @@ class CrawlerApiSofa extends Component
 
         $arrTourExits = [];
         $list_live_tournaments = [];
+      
         foreach ($this->data->events as $key => $div) {
 
             // goto test;
@@ -51,7 +56,6 @@ class CrawlerApiSofa extends Component
 
                     $list_live_tournaments[] = $tournamentModel;
 
-                    continue;
                 }
                 // echo "123";exit;
 

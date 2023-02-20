@@ -41,7 +41,8 @@ class Team extends Component
                 $team->setTeamNameFlashscore($team_name);
                 break;
             case MatchCrawl::TYPE_SOFA:
-                $team->getTeamNameSofa($team_name);
+            case MatchCrawl::TYPE_API_SOFA:
+                $team->setTeamNameSofa($team_name);
                 break;
             case MatchCrawl::TYPE_LIVE_SCORES:
                 $team->setTeamNameLivescore($team_name);
