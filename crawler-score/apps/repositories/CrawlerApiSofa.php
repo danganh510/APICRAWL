@@ -18,7 +18,7 @@ class CrawlerApiSofa extends Component
     public function __construct($dateTime)
     {
         $this->url_sf = $this->url_sf . "/" . $dateTime;
-        $this->data = json_decode(MyRepo::getHtmlByPassCloudFalre($this->url_sf));
+        $this->data = json_decode(MyRepo::getApiByPassCloudFalre($this->url_sf));
     }
 
     public function CrawlMatchScore()

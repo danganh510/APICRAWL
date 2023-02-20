@@ -69,6 +69,40 @@ class MyRepo extends Component
         fwrite($fp, $text);
         fclose($fp);
     }
+    public static function getApiByPassCloudFalre($url)
+    {
+        // init curl object        
+        $ch = curl_init();
+
+        // I just copied and pasted the headers from the original request
+        // then removed the cookies
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        
+        curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate');
+        
+        $headers = array();
+        $headers[] = 'Sec-Ch-Ua: ^^Not_A';
+        $headers[] = 'Referer: https://www.sofascore.com/';
+        $headers[] = 'Sec-Ch-Ua-Mobile: ?0';
+        $headers[] = 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36';
+        $headers[] = 'Sec-Ch-Ua-Platform: ^^Windows^^\"\"';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        // also get the error and response code
+        // $errors = curl_error($ch);
+        // $response = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        // dump the results
+        return $result;
+    }
     public static function getHtmlByPassCloudFalre($url)
     {
         // init curl object        
