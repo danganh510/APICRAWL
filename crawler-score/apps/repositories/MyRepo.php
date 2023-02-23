@@ -61,7 +61,7 @@ class MyRepo extends Component
     }
     public static function saveText($text, $key)
     {
-        $dir_test = __DIR__ . "/../test";
+        $dir_test = __DIR__ . "/../../test";
         if (!is_dir($dir_test)) {
             mkdir($dir_test);
         }

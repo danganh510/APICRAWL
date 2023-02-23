@@ -22,6 +22,8 @@ class CrawlerApiSofa extends Component
         } else {
             $this->url_sf = $this->url_sf . "/" . $dateTime;
         }
+        MyRepo::saveText(MyRepo::getApiByPassCloudFalre("https://www.sofascore.com/football/2023-02-21"),0);exit;
+
         $this->data = json_decode(MyRepo::getApiByPassCloudFalre($this->url_sf));
     }
 

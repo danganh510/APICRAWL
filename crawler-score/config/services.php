@@ -195,6 +195,11 @@ $di['router'] = function () {
         "controller" => "crawlerdetail",
         "action" => "index"
     ));
+    $router->add("/crawler-detail-live", array(
+        "module" => "backend",
+        "controller" => "crawlerdetaillive",
+        "action" => "index"
+    ));
     $router->add("/logout", array(
         "module" => "backend",
         "controller" => "login",
