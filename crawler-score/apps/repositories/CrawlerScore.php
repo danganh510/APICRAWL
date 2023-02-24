@@ -147,7 +147,7 @@ class CrawlerScore extends Component
         );
         return $tracker;
     }
-    public static function crawlDetailStarts($url)
+    public function crawlDetailStarts($url)
     {
         $client = new Client();
         $crawler = $client->request('GET', $url);
