@@ -20,6 +20,9 @@ class CrawlerSofa extends Component
         $time_delay = 1;
         $time_1 = microtime(true);
         $htmlDiv = "";
+        echo $seleniumDriver->getPageSource();
+        $seleniumDriver->quit();
+        exit;
         try {
             //click button live: react-calendar__month-view__days__day
             if (!$time_plus) {

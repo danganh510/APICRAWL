@@ -52,7 +52,7 @@ class MatchController extends ControllerBase
                     'id' => $home->getTeamId(),
                     'name' => $home->getTeamName(),
                     'slug' => $this->create_slug($home->getTeamName()),
-                    'svg' => "svg",
+                    'svg' => $home->getTeamLogo(),
                     'score' => [
                         'score' => $match['match_home_score'],
                         'time' => [$match['match_home_score']]
@@ -63,7 +63,7 @@ class MatchController extends ControllerBase
                     'name' => $away->getTeamName(),
                     'slug' => $this->create_slug($away->getTeamName(),
                     ),
-                    'svg' => "svg",
+                    'svg' => $away->getTeamLogo(),
                     'score' => [
                         'score' => $match['match_away_score'],
                         'time' => [$match['match_home_score']]

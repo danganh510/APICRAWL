@@ -17,14 +17,15 @@ class CrawlerSofaDetail extends Component
     {
         require_once(__DIR__ . "/../library/simple_html_dom.php");
         $html =  MyRepo::getHtmlByPassCloudFalre($url);
+        $this->saveText($html,2);
         $startData = strpos($html,'<script id="__NEXT_DATA__" type="application/json">');
         $startData = $startData + strlen('<script id="__NEXT_DATA__" type="application/json">');
         $endData = strpos($html,'</script>',$startData);
         $data_remove = substr($html,$endData);
         $data = substr($html,$startData);
         $data = str_replace($data_remove,"",$data);
-        
-        
+        $data = json_decode($data);
+        var_dump($data->props->footerEvents);exit;
     }
     public function getH2H() {
 
