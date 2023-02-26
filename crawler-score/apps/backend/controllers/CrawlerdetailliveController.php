@@ -3,27 +3,16 @@
 namespace Score\Backend\Controllers;
 
 use Exception;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\PromiseInterface;
 
-use GuzzleHttp\Psr7\Request;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-
-use Psr\Http\Message\ResponseInterface;
 use Score\Repositories\CrawlerScore;
-use Score\Repositories\CrawlerSofaDetail;
-use Score\Repositories\Team;
-
-use Score\Models\ScMatch;
-use Score\Repositories\CrawlerFlashScore;
-use Score\Repositories\CrawlerSofa;
 use Score\Repositories\MatchCrawl;
-use Score\Repositories\MatchRepo;
-use Score\Repositories\MyRepo;
-use Score\Repositories\Selenium;
-use Score\Repositories\Tournament;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
+use GuzzleHttp\Promise\Utils;
 
 
+use Score\Models\ScMatchInfo;
+use Score\Repositories\CrawlerDetailAsyn;
 
 
 class CrawlerdetailliveController extends ControllerBase
@@ -41,20 +30,66 @@ class CrawlerdetailliveController extends ControllerBase
             "https://www.livescores.com/football/copa-libertadores/qualification/boston-river-vs-ca-huracan/866456/?tz=7",
         ];
         //tab: info,tracker,statistics
-        $client = new Client();
         $promises = [];
         foreach ($userUrls as $key => $url) {
             //key sau được thay bằng match_id
-            $crawler = new CrawlerScore();
-            $promises[$key."_info"] = $crawler->crawlDetailInfo($url. "&tab=info");
-            $promises[$key."_tracker"] = $crawler->crawlDetailTracker($url. "&tab=tracker");
-            $promises[$key."_statistics"] = $crawler->crawlDetailStarts($url. "&tab=statistics");
+            $promisesInfo = new Promise(function (PromiseInterface  $resolve) use ($url) {
+                $crawler = new CrawlerScore();
+                $result = $crawler->crawlDetailInfo($url . "&tab=info");
+                $resolve($result);
+            });
+            $promisesTracker = new Promise(function (PromiseInterface  $resolve) use ($url) {
+                $crawler = new CrawlerScore();
+                $result = $crawler->crawlDetailTracker($url . "&tab=tracker");
+                $resolve($result);
+            });
+            $promisesStatistics = new Promise(function (PromiseInterface  $resolve) use ($url) {
+                $crawler = new CrawlerScore();
+                $result = $crawler->crawlDetailStarts($url . "&tab=statistics");
+                $resolve($result);
+            });
+            $promises[$key . "_info"] = $promisesInfo;
+            $promises[$key . "_tracker"] = $promisesTracker;
+            $promises[$key . "_statistics"] = $promisesStatistics;
         }
 
-        $data = [];
-        $results = Promise\Utils::unwrap($promises);
-        foreach ($results as $key => $data) {
-            var_dump($data);exit;
+        $dataResult = [];
+        //Promise\Utils::all()
+        $allPromises =  Promise\Utils::all($promises);
+
+
+        try {
+            $results = $allPromises->wait();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
         }
+var_dump($results);exit;
+        foreach ($results as $key => $data) {
+            $type = explode("_", $key)[1];
+            $id = explode("_", $key)[0];
+
+            switch ($type) {
+                case "info":
+                    $dataResult[$id]['info'] = json_encode($data);
+                    break;
+                case "tracker":
+                    $dataResult[$id]['tracker'] = json_encode($data);
+                    break;
+                case "statistics":
+                    $dataResult[$id]['statistics'] = json_encode($data);
+                    break;
+            }
+        }
+        foreach ($dataResult as $id =>  $info) {
+            $infoModel = new ScMatchInfo();
+            $infoModel->setInfoMatchId($id);
+            $infoModel->setInfoTime($info['info']);
+            $infoModel->setInfoStats($info['statistics']);
+            $infoModel->setInfoSummary($info['tracker']);
+            $infoModel->save();
+        }
+        var_dump(microtime(true) - $start);
+        exit;
     }
 }

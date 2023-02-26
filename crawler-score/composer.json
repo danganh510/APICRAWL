@@ -3,6 +3,7 @@
         "fabpot/goutte": "^4.0",
         "php-webdriver/webdriver": "^1.14",
         "sunra/php-simple-html-dom-parser": "^1.5",
-        "guzzlehttp/guzzle": "^7.5"
+        "guzzlehttp/guzzle": "^7.5",
+        "amphp/amp": "^2.6"
     }
 }

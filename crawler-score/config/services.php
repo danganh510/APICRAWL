@@ -819,6 +819,11 @@ $di['router'] = function () {
         "action" => "list"
     ));
 
+    $router->add('/get-match', array(
+        "module" => "api",
+        "controller" => 'match',
+        "action" => "detail"
+    ));
 
     $router->handle();
     return $router;

@@ -7,6 +7,7 @@ use Goutte\Client;
 use Score\Models\ForexcecConfig;
 use Phalcon\Mvc\User\Component;
 use Symfony\Component\DomCrawler\Crawler;
+use GuzzleHttp\Promise;
 
 class CrawlerScore extends Component
 {
@@ -121,7 +122,7 @@ class CrawlerScore extends Component
             }
 
         );
-        return $info;
+        return  Promise\all($info);
     }
     public static function crawlDetailTracker($url)
     {
@@ -145,7 +146,7 @@ class CrawlerScore extends Component
             }
 
         );
-        return $tracker;
+        return  Promise\all($tracker);
     }
     public function crawlDetailStarts($url)
     {
@@ -170,6 +171,6 @@ class CrawlerScore extends Component
             }
 
         );
-        return $starts;
+        return  Promise\all($starts);
     }
 }

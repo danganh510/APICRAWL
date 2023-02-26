@@ -3,9 +3,11 @@
 namespace Score\Repositories;
 
 use Goutte\Client;
+use GuzzleHttp\Promise\Promise;
 use Score\Models\ForexcecConfig;
 use Phalcon\Mvc\User\Component;
 use Symfony\Component\DomCrawler\Crawler;
+
 
 class CrawlerScore extends Component
 {

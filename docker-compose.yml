@@ -21,9 +21,9 @@ services:
       MYSQL_DATABASE: 123tyso
       MYSQL_USER: user
       MYSQL_PASSWORD: user
-  php:
+  api:
     image: sethsandaru/php73-phalcon-laravel-fpm:1.0.0
-    container_name: crawler
+    container_name: api
     ports:
       - 81:80
     environment:
