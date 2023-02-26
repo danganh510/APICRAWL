@@ -9,26 +9,28 @@ use Phalcon\Mvc\User\Component;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Promise;
 
-class CrawlerScore extends Component
+class CrawlerScore extends CrawlerList
 {
     public $url_fb = "https://www.livescores.com";
 
-    public function CrawlLivescores($start_time_cron, $type)
+    public function __construct($url_crawl, $day_time, $isLive)
     {
-        if ($type == "live") {
+        $this->url_crawl = $url_crawl;
+        $this->day_time = $day_time;
+        $this->isLive = $isLive;
+    }
+    public function crawlList()
+    {
+        if ($this->isLive) {
             $param = "/football/live/?tz=7";
         } else {
-            $param = "/football/{$this->my->formatDateYMD($start_time_cron)}/?tz=7";
+            $param = "/football/{$this->day_time}/?tz=7";
         }
-        $url = $this->url_fb . $param;
+        $url = $this->url_crawl . $param;
         $client = new Client();
         $crawler = $client->request('GET', $url);
 
         $list_live_match = [];
-        $list_live_tournaments = [];
-        $index = 0;
-        $tournaments = [];
-
         $crawler->filter('div[data-testid*="match_rows-root"] > div')->each(
 
             function (Crawler $item) use (&$list_live_tournaments, &$list_live_match) {
@@ -36,44 +38,58 @@ class CrawlerScore extends Component
 
                 //bb là class lấy giải đấu, qb là class lấy trận đấu
                 if ($item->filter("div[data-testid^='category_header-wrapper'] > span")->count() > 0) {
-
-                    //   $title = $item->filter(".Be > span")->text();
-                    $country = $item->filter("div[data-testid^='category_header-wrapper'] > span")->eq(0)->filter("a")->eq(0)->text();
-                    $tournament = $item->filter("div[data-testid^='category_header-wrapper'] > span")->eq(0)->filter("a")->eq(1)->text();
-
-                    $list_live_tournaments[] = [
-                        'country' => mb_ereg_replace('[^\x20-\x7E]+', '', $country),
-                        'tournament' => mb_ereg_replace('[^\x20-\x7E]+', '', $tournament),
-                        'index' => count($list_live_tournaments)
-                    ];
+                    $div = $item->filter("div[data-testid^='category_header-wrapper'] > span");
+                    $this->list_live_tournaments[] = $this->getTournament($div);
                 }
-
                 if ($item->filter("div[data-testid^='football_match_row']")->count() > 0) {
-                    $href_detail = $item->filter("div[data-testid^='football_match_row'] > a")->attr('href');
-
-                    $time = $item->filter("div[data-testid^='football_match_row'] > a > div > span")->eq(0)->filter("span")->text();
-
-                    $home = $item->filter("div[data-testid^='football_match_row'] > a > div > span")->eq(1)->filter("span")->eq(1)->filter("span")->text();
-                    $home_score = $item->filter("div[data-testid^='football_match_row'] > a > div > span")->eq(1)->filter("span")->eq(4)->filter("span")->text();
-                    $away = $item->filter("div[data-testid^='football_match_row'] > a > div > span")->eq(1)->filter("span")->eq(8)->filter("span")->text();
-                    $away_score = $item->filter("div[data-testid^='football_match_row'] > a > div > span")->eq(1)->filter("span")->eq(6)->filter("span")->text();
-
-                    $list_live_match[] = [
-                        'time' => trim($time),
-                        'home' => trim($home),
-                        'home_score' => trim($home_score),
-                        'away' => trim($away),
-                        'away_score' => trim($away_score),
-                        'href_detail' => trim($href_detail),
-                        'tournament' => $list_live_tournaments[count($list_live_tournaments) - 1]
-                    ];
+                    $divMatch = $item->filter("div[data-testid^='football_match_row']");
+                    $list_live_match[] = $this->getMatch($divMatch);
                 }
                 end:
             }
 
         );
-
         return $list_live_match;
+    }
+    public function getTournament($div)
+    {
+        $country = $div->eq(0)->filter("a")->eq(0)->text();
+        $tournament = $div->eq(0)->filter("a")->eq(1)->text();
+        $country_name = mb_ereg_replace('[^\x20-\x7E]+', '', $country);
+        $tournament = $this->explodeNameTour($tournament);
+        $this->round = $tournament['group'];
+
+        $tournamentModel = new MatchTournament();
+        $tournamentModel->setCountryName($country_name);
+        $tournamentModel->setTournamentName($tournament['name']);
+        $tournamentModel->setTournamentGroup($tournament['group']);
+        $tournamentModel->setId(count($this->list_live_tournaments) + 1);
+        $tournamentModel->setCountryImage("");
+        return $tournamentModel;
+    }
+    public function explodeNameTour($tournament)
+    {
+        $tournament = mb_ereg_replace('[^\x20-\x7E]+', '', $tournament);
+        $name = explode(":", $tournament);
+        return [
+            'name' => trim($name[0]),
+            'group' => isset($name[count($name) - 1]) ? trim($name[count($name) - 1]) : ""
+        ];
+    }
+    public function getMatch($divMatch)
+    {
+        $dataMatch = [];
+        $dataMatch['href_detail'] = $divMatch->filter("a")->attr('href');
+
+        $divMatchInfo = $divMatch->filter("a > div > span");
+        $dataMatch['time'] = $divMatchInfo->eq(0)->filter("span > span")->eq(0)->text();
+
+        $dataMatch['home'] = $divMatchInfo->eq(1)->filter("span")->eq(1)->filter("span")->text();
+        $dataMatch['home_score'] = $divMatchInfo->eq(1)->filter("span")->eq(4)->filter("span")->text();
+        $dataMatch['away'] = $divMatchInfo->eq(1)->filter("span")->eq(8)->filter("span")->text();
+        $dataMatch['away_score'] = $divMatchInfo->eq(1)->filter("span")->eq(6)->filter("span")->text();
+        $liveMatch = $this->saveMatch($dataMatch);
+        return $liveMatch;
     }
     public static function crawlDetailInfo($url)
     {
@@ -90,7 +106,7 @@ class CrawlerScore extends Component
                     $temp = [
                         'time' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(0)->text(),
                         'homeText' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(1)->text(),
-                     ];
+                    ];
                     if ($item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)) {
                         if (empty($temp['homeText'])) {
                             $temp['homeEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");

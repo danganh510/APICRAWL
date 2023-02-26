@@ -13,6 +13,7 @@ use Score\Repositories\Team;
 
 use Score\Models\ScMatch;
 use Score\Repositories\CrawlerFlashScore;
+use Score\Repositories\CrawlerList;
 use Score\Repositories\CrawlerSofa;
 use Score\Repositories\MatchCrawl;
 use Score\Repositories\MatchRepo;
@@ -29,11 +30,12 @@ class CrawlerController extends ControllerBase
     public function indexAction()
     {
 
-      //  ini_set('max_execution_time', 20);
+        //  ini_set('max_execution_time', 20);
 
         $time_plus = $this->request->get("timePlus");
         $is_live =  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
+
         if (!$this->type_crawl) {
             $this->type_crawl = MatchCrawl::TYPE_SOFA;
         }
@@ -42,46 +44,25 @@ class CrawlerController extends ControllerBase
         $total = 0;
         $start_time = microtime(true);
         try {
-            if ($this->type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
-                $crawler = new CrawlerFlashScore();
-                $seleniumDriver = new Selenium($crawler->url_fb);
-            } elseif ($this->type_crawl == MatchCrawl::TYPE_SOFA) {
-                //sofa
-                $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
-                $crawler = new CrawlerSofa();
-                $seleniumDriver = new Selenium($crawler->url_sf."/".$day_time);
-            } elseif ($this->type_crawl == MatchCrawl::TYPE_API_SOFA) {
-                if ($is_live) {
-                    $day_time = "live";
-                } else {
-                   
-                    $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
-                }
-                $crawler = new CrawlerApiSofa($day_time);
-                $list_match = $crawler->CrawlMatchScore();
-                goto listMatch;
-            } elseif ($this->type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
-                $crawler = new CrawlerScore();
-                $list_match = $crawler->CrawlLivescores($start_time_cron, $is_live);
-                goto listMatch;
-            } 
+            $crawler = new CrawlerList($this->type_crawl, $time_plus, $is_live);
+            $list_match = $crawler->getInstance();
 
             //time plus = 1  crawl all to day
-            $divParent = $crawler->getDivParent($seleniumDriver, $time_plus);
-            $seleniumDriver->quit();
+            // $divParent = $crawler->getDivParent($seleniumDriver, $time_plus);
+            // $seleniumDriver->quit();
             echo (microtime(true) - $start_time) . "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
-            $seleniumDriver->quit();
+            // $seleniumDriver->quit();
             die();
         }
-    
+
         //start crawler
         try {
             statCrawler:
-            $list_match = $crawler->CrawlMatchScore($divParent);
+            // $list_match = $crawler->CrawlMatchScore($divParent);
             echo (microtime(true) - $start_time) . "</br>";
-            listMatch: 
+            listMatch:
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
                 $home = Team::findByName($match->getHome(), MyRepo::create_slug($match->getHome()), $this->type_crawl);
@@ -125,7 +106,7 @@ class CrawlerController extends ControllerBase
             echo $total;
             echo $e->getMessage();
         }
-       // $seleniumDriver->quit();
+        // $seleniumDriver->quit();
         echo (microtime(true) - $start_time) . "</br>";
         end:
         echo "---total: " . $total;

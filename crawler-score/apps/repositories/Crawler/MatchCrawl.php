@@ -24,6 +24,7 @@ class MatchCrawl extends Component
     private $away_img;
     private $href_detail;
     private $tournament;
+    private $round; //round or group
     public function getTime() {
         return $this->time;
     }
@@ -93,6 +94,13 @@ class MatchCrawl extends Component
     public function setTournament($tournament) {
         $this->tournament = $tournament;
         return $this->tournament;
+    }
+    public function getRound() {
+        return $this->round;
+    }
+    public function setRound($round) {
+        $this->round = $round;
+        return $this->round;
     }
     
 }

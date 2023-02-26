@@ -14,7 +14,7 @@ class Team extends Component
         switch ($type_crawl) {
             case "flashScore":
                 return ScTeam::findFirst([
-                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug:',
+                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:',
                     'bind' => [
                         'name' => $name,
                         'slug' => $name_slug
@@ -22,7 +22,7 @@ class Team extends Component
                 ]);
             default:
                 return ScTeam::findFirst([
-                    'team_name = :name:  OR team_slug= :slug:',
+                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:',
                     'bind' => [
                         'name' => $name,
                         'slug' => $name_slug

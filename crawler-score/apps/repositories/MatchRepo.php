@@ -54,6 +54,7 @@ class MatchRepo extends Component
         }
         $matchSave->setMatchTime($timeInfo['time_live']);
         $matchSave->setMatchStatus($timeInfo['status']);
+        $matchSave->setMatchRound($match->getRound());
    
         $matchSave->setMatchHomeScore(is_numeric($match->getHomeScore()) ? $match->getHomeScore() : 0);
         $matchSave->setMatchAwayScore(is_numeric($match->getAwayScore()) ? $match->getAwayScore() : 0);

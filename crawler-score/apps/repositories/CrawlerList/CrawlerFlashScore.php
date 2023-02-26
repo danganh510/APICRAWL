@@ -10,11 +10,16 @@ use Phalcon\Mvc\User\Component;
 
 use Symfony\Component\DomCrawler\Crawler;
 
-class CrawlerFlashScore extends Component
+class CrawlerFlashScore extends CrawlerList
 {
     public $url_fb = "https://www.flashscore.com";
     public $url_sf = "https://www.sofascore.com/football";
-    public function getDivParent($seleniumDriver, $time_plus = 0)
+    public function __construct($seleniumDriver, $time_plus)
+    {
+        $this->seleniumDriver = $seleniumDriver;
+        $this->time_plus = $time_plus;
+    }
+    public function getDivParent()
     {
         $time_delay = 1;
         $time_1 = microtime(true);
@@ -23,22 +28,23 @@ class CrawlerFlashScore extends Component
             $time_delay = 2;
         }
 
-        if ($time_plus) {
+        if ($this->time_plus) {
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
             //click button time cho lần đầu
-            $seleniumDriver->clickButton("#calendarMenu");
+            $this->seleniumDriver->clickButton("#calendarMenu");
             sleep(2);
-            $divTimes = $seleniumDriver->findElements(".calendar__day");
+            $divTimes = $this->seleniumDriver->findElements(".calendar__day");
             foreach ($divTimes as $div) {
                 $text = $div->getText();
-                if (explode(' ', $text)[0] == strftime('%d/%m', time() + $time_plus * 24 * 60 * 60)) {
+                if (explode(' ', $text)[0] == strftime('%d/%m', time() + $this->time_plus * 24 * 60 * 60)) {
                     $div->click();
                     break;
                 }
             }
+            sleep(2.5);
         } else {
             //  click button LIVE cho lần đầu
-            $divFilters = $seleniumDriver->findElements(".filters__text--short");
+            $divFilters = $this->seleniumDriver->findElements(".filters__text--short");
             foreach ($divFilters as $div) {
                 echo "time find div: ". (microtime(true) - $time_1). "</br>";
 
@@ -47,15 +53,16 @@ class CrawlerFlashScore extends Component
                     break;
                 }
             }
+            sleep(1);
         }
 
         echo "time lick button: ". (microtime(true) - $time_1). "</br>";
-        sleep(2);
+      
 
         // sleep(1);
         //click close
         $total = 0;
-        // while(!empty($seleniumDriver->findElements(".event__expander--close"))) {
+        // while(!empty($this->seleniumDriver->findElements(".event__expander--close"))) {
         //     $divClose = $seleniumDriver->findElements(".event__expander--close");
         //     foreach ($divClose as $key =>  $div) {
         //         try {
@@ -68,7 +75,7 @@ class CrawlerFlashScore extends Component
         //         }
         //     }
         // }
-        $divClose = $seleniumDriver->findElements(".event__expander--close");
+        $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         $divClose = array_reverse($divClose);
       
         foreach ($divClose as $key =>  $div) {
@@ -84,9 +91,9 @@ class CrawlerFlashScore extends Component
         sleep(0.1);
         $htmlDiv = "";
         try {
-            //  $seleniumDriver->clickButton('.filters__tab > .filters');
+            //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
             echo "time before find parent div: ". (microtime(true) - $time_1). "</br>";
-            $parentDiv = $seleniumDriver->findElement('div[id="live-table"] > section > div > div');
+            $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
             
             echo "time after find parent div: ". (microtime(true) - $time_1). "</br>";
 
@@ -102,13 +109,14 @@ class CrawlerFlashScore extends Component
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-        $seleniumDriver->quit();
+        $this->seleniumDriver->quit();
         echo "time get button: ". (microtime(true) - $time_1). "</br>";
 
         return ($htmlDiv);
     }
-    public function CrawlMatchScore($parentDiv)
+    public function crawlList()
     {
+        $parentDiv = $this->getDivParent();
         $time_1 = microtime(true);
 
         require_once(__DIR__ . "/../library/simple_html_dom.php");
@@ -123,7 +131,7 @@ class CrawlerFlashScore extends Component
 
         $parentDivs = $parentDiv->find("div");
         // var_dump(count($parentDiv));
-        // $seleniumDriver->quit();
+        // $this->seleniumDriver->quit();
         // exit;
         foreach ($parentDivs as $key => $div) {
             //   goto test;
