@@ -22,7 +22,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_order;
     protected $match_link_detail_flashscore;
     protected $match_link_detail_sofa;
-
+    protected $match_link_detail_livescore;
 
     /**
      * @return mixed
@@ -306,6 +306,22 @@ class ScMatch extends \Phalcon\Mvc\Model
     public function setMatchLinkDetailSofa($match_link_detail_sofa)
     {
         $this->match_link_detail_sofa = $match_link_detail_sofa;
+    }
+  /**
+     * @return mixed
+     */
+    public function getMatchLinkDetailLivescore()
+    {
+        return $this->match_link_detail_livescore;
+    }
+
+
+    /**
+     * @param mixed $match_link_detail_livescore
+     */
+    public function setMatchLinkDetailLivescore($match_link_detail_livescore)
+    {
+        $this->match_link_detail_livescore = $match_link_detail_livescore;
     }
 
     /**

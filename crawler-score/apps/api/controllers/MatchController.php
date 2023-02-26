@@ -15,14 +15,7 @@ class MatchController extends ControllerBase
     public function listAction()
     {
         //get các trận cần lấy theo thời gian
-        /*
-        return match:
-        [
-            tournament => [
-                'name' => "name",
-            ]
-        ]
-        */
+    
 
         $time = $this->requestParams['time'];
         //live

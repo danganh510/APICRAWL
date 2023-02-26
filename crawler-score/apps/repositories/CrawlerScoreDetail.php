@@ -13,9 +13,9 @@ class CrawlerScore extends Component
 {
     public $url_fb = "https://www.livescores.com";
 
-    public function CrawlLivescores($start_time_cron,$type)
+    public function CrawlLivescores($start_time_cron,$is_live)
     {
-        if ($type == "live") {
+        if ($is_live) {
             $param = "/football/live/?tz=7";
         } else {
             $param = "/football/{$this->my->formatDateYMD($start_time_cron)}/?tz=7";

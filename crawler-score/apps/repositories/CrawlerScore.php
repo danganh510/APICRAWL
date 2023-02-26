@@ -28,6 +28,7 @@ class CrawlerScore extends Component
         $list_live_tournaments = [];
         $index = 0;
         $tournaments = [];
+
         $crawler->filter('div[data-testid*="match_rows-root"] > div')->each(
 
             function (Crawler $item) use (&$list_live_tournaments, &$list_live_match) {
@@ -71,6 +72,7 @@ class CrawlerScore extends Component
             }
 
         );
+
         return $list_live_match;
     }
     public static function crawlDetailInfo($url)
@@ -88,12 +90,13 @@ class CrawlerScore extends Component
                     $temp = [
                         'time' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(0)->text(),
                         'homeText' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(1)->text(),
-                        // 'homeEvent' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->attr("name"),
-                        // 'awayText' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(5)->text(),
-                        // 'awayEvent' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(4)->filter("svg")->attr("name"),
-                    ];
+                     ];
                     if ($item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)) {
-                        $temp['homeEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");
+                        if (empty($temp['homeText'])) {
+                            $temp['homeEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");
+                        } else {
+                            $temp['awayEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");
+                        }
                     }
                     if (count($item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")) > 1) {
                         $temp['awayEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(1)->attr("name");
@@ -160,7 +163,7 @@ class CrawlerScore extends Component
                     try {
                         $temp = [
                             'home' => $item->filter("span > span > span")->eq(0)->text(),
-                            'away' => $item->filter("span > span > span")->eq(2)->text(),
+                            'away' => $item->filter("span > span > span")->eq($item->filter("span > span > span")->count() - 1)->text(),
                             'name' => $item->filter("span > span > div")->eq(0)->text(),
                         ];
                     } catch (Exception $e) {

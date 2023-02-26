@@ -65,7 +65,10 @@ class MatchRepo extends Component
         if ($type_crawl == MatchCrawl::TYPE_SOFA || $type_crawl == MatchCrawl::TYPE_API_SOFA) {
             $matchSave->setMatchLinkDetailSofa($match->getHrefDetail());
         }
-        
+
+          if ($type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
+            $matchSave->setMatchLinkDetailLivescore($match->getHrefDetail());
+        }
         $matchSave->setMatchOrder(1);
         if ($matchSave->save()) {
             return true;

@@ -29,7 +29,7 @@ class CrawlerController extends ControllerBase
     public function indexAction()
     {
 
-        ini_set('max_execution_time', 20);
+      //  ini_set('max_execution_time', 20);
 
         $time_plus = $this->request->get("timePlus");
         $is_live =  $this->request->get("isLive");
@@ -56,12 +56,15 @@ class CrawlerController extends ControllerBase
                 } else {
                    
                     $day_time = $this->my->formatDateYMD(time() + $time_plus * 24 * 60 * 60);
-
                 }
                 $crawler = new CrawlerApiSofa($day_time);
                 $list_match = $crawler->CrawlMatchScore();
                 goto listMatch;
-            }
+            } elseif ($this->type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
+                $crawler = new CrawlerScore();
+                $list_match = $crawler->CrawlLivescores($start_time_cron, $is_live);
+                goto listMatch;
+            } 
 
             //time plus = 1  crawl all to day
             $divParent = $crawler->getDivParent($seleniumDriver, $time_plus);
