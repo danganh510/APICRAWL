@@ -47,10 +47,9 @@ class MatchRepo extends Component
             $matchSave->setMatchStartDay($day_start);
             $matchSave->setMatchStartMonth($month_start);
             $matchSave->setMatchStartYear($year_start);
-            if ($match->getStartTime()) {
-
+            if ($timeInfo['start_time']) {
                 //use crawl api
-                $matchSave->setMatchStartTime($match->getStartTime());
+                $matchSave->setMatchStartTime($timeInfo['start_time']);
             }
         }
         $matchSave->setMatchTime($timeInfo['time_live']);
