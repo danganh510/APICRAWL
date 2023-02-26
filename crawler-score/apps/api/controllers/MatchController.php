@@ -20,7 +20,6 @@ class MatchController extends ControllerBase
         [
             tournament => [
                 'name' => "name",
-
             ]
         ]
         */
@@ -115,12 +114,16 @@ class MatchController extends ControllerBase
                 'id' => $id
             ])->execute();
         $matchInfo = $matchInfo->toArray()[0];
+        $home = Team::getTeamById($matchInfo['match_home_id']);
+        $away = Team::getTeamById($matchInfo['match_away_id']);
         $info = [
             'id' => $matchInfo['match_id'],
             'name' => $matchInfo['match_name'],
             'tournament' => $matchInfo['tournament_name'],
-            'home' => $matchInfo['match_home_id'],
-            'away' => $matchInfo['match_away_id'],
+            'home' => $home->getTeamName(),
+            'away' => $away->getTeamName(),
+            'homeSlug' => $home->getTeamSlug(),
+            'awaySlug' => $away->getTeamSlug(),
             'homeScore' => $matchInfo['match_home_score'],
             'awayScore' => $matchInfo['match_away_score'],
             'summary' => $matchInfo['info_summary'],
