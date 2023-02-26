@@ -12,23 +12,23 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class CrawlerFlashScore extends CrawlerList
 {
-    public $url_fb = "https://www.flashscore.com";
-    public $url_sf = "https://www.sofascore.com/football";
-    public function __construct($seleniumDriver, $time_plus)
+    public function __construct($seleniumDriver,$url_crawl, $day_time, $isLive)
     {
         $this->seleniumDriver = $seleniumDriver;
-        $this->time_plus = $time_plus;
+        $this->url_crawl = $url_crawl;
+        $this->day_time = $day_time;
+        $this->isLive = $isLive;
     }
     public function getDivParent()
     {
         $time_delay = 1;
         $time_1 = microtime(true);
 
-        if (date("H", time()) > $this->globalVariable->time_size_low_start && date("H", time()) < $this->globalVariable->time_size_low_end) {
-            $time_delay = 2;
-        }
+        // if (date("H", time()) > $this->globalVariable->time_size_low_start && date("H", time()) < $this->globalVariable->time_size_low_end) {
+        //     $time_delay = 2;
+        // }
 
-        if ($this->time_plus) {
+        if (!$this->isLive) {
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
             //click button time cho lần đầu
             $this->seleniumDriver->clickButton("#calendarMenu");
@@ -36,7 +36,7 @@ class CrawlerFlashScore extends CrawlerList
             $divTimes = $this->seleniumDriver->findElements(".calendar__day");
             foreach ($divTimes as $div) {
                 $text = $div->getText();
-                if (explode(' ', $text)[0] == strftime('%d/%m', time() + $this->time_plus * 24 * 60 * 60)) {
+                if (explode(' ', $text)[0] == strftime('%d/%m', strtotime($this->day_time))) {
                     $div->click();
                     break;
                 }
@@ -122,8 +122,6 @@ class CrawlerFlashScore extends CrawlerList
         require_once(__DIR__ . "/../library/simple_html_dom.php");
         $list_live_match = [];
         $list_live_tournaments = [];
-        $index = 0;
-        $tournaments = [];
         $parentDiv =  str_get_html($parentDiv);
         if (!$parentDiv) {
             return [];

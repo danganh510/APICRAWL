@@ -44,7 +44,7 @@ class CrawlerList extends Component
             case MatchCrawl::TYPE_FLASH_SCORE:
                 $this->url_crawl = $this->url_fl;
                 $this->runSelenium();
-                $crawler = new CrawlerFlashScore($this->seleniumDriver, $this->isLive);
+                $crawler = new CrawlerFlashScore($this->seleniumDriver,$this->url_crawl,$day_time, $this->isLive);
                 break;
             case MatchCrawl::TYPE_SOFA:
                 $this->url_crawl = $this->url_sf;
