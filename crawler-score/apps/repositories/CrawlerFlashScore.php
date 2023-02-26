@@ -50,7 +50,7 @@ class CrawlerFlashScore extends Component
         }
 
         echo "time lick button: ". (microtime(true) - $time_1). "</br>";
-        sleep(1);
+        sleep(2);
 
         // sleep(1);
         //click close
