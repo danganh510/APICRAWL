@@ -32,7 +32,7 @@ class CrawlerFlashScore extends CrawlerList
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
             //click button time cho lần đầu
             $this->seleniumDriver->clickButton("#calendarMenu");
-            sleep(2);
+            sleep(1);
             $divTimes = $this->seleniumDriver->findElements(".calendar__day");
             foreach ($divTimes as $div) {
                 $text = $div->getText();
@@ -86,8 +86,18 @@ class CrawlerFlashScore extends CrawlerList
                 echo $e->getMessage();
             }
         }
-        echo "time click icon: ". (microtime(true) - $time_1). "</br>";
+        $divClose = $this->seleniumDriver->findElements(".event__expander--close");
+        $divClose = array_reverse($divClose);
+        foreach ($divClose as $key =>  $div) {
+            try {
+                $div->click();
+                echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+        }
 
+        echo "time click icon: ". (microtime(true) - $time_1). "</br>";
         sleep(0.1);
         $htmlDiv = "";
         try {
@@ -119,7 +129,7 @@ class CrawlerFlashScore extends CrawlerList
         $parentDiv = $this->getDivParent();
         $time_1 = microtime(true);
 
-        require_once(__DIR__ . "/../library/simple_html_dom.php");
+        require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
         $list_live_tournaments = [];
         $parentDiv =  str_get_html($parentDiv);
@@ -240,55 +250,5 @@ class CrawlerFlashScore extends CrawlerList
         }
         return $list_live_match;
     }
-    public function saveText($text, $key)
-    {
-        $dir_test = __DIR__."/../test";
-        if ( !is_dir( $dir_test ) ) {
-            mkdir( $dir_test );       
-        }
-        $fp = fopen(__DIR__ . "/../test/div_$key.html", 'w'); //mở file ở chế độ write-only
-        fwrite($fp, $text);
-        fclose($fp);
-    }
-    function create_slug($string)
-    {
-        $search = array(
-            '#(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)#',
-            '#(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)#',
-            '#(ì|í|ị|ỉ|ĩ)#',
-            '#(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)#',
-            '#(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)#',
-            '#(ỳ|ý|ỵ|ỷ|ỹ)#',
-            '#(đ)#',
-            '#(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)#',
-            '#(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)#',
-            '#(Ì|Í|Ị|Ỉ|Ĩ)#',
-            '#(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)#',
-            '#(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)#',
-            '#(Ỳ|Ý|Ỵ|Ỷ|Ỹ)#',
-            '#(Đ)#',
-            "/[^a-zA-Z0-9\-\_]/",
-        );
-        $replace = array(
-            'a',
-            'e',
-            'i',
-            'o',
-            'u',
-            'y',
-            'd',
-            'A',
-            'E',
-            'I',
-            'O',
-            'U',
-            'Y',
-            'D',
-            '-',
-        );
-        $string = preg_replace($search, $replace, $string);
-        $string = preg_replace('/(-)+/', '-', $string);
-        $string = strtolower($string);
-        return $string;
-    }
+
 }

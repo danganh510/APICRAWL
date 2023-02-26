@@ -86,9 +86,9 @@ class CrawlerList extends Component
     }
     public function saveText($text, $key)
     {
-        $dir_test = __DIR__ . "/../test";
-        if (!is_dir($dir_test)) {
-            mkdir($dir_test);
+        $dir_test = __DIR__."/../test";
+        if ( !is_dir( $dir_test ) ) {
+            mkdir( $dir_test );       
         }
         $fp = fopen(__DIR__ . "/../test/div_$key.html", 'w'); //mở file ở chế độ write-only
         fwrite($fp, $text);
