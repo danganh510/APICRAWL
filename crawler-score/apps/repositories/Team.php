@@ -9,47 +9,40 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Team extends Component
 {
-    public static function findByName($name, $name_slug, $type_crawl)
+    public static function findByName($name, $name_slug)
     {
-        switch ($type_crawl) {
-            case "flashScore":
-                return ScTeam::findFirst([
-                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:',
-                    'bind' => [
-                        'name' => $name,
-                        'slug' => $name_slug
-                    ]
-                ]);
-            default:
-                return ScTeam::findFirst([
-                    'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:',
-                    'bind' => [
-                        'name' => $name,
-                        'slug' => $name_slug
-                    ]
-                ]);
-        }
+        return ScTeam::findFirst([
+            'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:',
+            'bind' => [
+                'name' => $name,
+                'slug' => $name_slug
+            ]
+        ]);
     }
     public static function saveTeam($team_name, $image, $type)
     {
-        $team = new ScTeam();
-        $team->setTeamName($team_name);
-        $team->setTeamLogo($image);
-        $team->setTeamSlug(MyRepo::create_slug($team_name));
-        switch ($type) {
-            case MatchCrawl::TYPE_FLASH_SCORE:
-                $team->setTeamNameFlashscore($team_name);
-                break;
-            case MatchCrawl::TYPE_SOFA:
-            case MatchCrawl::TYPE_API_SOFA:
-                $team->setTeamNameSofa($team_name);
-                break;
-            case MatchCrawl::TYPE_LIVE_SCORES:
-                $team->setTeamNameLivescore($team_name);
-                break;
+        $team = Team::findByName($team_name, MyRepo::create_slug($team_name));
+        if (!$team) {
+            $team = new ScTeam();
+            $team->setTeamName($team_name);
+            $team->setTeamLogo($image);
+            $team->setTeamSlug(MyRepo::create_slug($team_name));
+            switch ($type) {
+                case MatchCrawl::TYPE_FLASH_SCORE:
+                    $team->setTeamNameFlashscore($team_name);
+                    break;
+                case MatchCrawl::TYPE_SOFA:
+                case MatchCrawl::TYPE_API_SOFA:
+                    $team->setTeamNameSofa($team_name);
+                    break;
+                case MatchCrawl::TYPE_LIVE_SCORES:
+                    $team->setTeamNameLivescore($team_name);
+                    break;
+            }
+            $team->setTeamActive("Y");
+            $team->save();
         }
-        $team->setTeamActive("Y");
-        $team->save();
+
         return $team;
     }
     public static function getTeamById($team_id)
