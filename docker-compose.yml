@@ -42,7 +42,7 @@ services:
       
   selenium-chrome:
     image: selenium/node-chrome-debug:3.141.59-20210105
-    shm_size: '2gb'
+    shm_size: '4gb'
     ports:
       - "15900:5900"
     environment:
