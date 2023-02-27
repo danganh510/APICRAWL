@@ -60,9 +60,9 @@ class CrawlerScore extends CrawlerList
         $this->round = $tournament['group'];
 
         $tournamentModel = new MatchTournament();
-        $tournamentModel->setCountryName($country_name);
-        $tournamentModel->setTournamentName($tournament['name']);
-        $tournamentModel->setTournamentGroup($tournament['group']);
+        $tournamentModel->setCountryName(strtolower($country_name));
+        $tournamentModel->setTournamentName(strtolower($tournament['name']));
+        $tournamentModel->setTournamentGroup(strtolower($tournament['group']));
         $tournamentModel->setId(count($this->list_live_tournaments) + 1);
         $tournamentModel->setCountryImage("");
         return $tournamentModel;

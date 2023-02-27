@@ -39,8 +39,8 @@ class Tournament extends Component
                     $tournament->setTournamentHrefFlashscore($tournamentInfo->getTournamentHref());
                     break;
                 case MatchCrawl::TYPE_LIVE_SCORES:
-                    $tournament->setTournamentNameFlashScore($tournamentInfo->getTournamentName());
-                    $tournament->setTournamentHrefFlashscore($tournamentInfo->getTournamentHref());
+                    $tournament->setTournamentNameLivescore($tournamentInfo->getTournamentName());
+                    $tournament->setTournamentHrefLivescore($tournamentInfo->getTournamentHref());
                     break;
             }
             $tournament->setTournamentActive("Y");

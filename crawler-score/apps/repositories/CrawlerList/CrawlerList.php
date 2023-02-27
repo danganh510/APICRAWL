@@ -35,7 +35,6 @@ class CrawlerList extends Component
     public function runSelenium()
     {
         $this->seleniumDriver = new Selenium($this->url_crawl);
-
     }
     public function getInstance()
     {
@@ -44,7 +43,7 @@ class CrawlerList extends Component
             case MatchCrawl::TYPE_FLASH_SCORE:
                 $this->url_crawl = $this->url_fl;
                 $this->runSelenium();
-                $crawler = new CrawlerFlashScore($this->seleniumDriver,$this->url_crawl,$day_time, $this->isLive);
+                $crawler = new CrawlerFlashScore($this->seleniumDriver, $this->url_crawl, $day_time, $this->isLive);
                 break;
             case MatchCrawl::TYPE_SOFA:
                 $this->url_crawl = $this->url_sf;
@@ -56,7 +55,7 @@ class CrawlerList extends Component
                 break;
             case MatchCrawl::TYPE_LIVE_SCORES:
                 $this->url_crawl = $this->url_lc;
-                $crawler = new CrawlerScore($this->url_crawl,$day_time, $this->isLive);
+                $crawler = new CrawlerScore($this->url_crawl, $day_time, $this->isLive);
                 break;
         }
         return $crawler->crawlList();
@@ -64,31 +63,54 @@ class CrawlerList extends Component
     public function getDivParent()
     {
     }
-    public function getTournament($div) {
-
+    public function getTournament($div)
+    {
     }
-    public function getMatch($div) {
-
+    public function getMatch($div)
+    {
     }
-    public function saveMatch($data) {
+    public function saveMatch($data)
+    {
+
+        $data['home'] = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $data['home']);
+        $data['home'] = trim($data['home']);
+        //loai bo ten nuoc ra khoi ten:
+        if (strpos($data['home'], '(')) {
+            $data['home'] = explode('(', $data['home']);
+            $data['home'] = trim($data['home'][0]);
+        }
+        $data['away'] = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $data['away']);
+        $data['away'] = trim($data['away']);
+        //loai bo ten nuoc ra khoi ten:
+        if (strpos($data['away'], '(')) {
+            $data['away'] = explode('(', $data['away']);
+            $data['away'] = trim($data['away'][0]);
+        }
+
         $liveMatch = new MatchCrawl();
         $liveMatch->setTime(MyRepo::replace_space($data['time']));
         $liveMatch->setHome($data['home']);
         $liveMatch->setHomeScore(is_numeric($data['home_score']) ? $data['home_score'] : 0);
-        // $liveMatch->setHomeImg($home_image);
+
         $liveMatch->setAway($data['away']);
         $liveMatch->setAwayScore(is_numeric($data['away_score']) ? $data['away_score'] : 0);
-        //  $liveMatch->setAwayImg($away_image);
         $liveMatch->setHrefDetail($data['href_detail']);
         $liveMatch->setRound($this->round);
         $liveMatch->setTournament($this->list_live_tournaments[count($this->list_live_tournaments) - 1]);
+        if (isset($data['home_image'])) {
+            $liveMatch->setHomeImg($data['home_image']);
+        }
+        if (isset($data['away_image'])) {
+            $liveMatch->setAwayImg($data['away_image']);
+        }
         return $liveMatch;
     }
+
     public function saveText($text, $key)
     {
-        $dir_test = __DIR__."/../test";
-        if ( !is_dir( $dir_test ) ) {
-            mkdir( $dir_test );       
+        $dir_test = __DIR__ . "/../test";
+        if (!is_dir($dir_test)) {
+            mkdir($dir_test);
         }
         $fp = fopen(__DIR__ . "/../test/div_$key.html", 'w'); //mở file ở chế độ write-only
         fwrite($fp, $text);

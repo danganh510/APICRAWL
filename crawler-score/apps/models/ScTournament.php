@@ -8,10 +8,13 @@ class ScTournament extends \Phalcon\Mvc\Model
     protected $tournament_name;
     protected $tournament_slug;
     protected $tournament_name_flash_score;
+    protected $tournament_name_livescore;
+    protected $tournament_name_sofa;
     protected $tournament_country_code;
     protected $tournament_country;
     protected $tournament_image;
     protected $tournament_href_flashscore;
+    protected $tournament_href_livescore;
     protected $tournament_order;
     protected $tournament_active;
 
@@ -72,6 +75,21 @@ class ScTournament extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @param mixed $tournament_name_livescore
+     */
+    public function setTournamentNameLivescore($tournament_name_livescore)
+    {
+        $this->tournament_name_livescore = $tournament_name_livescore;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTournamentNameLivescore()
+    {
+        return $this->tournament_name_livescore;
+    }
+
+    /**
      * @param mixed $tournament_name_flash_score
      */
     public function setTournamentNameFlashScore($tournament_name_flash_score)
@@ -93,7 +111,7 @@ class ScTournament extends \Phalcon\Mvc\Model
     {
         $this->tournament_country = $tournament_country;
     }
-     /**
+    /**
      * @return mixed
      */
     public function getTournamentCountryCode()
@@ -123,12 +141,27 @@ class ScTournament extends \Phalcon\Mvc\Model
     {
         $this->tournament_image = $tournament_image;
     }
-        /**
+    /**
      * @return mixed
      */
     public function getTournamentHrefFlashscore()
     {
         return $this->tournament_href_flashscore;
+    }
+
+    /**
+     * @param mixed $tournament_href_livescore
+     */
+    public function setTournamentHrefLivescore($tournament_href_livescore)
+    {
+        $this->tournament_href_livescore = $tournament_href_livescore;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTournamentHrefLivescore()
+    {
+        return $this->tournament_href_livescore;
     }
 
     /**

@@ -59,7 +59,6 @@ class CrawlerSofa extends Component
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
-            $this->saveText($htmlDiv, time());
             echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -206,7 +205,6 @@ class CrawlerSofa extends Component
             }
             test:
             $text = $div->innertext();
-            $this->saveText($text, $key);
         }
 
         return $list_live_match;

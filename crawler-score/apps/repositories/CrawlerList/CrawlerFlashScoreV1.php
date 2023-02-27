@@ -61,7 +61,6 @@ class CrawlerFlashScore extends Component
             $htmlDiv = "<!DOCTYPE html>".$htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ","<svg xmlns='http://www.w3.org/2000/svg'",$htmlDiv);
-            $this->saveText($htmlDiv, time());
         } catch (Exception $e) {
         }
         $seleniumDriver->quit();

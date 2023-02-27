@@ -12,7 +12,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class CrawlerFlashScore extends CrawlerList
 {
-    public function __construct($seleniumDriver,$url_crawl, $day_time, $isLive)
+    public function __construct($seleniumDriver, $url_crawl, $day_time, $isLive)
     {
         $this->seleniumDriver = $seleniumDriver;
         $this->url_crawl = $url_crawl;
@@ -46,7 +46,7 @@ class CrawlerFlashScore extends CrawlerList
             //  click button LIVE cho lần đầu
             $divFilters = $this->seleniumDriver->findElements(".filters__text--short");
             foreach ($divFilters as $div) {
-                echo "time find div: ". (microtime(true) - $time_1). "</br>";
+                echo "time find div: " . (microtime(true) - $time_1) . "</br>";
 
                 if ($div->getText() === 'LIVE') {
                     $div->click();
@@ -56,8 +56,8 @@ class CrawlerFlashScore extends CrawlerList
             sleep(1);
         }
 
-        echo "time lick button: ". (microtime(true) - $time_1). "</br>";
-      
+        echo "time lick button: " . (microtime(true) - $time_1) . "</br>";
+
 
         // sleep(1);
         //click close
@@ -77,11 +77,11 @@ class CrawlerFlashScore extends CrawlerList
         // }
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         $divClose = array_reverse($divClose);
-      
+
         foreach ($divClose as $key =>  $div) {
             try {
                 $div->click();
-                echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+                echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -91,36 +91,34 @@ class CrawlerFlashScore extends CrawlerList
         foreach ($divClose as $key =>  $div) {
             try {
                 $div->click();
-                echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
+                echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
         }
 
-        echo "time click icon: ". (microtime(true) - $time_1). "</br>";
+        echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
         sleep(0.1);
         $htmlDiv = "";
         try {
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-            echo "time before find parent div: ". (microtime(true) - $time_1). "</br>";
+            echo "time before find parent div: " . (microtime(true) - $time_1) . "</br>";
             $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
-            
-            echo "time after find parent div: ". (microtime(true) - $time_1). "</br>";
+
+            echo "time after find parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
-            echo "time get html parent div: ". (microtime(true) - $time_1). "</br>";
+            echo "time get html parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
-            echo "time replace: ". (microtime(true) - $time_1). "</br>";
-
-             $this->saveText($htmlDiv, time());
+            echo "time replace: " . (microtime(true) - $time_1) . "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
         }
         $this->seleniumDriver->quit();
-        echo "time get button: ". (microtime(true) - $time_1). "</br>";
+        echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
         return ($htmlDiv);
     }
@@ -131,7 +129,6 @@ class CrawlerFlashScore extends CrawlerList
 
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
-        $list_live_tournaments = [];
         $parentDiv =  str_get_html($parentDiv);
         if (!$parentDiv) {
             return [];
@@ -155,7 +152,10 @@ class CrawlerFlashScore extends CrawlerList
 
                     $country_name =  strtolower($country_name);
                     $group = "";
-                    if (strpos($name, "Group") && strpos($name, " - ")) {
+                    if ((strpos($name, "Group") || strpos($name, "Offs") || strpos($name, "Apertura") || strpos($name, "Clausura"))
+
+                        && strpos($name, " - ")
+                    ) {
                         echo $name;
                         $nameDetail = explode(" - ", $name);
                         $name = $nameDetail[0];
@@ -165,14 +165,14 @@ class CrawlerFlashScore extends CrawlerList
 
 
                     $tournamentModel = new MatchTournament();
-                    $tournamentModel->setCountryName($country_name);
-                    $tournamentModel->setTournamentName($name);
-                    $tournamentModel->setTournamentGroup($group);
-                    $tournamentModel->setId(count($list_live_tournaments) + 1);
+                    $tournamentModel->setCountryName(strtolower($country_name));
+                    $tournamentModel->setTournamentName(strtolower($name));
+                    $tournamentModel->setTournamentGroup(strtolower($group));
+                    $tournamentModel->setId(count($this->list_live_tournaments) + 1);
                     $tournamentModel->setCountryImage("");
                     $tournamentModel->setTournamentHref($hrefTour);
 
-                    $list_live_tournaments[] = $tournamentModel;
+                    $this->list_live_tournaments[] = $tournamentModel;
 
                     continue;
                 }
@@ -181,63 +181,9 @@ class CrawlerFlashScore extends CrawlerList
                 $divMatch = $div->find(".event__participant");
 
                 if (!empty($divMatch)) {
-                    $id_insite = $div->getAttribute("id");
-                    $id_insite = explode("_", $id_insite);
-                    $id_insite = $id_insite[count($id_insite) - 1];
-                    $href_detail = "/match/" . $id_insite;
-                    try {
-                        if (count($div->find(".event__stage--block"))) {
-                            $time = $div->find(".event__stage--block")[0]->text();
-                        } else {
-                            $time = $div->find(".event__time")[0]->text();
-                        }
-                    } catch (Exception $e) {
-                    }
-                    $time = str_replace('&nbsp;', "", $time);
-                    $time = trim($time);
+                    $list_live_match[] = $this->getMatch($div);
 
-                    $home = $div->find(".event__participant--home")[0]->text();
-                    $home_image = $div->find(".event__logo--home");
-                    $home_image = isset($home_image[0]) ? $home_image[0]->getAttribute("src") : '';
-                    $home_score = $div->find(".event__score--home");
-                    $home_score = isset($home_score[0]) ? $home_score[0]->innertext() : 0;
-
-                    $away = $div->find(".event__participant--away")[0]->text();
-                    $away_image = $div->find(".event__logo--away");
-                    $away_image = isset($away_image[0]) ? $away_image[0]->getAttribute("src") : '';
-
-                    $away_score = $div->find(".event__score--away");
-                    $away_score = isset($away_score[0]) ? $away_score[0]->innertext() : 0;
-
-                    $home = str_replace(['GOAL', 'CORRECTION'], ['', ''], $home);
-                    $home = trim($home);
-
-                    $away = str_replace(['GOAL', 'CORRECTION', '&nbsp;'], ['', '', ''], $away);
-                    $away = trim($away);
-
-                    //loai bo ten nuoc ra khoi ten:
-                    if (strpos($home,'(')) {
-                        $home = explode( '(',$home);
-                        $home = trim($home[0]);          
-                    }
-                    if (strpos($away,'(')) {
-                        $away = explode('(', $away);
-                        $away = trim($away[0]);
-                    }
-
-                    $liveMatch = new MatchCrawl();
-                    $liveMatch->setTime(MyRepo::replace_space($time));
-                    $liveMatch->setHome($home);
-                    $liveMatch->setHomeScore(is_numeric($home_score) ? $home_score : 0);
-                    $liveMatch->setHomeImg($home_image);
-                    $liveMatch->setAway($away);
-                    $liveMatch->setAwayScore(is_numeric($away_score) ? $away_score : 0);
-                    $liveMatch->setAwayImg($away_image);
-                    $liveMatch->setHrefDetail($href_detail);
-                    $liveMatch->setTournament($list_live_tournaments[count($list_live_tournaments) - 1]);
-                    $list_live_match[] =  $liveMatch;
-                    echo "time get match: ". (microtime(true) - $time_1). "</br>";
-
+                    echo "time get match: " . (microtime(true) - $time_1) . "</br>";
                 }
             } catch (Exception $e) {
                 echo "1-";
@@ -250,5 +196,41 @@ class CrawlerFlashScore extends CrawlerList
         }
         return $list_live_match;
     }
+    public function getMatch($divMatch)
+    {
+        $dataMatch = [];
+        $id_insite = $divMatch->getAttribute("id");
+        $id_insite = explode("_", $id_insite);
+        $id_insite = $id_insite[count($id_insite) - 1];
+        $dataMatch['href_detail'] = "/match/" . $id_insite;
+        try {
+            if (count($divMatch->find(".event__stage--block"))) {
+                $time = $divMatch->find(".event__stage--block")[0]->text();
+            } else {
+                $time = $divMatch->find(".event__time")[0]->text();
+            }
+        } catch (Exception $e) {
+        }
+        $time = str_replace('&nbsp;', "", $time);
+        $dataMatch['time'] = trim($time);
 
+        $dataMatch['home'] = $divMatch->find(".event__participant--home")[0]->text();
+
+
+        $home_image = $divMatch->find(".event__logo--home");
+        $dataMatch['home_image'] = isset($home_image[0]) ? $home_image[0]->getAttribute("src") : '';
+
+        $home_score = $divMatch->find(".event__score--home");
+        $dataMatch['home_score'] = isset($home_score[0]) ? $home_score[0]->innertext() : 0;
+
+        $dataMatch['away'] = $divMatch->find(".event__participant--away")[0]->text();
+        $away_image = $divMatch->find(".event__logo--away");
+        $dataMatch['away_image'] = isset($away_image[0]) ? $away_image[0]->getAttribute("src") : '';
+
+        $away_score = $divMatch->find(".event__score--away");
+        $dataMatch['away_score'] = isset($away_score[0]) ? $away_score[0]->innertext() : 0;
+
+        $liveMatch = $this->saveMatch($dataMatch);
+        return $liveMatch;
+    }
 }
