@@ -158,9 +158,11 @@ class MatchRepo extends Component
             match_insert_time,match_time,match_start_time,match_order,match_status,
             t.tournament_id,t.tournament_name,t.tournament_country,t.tournament_image,t.tournament_order")
             ->andWhere(
-                "match_start_day = :day: AND match_start_month = :month: AND match_start_year = :year:",
+                "(match_start_day = :day: OR match_start_day = :day2: OR match_start_day = :day3:) AND match_start_month = :month: AND match_start_year = :year:",
                 [
                     'day' => $day,
+                    'day2' => $day -1,
+                    'day3' => $day + 1,
                     'month' => $month,
                     'year' => $year
                 ]
