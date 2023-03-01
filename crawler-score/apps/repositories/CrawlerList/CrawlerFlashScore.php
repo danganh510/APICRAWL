@@ -78,7 +78,6 @@ class CrawlerFlashScore extends CrawlerList
                 // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
                 echo "error85:";
-                echo $e->getMessage();
             }
         }
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
