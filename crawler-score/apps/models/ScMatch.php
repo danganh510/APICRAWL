@@ -211,7 +211,7 @@ class ScMatch extends \Phalcon\Mvc\Model
      */
     public function setMatchStartTime($match_start_time)
     {
-        $this->match_start_time = $match_start_time;
+        $this->match_start_time = ceil($match_start_time / 100) * 100;
     }
         /**
      * @return mixed
