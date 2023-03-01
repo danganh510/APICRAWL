@@ -26,14 +26,14 @@ class CrawlerDetailFlashScore extends CrawlerList
         try {
             //$html = $this->seleniumDriver->getPageSource();
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-            $this->getDivInfo();
+            echo $this->getDivInfo();
             $this->getDivStart();
             $this->getDivTracker();
 
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-        $this->seleniumDriver->checkRam();
+        echo $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
     }
     public function getDivInfo()
@@ -46,6 +46,7 @@ class CrawlerDetailFlashScore extends CrawlerList
         //khai bao cho the svg
         $htmlDivInfo = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivInfo);
         MyRepo::saveText($htmlDivInfo, "info");
+        return $htmlDivInfo;
     }
     public function getDivStart()
     {

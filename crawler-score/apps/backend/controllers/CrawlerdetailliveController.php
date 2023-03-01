@@ -26,7 +26,7 @@ class CrawlerdetailliveController extends ControllerBase
         //tab: info,tracker,statistics
         $crawler = new CrawlerDetail($this->type_crawl,$urlDetail, $is_live);
         $detail = $crawler->getInstance();
-        var_dump(microtime(true) - $start);
+        var_dump($detail,microtime(true) - $start);
         exit;
      
         foreach ($dataResult as $id =>  $info) {
