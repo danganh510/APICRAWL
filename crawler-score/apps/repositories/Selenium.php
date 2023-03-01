@@ -5,6 +5,8 @@ namespace Score\Repositories;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
+use Facebook\WebDriver\WebDriverWait;
 use Phalcon\Mvc\User\Component;
 
 
@@ -38,10 +40,19 @@ class Selenium extends Component
     {
         $this->driver->get($url);
 
-      //  $this->driver->manage()->timeouts()->implicitlyWait(100); //to close tab
+        //  $this->driver->manage()->timeouts()->implicitlyWait(100); //to close tab
         //wait javascript load
         sleep(2);
         return $this->driver->getWindowHandle();
+    }
+    public function waitItemHide($idDoom)
+    {
+        $wait = new WebDriverWait($this->driver, 2);
+        $wait->until(
+            WebDriverExpectedCondition::invisibilityOfElementLocated(
+                WebDriverBy::id($idDoom)
+            )
+        );
     }
     public function checkRam()
     {
