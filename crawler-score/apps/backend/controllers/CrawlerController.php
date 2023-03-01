@@ -50,7 +50,7 @@ class CrawlerController extends ControllerBase
             //time plus = 1  crawl all to day
             // $divParent = $crawler->getDivParent($seleniumDriver, $time_plus);
             // $seleniumDriver->quit();
-            echo (microtime(true) - $start_time) . "</br>";
+            // echo (microtime(true) - $start_time) . "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
             // $seleniumDriver->quit();
@@ -61,7 +61,7 @@ class CrawlerController extends ControllerBase
         try {
             statCrawler:
             // $list_match = $crawler->CrawlMatchScore($divParent);
-            echo (microtime(true) - $start_time) . "</br>";
+            // echo (microtime(true) - $start_time) . "</br>";
             listMatch:
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
@@ -99,7 +99,7 @@ class CrawlerController extends ControllerBase
             echo $e->getMessage();
         }
         // $seleniumDriver->quit();
-        echo (microtime(true) - $start_time) . "</br>";
+        // echo (microtime(true) - $start_time) . "</br>";
         end:
         echo "---total: " . $total;
 

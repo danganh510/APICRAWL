@@ -46,7 +46,7 @@ class CrawlerFlashScore extends CrawlerList
             //  click button LIVE cho lần đầu
             $divFilters = $this->seleniumDriver->findElements(".filters__text--short");
             foreach ($divFilters as $div) {
-                echo "time find div: " . (microtime(true) - $time_1) . "</br>";
+                // echo "time find div: " . (microtime(true) - $time_1) . "</br>";
 
                 if ($div->getText() === 'LIVE') {
                     $div->click();
@@ -55,7 +55,7 @@ class CrawlerFlashScore extends CrawlerList
             }
             sleep(1);
         }
-        echo "time lick button: " . (microtime(true) - $time_1) . "</br>";
+        // echo "time lick button: " . (microtime(true) - $time_1) . "</br>";
 
 
         // sleep(1);
@@ -80,7 +80,7 @@ class CrawlerFlashScore extends CrawlerList
         foreach ($divClose as $key =>  $div) {
             try {
                 $div->click();
-                echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
+                // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -90,35 +90,35 @@ class CrawlerFlashScore extends CrawlerList
         foreach ($divClose as $key =>  $div) {
             try {
                 $div->click();
-                echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
+                // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
         }
 
-        echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
+        // echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
         sleep(0.1);
         $htmlDiv = "";
         try {
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-            echo "time before find parent div: " . (microtime(true) - $time_1) . "</br>";
+            // echo "time before find parent div: " . (microtime(true) - $time_1) . "</br>";
             $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
 
-            echo "time after find parent div: " . (microtime(true) - $time_1) . "</br>";
+            // echo "time after find parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
-            echo "time get html parent div: " . (microtime(true) - $time_1) . "</br>";
+            // echo "time get html parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
-            echo "time replace: " . (microtime(true) - $time_1) . "</br>";
+            // echo "time replace: " . (microtime(true) - $time_1) . "</br>";
         } catch (Exception $e) {
             echo $e->getMessage();
         }
         $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
-        echo "time get button: " . (microtime(true) - $time_1) . "</br>";
+        // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
         return ($htmlDiv);
     }
@@ -183,7 +183,7 @@ class CrawlerFlashScore extends CrawlerList
                 if (!empty($divMatch)) {
                     $list_live_match[] = $this->getMatch($div);
 
-                    echo "time get match: " . (microtime(true) - $time_1) . "</br>";
+                    // echo "time get match: " . (microtime(true) - $time_1) . "</br>";
                 }
             } catch (Exception $e) {
                 echo "1-";
