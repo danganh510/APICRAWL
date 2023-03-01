@@ -43,14 +43,14 @@ services:
       
   selenium-chrome:
     image: selenium/node-chrome-debug:3.141.59-20210105
-    shm_size: '4gb'
+    shm_size: '6gb'
     ports:
       - "15900:5900"
     environment:
       HUB_PORT_4444_TCP_ADDR: selenium-hub
       HUB_PORT_4444_TCP_PORT: 4444
-      NODE_MAX_INSTANCES: 10
-      NODE_MAX_SESSION: 10
+      NODE_MAX_INSTANCES: 6
+      NODE_MAX_SESSION: 6
       SCREEN_WIDTH: 1920
       SCREEN_HEIGHT: 1200
   # socket.io:
