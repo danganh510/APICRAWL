@@ -39,8 +39,6 @@ class Selenium extends Component
         $this->driver->get($url);
 
         $this->driver->manage()->timeouts()->implicitlyWait(100); //to close tab
-        $this->driver->close();
-
         //wait javascript load
         sleep(2);
         return $this->driver->getWindowHandle();
