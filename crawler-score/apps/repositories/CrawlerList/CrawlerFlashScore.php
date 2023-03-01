@@ -80,17 +80,17 @@ class CrawlerFlashScore extends CrawlerList
                 echo "error85:";
             }
         }
-        $divClose = $this->seleniumDriver->findElements(".event__expander--close");
-        $divClose = array_reverse($divClose);
-        foreach ($divClose as $key =>  $div) {
-            try {
-                $div->click();
-                // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
-            } catch (Exception $e) {
-                echo "--error 90---";
-                echo $e->getMessage();
-            }
-        }
+        // $divClose = $this->seleniumDriver->findElements(".event__expander--close");
+        // $divClose = array_reverse($divClose);
+        // foreach ($divClose as $key =>  $div) {
+        //     try {
+        //         $div->click();
+        //         // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
+        //     } catch (Exception $e) {
+        //         echo "--error 90---";
+        //         echo $e->getMessage();
+        //     }
+        // }
 
         // echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
         sleep(0.1);
