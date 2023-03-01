@@ -82,6 +82,7 @@ class CrawlerFlashScore extends CrawlerList
                 $div->click();
                 // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
+                echo "error85:";
                 echo $e->getMessage();
             }
         }
@@ -114,6 +115,7 @@ class CrawlerFlashScore extends CrawlerList
             $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
             // echo "time replace: " . (microtime(true) - $time_1) . "</br>";
         } catch (Exception $e) {
+            echo "error118:";
             echo $e->getMessage();
         }
         $this->seleniumDriver->checkRam();
