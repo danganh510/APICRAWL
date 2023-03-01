@@ -26,9 +26,10 @@ class CrawlerDetailFlashScore extends CrawlerList
         try {
             //$html = $this->seleniumDriver->getPageSource();
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-            echo $this->getDivInfo();
+             $this->getDivInfo();
             $this->getDivStart();
             $this->getDivTracker();
+            echo "true\n\r";
 
         } catch (Exception $e) {
             echo $e->getMessage();
