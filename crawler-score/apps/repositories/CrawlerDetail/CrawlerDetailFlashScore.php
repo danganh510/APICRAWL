@@ -75,8 +75,9 @@ class CrawlerDetailFlashScore extends CrawlerList
     }
     public function crawlDetail()
     {
-        return [];
         $parentDiv = $this->getDivParent();
+        return [];
+
         $time_1 = microtime(true);
 
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
