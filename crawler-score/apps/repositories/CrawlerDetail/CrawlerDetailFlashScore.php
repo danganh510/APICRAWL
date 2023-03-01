@@ -27,13 +27,12 @@ class CrawlerDetailFlashScore extends CrawlerList
             //$html = $this->seleniumDriver->getPageSource();
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
             $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
-            $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
-            $this->seleniumDriver->clickButton("a[href='#/match-summary/match-summary']");
 
-            $this->getDivInfo();
+             $this->getDivInfo();
             $this->getDivStart();
             $this->getDivTracker();
             echo "true\n\r";
+
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -55,7 +54,7 @@ class CrawlerDetailFlashScore extends CrawlerList
     public function getDivStart()
     {
         $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
-
+        sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
         $htmlDivStart = $parentDiv->getAttribute("outerHTML");
 
@@ -67,7 +66,7 @@ class CrawlerDetailFlashScore extends CrawlerList
     public function getDivTracker()
     {
         $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
-
+        sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
         $htmlDivStart = $parentDiv->getAttribute("outerHTML");
 
