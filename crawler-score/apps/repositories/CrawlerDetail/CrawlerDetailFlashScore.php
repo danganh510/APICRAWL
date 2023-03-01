@@ -49,6 +49,7 @@ class CrawlerDetailFlashScore extends CrawlerList
         //khai bao cho the svg
         $htmlDivInfo = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivInfo);
         MyRepo::saveText($htmlDivInfo, "info");
+        echo "info--";
         return $htmlDivInfo;
     }
     public function getDivStart()
@@ -62,6 +63,7 @@ class CrawlerDetailFlashScore extends CrawlerList
         //khai bao cho the svg
         $htmlDivStart = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivStart);
         MyRepo::saveText($htmlDivStart, "Start");
+        echo "start--";
     }
     public function getDivTracker()
     {
@@ -73,7 +75,8 @@ class CrawlerDetailFlashScore extends CrawlerList
         $htmlDivStart = "<!DOCTYPE html>" . $htmlDivStart;
         //khai bao cho the svg
         $htmlDivStart = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivStart);
-        MyRepo::saveText($htmlDivStart, "Start");
+        MyRepo::saveText($htmlDivStart, "tracker");
+        echo "tracker--";
     }
     public function crawlDetail()
     {
