@@ -55,7 +55,6 @@ class CrawlerFlashScore extends CrawlerList
             }
             sleep(1);
         }
-
         echo "time lick button: " . (microtime(true) - $time_1) . "</br>";
 
 
@@ -117,6 +116,7 @@ class CrawlerFlashScore extends CrawlerList
         } catch (Exception $e) {
             echo $e->getMessage();
         }
+        $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
         echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 

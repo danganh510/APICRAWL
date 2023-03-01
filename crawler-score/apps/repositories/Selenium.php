@@ -16,10 +16,11 @@ class Selenium extends Component
     {
         $ip = 'selenium-hub';
 
-         //$ip = "13.250.21.188";
+        //$ip = "13.250.21.188";
         $port = 4444;
 
         $connection = @fsockopen($ip, $port);
+
 
         if (is_resource($connection)) {
             echo 'Server is up and running.';
@@ -36,10 +37,39 @@ class Selenium extends Component
     public function setURL($url = 'https://www.sofascore.com/football')
     {
         $this->driver->get($url);
+
+        $this->driver->manage()->timeouts()->implicitlyWait(100); //to close tab
+        $this->driver->close();
+
         //wait javascript load
-        sleep(3);
+        sleep(2);
+        return $this->driver->getWindowHandle();
     }
-    public function getPageSource() {
+    public function checkRam()
+    {
+        $jsonLength = strlen(json_encode($this->driver->executeScript('return window.performance.memory')));
+        $jsonLength = strlen(json_encode($this->driver->executeScript('return window.performance.memory')));
+        echo "Selenium RAM usage: " . $jsonLength . " bytes";
+    }
+    public function openTab()
+    {
+        $this->driver->executeScript("window.open()");
+        $handles = $this->driver->getWindowHandles();
+        $newHandle = end($handles);
+        $this->driver->switchTo()->window($newHandle);
+        return $this->driver;
+    }
+    public function swichTab($handle)
+    {
+        $this->driver->switchTo()->window($handle);
+        return $this->driver->getWindowHandles();
+    }
+    public function countTab()
+    {
+        return count($this->driver->getWindowHandles());
+    }
+    public function getPageSource()
+    {
         return $this->driver->getPageSource();
     }
     public function clickButton($domButton)
@@ -61,7 +91,8 @@ class Selenium extends Component
         $elements = $this->driver->findElements(WebDriverBy::cssSelector($domElement));
         return $elements;
     }
-    public function executeScript($script) {
+    public function executeScript($script)
+    {
         return $this->driver->executeScript($script);
     }
     public function quit()
