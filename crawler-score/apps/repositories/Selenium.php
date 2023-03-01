@@ -47,7 +47,7 @@ class Selenium extends Component
     }
     public function waitItemHide($idDoom)
     {
-        $wait = new WebDriverWait($this->driver, 2);
+        $wait = new WebDriverWait($this->driver, 1);
         $wait->until(
             WebDriverExpectedCondition::invisibilityOfElementLocated(
                 WebDriverBy::id($idDoom)

@@ -2,16 +2,7 @@
 
 namespace Score\Repositories;
 
-use DOMDocument;
 use Exception;
-use Facebook\WebDriver\Exception\WebDriverException;
-use Facebook\WebDriver\WebDriver;
-use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverExpectedCondition;
-use Facebook\WebDriver\WebDriverWait;
-use Phalcon\Mvc\User\Component;
-
-use Symfony\Component\DomCrawler\Crawler;
 
 class CrawlerFlashScore extends CrawlerList
 {
