@@ -50,6 +50,7 @@ $loader->registerNamespaces(array(
     __DIR__ . '/../apps/repositories/',
     __DIR__ . '/../apps/repositories/Crawler/',
     __DIR__ . '/../apps/repositories/CrawlerList/',
+    __DIR__ . '/../apps/repositories/CrawlerDetail/',
 ],
     'Score\Utils' => __DIR__ . '/../apps/library/Utils/'
 ));
