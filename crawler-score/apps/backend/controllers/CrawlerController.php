@@ -84,7 +84,7 @@ class CrawlerController extends ControllerBase
                 $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
                 if ($result) {
                     $total++;
-                    echo "Save match success --- ";
+                  //  echo "Save match success --- ";
                 } else {
                     echo "Save match false ---";
                 }
