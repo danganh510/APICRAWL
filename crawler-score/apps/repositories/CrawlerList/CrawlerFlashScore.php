@@ -4,8 +4,11 @@ namespace Score\Repositories;
 
 use DOMDocument;
 use Exception;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriver;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
+use Facebook\WebDriver\WebDriverWait;
 use Phalcon\Mvc\User\Component;
 
 use Symfony\Component\DomCrawler\Crawler;
@@ -79,6 +82,12 @@ class CrawlerFlashScore extends CrawlerList
 
         foreach ($divClose as $key =>  $div) {
             try {
+                $wait = new WebDriverWait($this->seleniumDriver, 10);
+                $wait->until(
+                    WebDriverExpectedCondition::invisibilityOfElementLocated(
+                        WebDriverBy::id("onetrust-accept-btn-handler")
+                    )
+                );
                 $div->click();
                 // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
