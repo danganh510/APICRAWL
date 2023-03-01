@@ -87,6 +87,7 @@ class CrawlerFlashScore extends CrawlerList
                 $div->click();
                 // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
+                echo "--error 90---";
                 echo $e->getMessage();
             }
         }
