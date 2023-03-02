@@ -64,7 +64,8 @@ class CrawlerdetailliveController extends ControllerBase
             echo "crawl succes--";
         }
         //lưu thông tin mới của match
-        if (!empty($detail['match']) && isset($detail['match']['homeScore']) && isset($detail['match']['awayScore'])) {
+        if (!empty($detail['match']) && isset($detail['match']['homeScore']) && isset($detail['match']['awayScore'])
+        && $detail['match']['homeScore'] && $detail['match']['homeScore']) {
             $matchCrawl->setMatchHomeScore($detail['match']['homeScore']);
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
