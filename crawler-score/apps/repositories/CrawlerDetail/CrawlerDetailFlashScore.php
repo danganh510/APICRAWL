@@ -41,9 +41,15 @@ class CrawlerDetailFlashScore extends CrawlerDetail
      */
     public function getDivParent()
     { #/match-summary/match-statistics
-        $this->divInfo = $this->getDivInfo();
-        $this->divStart = $this->getDivStart();
-        $this->divTracker = $this->getDivTracker();
+        try {
+            //$html = $this->seleniumDriver->getPageSource();
+            //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
+            $this->divInfo = $this->getDivInfo();
+            $this->divStart = $this->getDivStart();
+            $this->divTracker = $this->getDivTracker();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
         echo $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
     }
@@ -61,10 +67,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     public function getDivStart()
     {
         $htmlDivStart = "";
-        $button = $this->seleniumDriver->findElement("a[href='#/match-summary/match-statistics']");
-        if (!$button) {
-            goto end;
-        }
+
         try {
             $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
         } catch (Exception $e) {
@@ -82,10 +85,8 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     }
     public function getDivTracker()
     {
-        $button = $this->seleniumDriver->findElement("a[href='#/match-summary/live-commentary']");
-        if (!$button) {
-            goto end;
-        }
+
+        $htmlTRacker = "";
         try {
             $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
         } catch (Exception $e) {
