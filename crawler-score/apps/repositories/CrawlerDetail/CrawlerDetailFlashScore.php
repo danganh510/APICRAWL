@@ -41,15 +41,9 @@ class CrawlerDetailFlashScore extends CrawlerDetail
      */
     public function getDivParent()
     { #/match-summary/match-statistics
-        try {
-            //$html = $this->seleniumDriver->getPageSource();
-            //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-            $this->divInfo = $this->getDivInfo();
-            $this->divStart = $this->getDivStart();
-            $this->divTracker = $this->getDivTracker();
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $this->divInfo = $this->getDivInfo();
+        $this->divStart = $this->getDivStart();
+        $this->divTracker = $this->getDivTracker();
         echo $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
     }
