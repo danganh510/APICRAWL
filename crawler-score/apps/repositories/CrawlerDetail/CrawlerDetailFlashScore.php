@@ -27,7 +27,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $info = $this->crawlDetailInfo();
         $start = $this->crawlDetailStarts();
         $tracker = $this->crawlDetailTracker();
-var_dump(microtime(true) - $time);
+        var_dump(microtime(true) - $time);
         $result = [
             'match' => $info['match'],
             'info' => $info['info'],
@@ -91,13 +91,14 @@ var_dump(microtime(true) - $time);
 
     public function crawlDetailInfo()
     {
-        $info = [
-            'info' => [],
-            'match' => [],
-        ];
+        $info = [];
         $divCrawl =  str_get_html($this->divInfo);
         if (!$divCrawl) {
-            return $info;
+            return [
+                'info' => [],
+                'match' => [],
+
+            ];
         }
 
         $divsInfo = $divCrawl->find("div[elementtiming='SpeedCurveFRP'] > div");
@@ -186,27 +187,27 @@ var_dump(microtime(true) - $time);
                 $info[] = [
                     'time' => $timeNow,
                     'homeText' => $homeText,
-                    'homeAssist' => str_replace(["(",")"],["",""],$assistHome),
+                    'homeAssist' => str_replace(["(", ")"], ["", ""], $assistHome),
                     'homeEvent' => $homeEvent,
                     'homeDescription' => $homeDescription,
-                    'homeSubIncident' => str_replace(["(",")"],["",""],$homeSubIncident),
-                    'homeincidentSubOut' => str_replace(["(",")"],["",""],$homeincidentSubOut),
+                    'homeSubIncident' => str_replace(["(", ")"], ["", ""], $homeSubIncident),
+                    'homeincidentSubOut' => str_replace(["(", ")"], ["", ""], $homeincidentSubOut),
 
                     'awayText' => $awayText,
-                    'awayAssist' => str_replace(["(",")"],["",""],$assistAway),
+                    'awayAssist' => str_replace(["(", ")"], ["", ""], $assistAway),
                     'awayEvent' => $awayEvent,
                     'awayDescription' => $awayDescription,
-                    'awaySubIncident' => str_replace(["(",")"],["",""],$awaySubIncident),
-                    'awayincidentSubOut' => str_replace(["(",")"],["",""],$awayincidentSubOut),
+                    'awaySubIncident' => str_replace(["(", ")"], ["", ""], $awaySubIncident),
+                    'awayincidentSubOut' => str_replace(["(", ")"], ["", ""], $awayincidentSubOut),
                 ];
             }
-        }     
+        }
 
         $homeScore = "";
         $awayScore = "";
         $time = "";
         $divScore = $divCrawl->find(".detailScore__matchInfo > div > span");
-        if (isset( $divScore[0])) {
+        if (isset($divScore[0])) {
             $homeScore = $divScore[0]->innertext();
         }
         if (isset($divScore[2])) {
@@ -234,21 +235,21 @@ var_dump(microtime(true) - $time);
         }
 
         $divsStart = $divCrawl->find(".soccer__row");
-        foreach($divsStart as $div) {
+        foreach ($divsStart as $div) {
             $description = "";
             $event = "";
-            $divEvent = $div->find(".soccer__icon",0);
+            $divEvent = $div->find(".soccer__icon", 0);
             if ($divEvent) {
                 $event = $this->getEvent($divEvent)['event'];
             }
-            $descriptionDiv = $div->find(".soccer__comment",0);
+            $descriptionDiv = $div->find(".soccer__comment", 0);
             if ($descriptionDiv) {
                 $description = $descriptionDiv->text();
             }
             $arrTemp = [
                 'description' => $description,
                 'event' => $event,
-                'time' => $div->find(".soccer__time",0)->getAttribute("title"),
+                'time' => $div->find(".soccer__time", 0)->getAttribute("title"),
             ];
             $tracker[] = $arrTemp;
         }
@@ -264,18 +265,19 @@ var_dump(microtime(true) - $time);
         }
 
         $divsStart = $divCrawl->find(".stat__row");
-        foreach($divsStart as $div) {
+        foreach ($divsStart as $div) {
             $arrTemp = [
-                'category' => $div->find(".stat__categoryName",0)->text(),
-                'homeValue' => $div->find(".stat__homeValue",0)->text(),
-                'awayValue' => $div->find(".stat__awayValue",0)->text(),
+                'category' => $div->find(".stat__categoryName", 0)->text(),
+                'homeValue' => $div->find(".stat__homeValue", 0)->text(),
+                'awayValue' => $div->find(".stat__awayValue", 0)->text(),
             ];
             $start[] = $arrTemp;
         }
         return $start;
     }
 
-    public function getEvent($description) {
+    public function getEvent($description)
+    {
         $event = "";
         $strDescription = "";
         $svg = $description->find("svg", 0);
@@ -289,7 +291,7 @@ var_dump(microtime(true) - $time);
                     $event = "Yellow Card";
                 }
             } else {
-                $event = substr($hrefIcon,strpos($hrefIcon,"#") + 1);
+                $event = substr($hrefIcon, strpos($hrefIcon, "#") + 1);
             }
         }
         $strDescription = $description->getAttribute("title");
