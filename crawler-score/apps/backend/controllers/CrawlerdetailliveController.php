@@ -35,6 +35,7 @@ class CrawlerdetailliveController extends ControllerBase
             echo "Not found Match";
             die();
         }
+        echo $matchCrawl->getMatchId()."---";
         
         if ($matchCrawl->getMatchLinkDetailFlashscore() == "" || $matchCrawl->getMatchLinkDetailFlashscore() == null) {
             goto end;

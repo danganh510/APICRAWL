@@ -66,6 +66,11 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     }
     public function getDivStart()
     {
+        $htmlDivStart = "";
+        $button = $this->seleniumDriver->findElement("a[href='#/match-summary/match-statistics']");
+        if(!$button) {
+            goto end;
+        }
         $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
         sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
@@ -74,10 +79,15 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $htmlDivStart = "<!DOCTYPE html>" . $htmlDivStart;
         //khai bao cho the svg
         $htmlDivStart = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivStart);
+        end:
         return $htmlDivStart;
     }
     public function getDivTracker()
     {
+        $button = $this->seleniumDriver->findElement("a[href='#/match-summary/live-commentary']");
+        if(!$button) {
+            goto end;
+        }
         $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
         sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
@@ -86,6 +96,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $htmlTRacker = "<!DOCTYPE html>" . $htmlTRacker;
         //khai bao cho the svg
         $htmlTRacker = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlTRacker);
+        end:
         return $htmlTRacker;
     }
 
