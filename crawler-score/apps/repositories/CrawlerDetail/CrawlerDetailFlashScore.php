@@ -27,7 +27,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $info = $this->crawlDetailInfo();
         $start = $this->crawlDetailStarts();
         $tracker = $this->crawlDetailTracker();
-        var_dump(microtime(true) - $time);
+       
         $result = [
             'match' => $info['match'],
             'info' => $info['info'],
