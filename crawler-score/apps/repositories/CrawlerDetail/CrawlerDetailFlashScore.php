@@ -67,15 +67,15 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     public function getDivStart()
     {
         $htmlDivStart = "";
-        echo "1";
         $button = $this->seleniumDriver->findElement("a[href='#/match-summary/match-statistics']");
-        echo "2";
-
-        var_dump($button);exit;
-        if(!$button) {
+        if (!$button) {
             goto end;
         }
-        $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
+        try {
+            $this->seleniumDriver->clickButton("a[href='#/match-summary/match-statistics']");
+        } catch (Exception $e) {
+            goto end;
+        }
         sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
         $htmlDivStart = $parentDiv->getAttribute("outerHTML");
@@ -89,10 +89,14 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     public function getDivTracker()
     {
         $button = $this->seleniumDriver->findElement("a[href='#/match-summary/live-commentary']");
-        if(!$button) {
+        if (!$button) {
             goto end;
         }
-        $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
+        try {
+            $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
+        } catch (Exception $e) {
+            goto end;
+        }
         sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
         $htmlTRacker = $parentDiv->getAttribute("outerHTML");
