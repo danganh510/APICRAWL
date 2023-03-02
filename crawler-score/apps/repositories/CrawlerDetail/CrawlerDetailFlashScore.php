@@ -10,13 +10,31 @@ use Phalcon\Mvc\User\Component;
 
 use Symfony\Component\DomCrawler\Crawler;
 
-class CrawlerDetailFlashScore extends CrawlerList
+class CrawlerDetailFlashScore extends CrawlerDetail
 {
     public function __construct($seleniumDriver, $url_crawl, $day_time, $isLive)
     {
         $this->seleniumDriver = $seleniumDriver;
         $this->url_crawl = $url_crawl;
         $this->isLive = $isLive;
+    }
+    public function crawlDetail()
+    {
+        require_once(__DIR__ . "/../../library/simple_html_dom.php");
+        $result = [];
+        $time = microtime(true);
+        $this->getDivParent();
+        $info = $this->crawlDetailInfo();
+        $start = $this->crawlDetailStarts();
+        $tracker = $this->crawlDetailTracker();
+var_dump(microtime(true) - $time);
+        $result = [
+            'match' => $info['match'],
+            'info' => $info['info'],
+            'start' => $start,
+            'tracker' => $tracker
+        ];
+        return $result;
     }
     /**
      * @ $this->seleniumDriver Selenium
@@ -26,10 +44,9 @@ class CrawlerDetailFlashScore extends CrawlerList
         try {
             //$html = $this->seleniumDriver->getPageSource();
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
-             $this->getDivInfo();
-            $this->getDivStart();
-            $this->getDivTracker();
-
+            $this->divInfo = $this->getDivInfo();
+            $this->divStart = $this->getDivStart();
+            $this->divTracker = $this->getDivTracker();
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -45,8 +62,6 @@ class CrawlerDetailFlashScore extends CrawlerList
         $htmlDivInfo = "<!DOCTYPE html>" . $htmlDivInfo;
         //khai bao cho the svg
         $htmlDivInfo = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivInfo);
-        MyRepo::saveText($htmlDivInfo, "info");
-        echo "info--";
         return $htmlDivInfo;
     }
     public function getDivStart()
@@ -59,198 +74,234 @@ class CrawlerDetailFlashScore extends CrawlerList
         $htmlDivStart = "<!DOCTYPE html>" . $htmlDivStart;
         //khai bao cho the svg
         $htmlDivStart = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivStart);
-        MyRepo::saveText($htmlDivStart, "Start");
-        echo "Start--";
-        sleep(1);
+        return $htmlDivStart;
     }
     public function getDivTracker()
     {
         $this->seleniumDriver->clickButton("a[href='#/match-summary/live-commentary']");
         sleep(1);
         $parentDiv = $this->seleniumDriver->findElement('div[id="detail"]');
-        $htmlDivStart = $parentDiv->getAttribute("outerHTML");
+        $htmlTRacker = $parentDiv->getAttribute("outerHTML");
 
-        $htmlDivStart = "<!DOCTYPE html>" . $htmlDivStart;
+        $htmlTRacker = "<!DOCTYPE html>" . $htmlTRacker;
         //khai bao cho the svg
-        $htmlDivStart = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDivStart);
-        MyRepo::saveText($htmlDivStart, "tracker");
-        echo "tracker--";
+        $htmlTRacker = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlTRacker);
+        return $htmlTRacker;
     }
-    public function crawlDetail()
+
+    public function crawlDetailInfo()
     {
-        $parentDiv = $this->getDivParent();
-        return [];
-
-        $time_1 = microtime(true);
-
-        require_once(__DIR__ . "/../../library/simple_html_dom.php");
-        $list_live_match = [];
-        $parentDiv =  str_get_html($parentDiv);
-        if (!$parentDiv) {
-            return [];
+        $info = [
+            'info' => [],
+            'match' => [],
+        ];
+        $divCrawl =  str_get_html($this->divInfo);
+        if (!$divCrawl) {
+            return $info;
         }
 
-        $parentDivs = $parentDiv->find("div");
-        // var_dump(count($parentDiv));
-        // $this->seleniumDriver->quit();
-        // exit;
-        foreach ($parentDivs as $key => $div) {
-            //   goto test;
-            try {
-                //check tournament
-                $divTuornaments = $div->find('.event__title--type');
+        $divsInfo = $divCrawl->find("div[elementtiming='SpeedCurveFRP'] > div");
+        foreach ($divsInfo as $div) {
+            $temp = [];
+            $timeNow = 0;
+            $homeEvent = "";
+            $homeDescription = "";
+            $homeText = "";
+            $assistHome = "";
+            $homeSubIncident = "";
+            $homeincidentSubOut = "";
 
-                if (!empty($divTuornaments)) {
-                    //đây là div chứa tournament
-                    $country_name = $div->find('.event__title--type')[0]->innertext();
+            $awayEvent = "";
+            $awayDescription = "";
+            $awayText = "";
+            $assistAway = "";
+            $awaySubIncident = "";
+            $awayincidentSubOut = "";
+            $classDiv = $div->getAttribute('class');
 
-                    $name = $div->find(".event__title--name")[0]->innertext();
-
-                    $country_name =  strtolower($country_name);
-                    $group = "";
-                    if ((strpos($name, "Group") || strpos($name, "Offs") || strpos($name, "Apertura") || strpos($name, "Clausura"))
-
-                        && strpos($name, " - ")
-                    ) {
-                        echo $name;
-                        $nameDetail = explode(" - ", $name);
-                        $name = $nameDetail[0];
-                        $group = $nameDetail[1];
-                    }
-                    $hrefTour = "/football/" . MyRepo::create_slug($country_name) . "/" . $this->create_slug(strtolower($name));
-
-
-                    $tournamentModel = new MatchTournament();
-                    $tournamentModel->setCountryName(strtolower($country_name));
-                    $tournamentModel->setTournamentName(strtolower($name));
-                    $tournamentModel->setTournamentGroup(strtolower($group));
-                    $tournamentModel->setId(count($this->list_live_tournaments) + 1);
-                    $tournamentModel->setCountryImage("");
-                    $tournamentModel->setTournamentHref($hrefTour);
-
-                    $this->list_live_tournaments[] = $tournamentModel;
-
-                    continue;
+            if (strpos($classDiv, 'smv__homeParticipant') !== false) {
+                $time = $div->find(".smv__timeBox", 0);
+                if ($time) {
+                    $timeNow = $time->text();
                 }
 
-                //match
-                $divMatch = $div->find(".event__participant");
+                $description = $div->find("div > div > div", 0);
 
-                if (!empty($divMatch)) {
-                    $list_live_match[] = $this->getMatch($div);
-
-                    echo "time get match: " . (microtime(true) - $time_1) . "</br>";
+                if ($description) {
+                    $arrEvent = $this->getEvent($description);
+                    $homeEvent = $arrEvent['event'];
+                    $homeDescription = $arrEvent['strDescription'];
                 }
-            } catch (Exception $e) {
-                echo "1-";
 
-                continue;
+                $home = $div->find("a", 0);
+                if ($home) {
+                    $homeText = $home->text();
+                }
+                $assist = $div->find(".smv__assist", 0);
+                if ($assist) {
+                    $assistHome = $assist->text();
+                }
+                $supIncident = $div->find(".smv__subIncident", 0);
+                if ($supIncident) {
+                    $homeSubIncident = $supIncident->text();
+                }
+                $incidentSubOut = $div->find(".smv__incidentSubOut", 0);
+                if ($incidentSubOut) {
+                    $homeincidentSubOut = $incidentSubOut->text();
+                }
             }
-            test:
-            // $text = $div->getAttribute("outerHTML");
-            // $this->saveText($text, $key);
-        }
-        return $list_live_match;
-    }
-    public static function crawlDetailInfo($url)
-    {
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
+            if (strpos($classDiv, 'smv__awayParticipant') !== false) {
+                $time = $div->find(".smv__timeBox", 0);
+                if ($time) {
+                    $timeNow = $time->text();
+                }
+                $description = $div->find("div > div", 1);
 
-        $info = [];
-        $crawler->filter('#__livescore > div')->each(
-
-            function (Crawler $item) use (&$info) {
-
-                //bb là class lấy giải đấu, qb là class lấy trận đấu
-                if ($item->filter("div[data-testid^='match_detail-event'] > span")->count() > 0) {
-                    $temp = [
-                        'time' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(0)->text(),
-                        'homeText' => $item->filter("div[data-testid^='match_detail-event'] > span")->eq(1)->text(),
-                    ];
-                    if ($item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)) {
-                        if (empty($temp['homeText'])) {
-                            $temp['homeEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");
-                        } else {
-                            $temp['awayEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(0)->attr("name");
-                        }
-                    }
-                    if (count($item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")) > 1) {
-                        $temp['awayEvent'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq(2)->filter("svg")->eq(1)->attr("name");
-                    }
-                    $away_event = count($item->filter("div[data-testid^='match_detail-event'] > span"));
-                    if (count($item->filter("div[data-testid^='match_detail-event'] > span")->eq($away_event - 1))) {
-                        $temp['awayText'] = $item->filter("div[data-testid^='match_detail-event'] > span")->eq($away_event - 1)->text();
-                    }
+                if ($description) {
+                    $arrEvent = $this->getEvent($description);
+                    $awayEvent = $arrEvent['event'];
+                    $awayDescription = $arrEvent['strDescription'];
                 }
 
-                //HT or FT
-                if (
-                    $item->filter("div[data-testid^='half-time-scores'] > span")->count() > 0 ||
-                    $item->filter("div[data-testid^='full-time-scores'] > span")->count() > 0
-                ) {
-                    $temp = [
-                        'time' => $item->filter("div > span")->eq(0)->text(),
-                        'homeScore' => $item->filter("div > div > span[data-testid^='match_detail-home_score']")->text(),
-                        'awayScore' => $item->filter("div > div > span[data-testid^='match_detail-away_score']")->text(),
-                    ];
+                $away = $div->find("a", 0);
+                if ($away) {
+                    $awayText = $away->text();
                 }
-                if (!empty($temp)) {
-                    $temp['time'] =  explode("'", $temp['time'])[0];
-                    $info[] = $temp;
+                $assist = $div->find(".smv__assistAway", 0);
+                if ($assist) {
+                    $assistAway = $assist->text();
+                }
+                $supIncident = $div->find(".smv__subIncident", 0);
+                if ($supIncident) {
+                    $awaySubIncident = $supIncident->text();
+                }
+
+                $incidentSubOut = $div->find(".smv__incidentSubOut", 0);
+                if ($incidentSubOut) {
+                    $awayincidentSubOut = $incidentSubOut->text();
                 }
             }
 
-        );
-        return  Promise\all($info);
-    }
-    public static function crawlDetailTracker($url)
-    {
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
+            if ($timeNow) {
+                $info[] = [
+                    'time' => $timeNow,
+                    'homeText' => $homeText,
+                    'homeAssist' => str_replace(["(",")"],["",""],$assistHome),
+                    'homeEvent' => $homeEvent,
+                    'homeDescription' => $homeDescription,
+                    'homeSubIncident' => str_replace(["(",")"],["",""],$homeSubIncident),
+                    'homeincidentSubOut' => str_replace(["(",")"],["",""],$homeincidentSubOut),
 
+                    'awayText' => $awayText,
+                    'awayAssist' => str_replace(["(",")"],["",""],$assistAway),
+                    'awayEvent' => $awayEvent,
+                    'awayDescription' => $awayDescription,
+                    'awaySubIncident' => str_replace(["(",")"],["",""],$awaySubIncident),
+                    'awayincidentSubOut' => str_replace(["(",")"],["",""],$awayincidentSubOut),
+                ];
+            }
+        }     
+
+        $homeScore = "";
+        $awayScore = "";
+        $time = "";
+        $divScore = $divCrawl->find(".detailScore__matchInfo > div > span");
+        if (isset( $divScore[0])) {
+            $homeScore = $divScore[0]->innertext();
+        }
+        if (isset($divScore[2])) {
+            $awayScore = $divScore[2]->innertext();
+        }
+        if (isset($divScore[3])) {
+            $time = $divScore[3]->innertext();
+        }
+
+        return [
+            'info' => $info,
+            'match' => [
+                'homeScore' => $homeScore,
+                'awayScore' => $awayScore,
+                'timeNow' => $time
+            ]
+        ];
+    }
+    public function crawlDetailTracker()
+    {
         $tracker = [];
-        $crawler->filter('#__livescore > div[data-testid^="commentary_match_detail"]')->each(
+        $divCrawl =  str_get_html($this->divTracker);
+        if (!$divCrawl) {
+            return $tracker;
+        }
 
-            function (Crawler $item) use (&$tracker) {
-
-                //bb là class lấy giải đấu, qb là class lấy trận đấu
-                if ($item->filter("span")->count() > 1) {
-                    $temp = [
-                        'time' => $item->filter("span")->eq(0)->text(),
-                        'content' => $item->filter("span")->eq(1)->text(),
-                    ];
-                    $temp['time'] =  explode("'", $temp['time'])[0];
-                    $tracker[] = $temp;
-                }
+        $divsStart = $divCrawl->find(".soccer__row");
+        foreach($divsStart as $div) {
+            $description = "";
+            $event = "";
+            $divEvent = $div->find(".soccer__icon",0);
+            if ($divEvent) {
+                $event = $this->getEvent($divEvent)['event'];
             }
+            $descriptionDiv = $div->find(".soccer__comment",0);
+            if ($descriptionDiv) {
+                $description = $descriptionDiv->text();
+            }
+            $arrTemp = [
+                'description' => $description,
+                'event' => $event,
+                'time' => $div->find(".soccer__time",0)->getAttribute("title"),
+            ];
+            $tracker[] = $arrTemp;
+        }
 
-        );
-        return  Promise\all($tracker);
+        return $tracker;
     }
-    public function crawlDetailStarts($url)
+    public function crawlDetailStarts()
     {
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
+        $start = [];
+        $divCrawl =  str_get_html($this->divStart);
+        if (!$divCrawl) {
+            return $start;
+        }
 
-        $starts = [];
-        $crawler->filter('#__livescore > div[data-testid^="match_detail-statistics"]')->each(
-            function (Crawler $item) use (&$starts) {
-                if ($item->filter("div")->count() > 1) {
-                    try {
-                        $temp = [
-                            'home' => $item->filter("span > span > span")->eq(0)->text(),
-                            'away' => $item->filter("span > span > span")->eq($item->filter("span > span > span")->count() - 1)->text(),
-                            'name' => $item->filter("span > span > div")->eq(0)->text(),
-                        ];
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+        $divsStart = $divCrawl->find(".stat__row");
+        foreach($divsStart as $div) {
+            $arrTemp = [
+                'category' => $div->find(".stat__categoryName",0)->text(),
+                'homeValue' => $div->find(".stat__homeValue",0)->text(),
+                'awayValue' => $div->find(".stat__awayValue",0)->text(),
+            ];
+            $start[] = $arrTemp;
+        }
+        return $start;
+    }
+
+    public function getEvent($description) {
+        $event = "";
+        $strDescription = "";
+        $svg = $description->find("svg", 0);
+        //get event
+        if ($svg) {
+            $hrefIcon = $svg->find("use", 0)->getAttribute("xlink:href");
+            if (strpos($hrefIcon, "card") !== false) {
+                if ($svg->text() == "Red Card") {
+                    $event = "Red Card";
+                } else {
+                    $event = "Yellow Card";
                 }
-                $starts[] = $temp;
+            } else {
+                $event = substr($hrefIcon,strpos($hrefIcon,"#") + 1);
             }
-
-        );
-        return  Promise\all($starts);
+        }
+        $strDescription = $description->getAttribute("title");
+        if (!$strDescription) {
+            $divDescription = $description->find("svg > title", 0);
+            if ($divDescription) {
+                $strDescription = $divDescription->text();
+            }
+        }
+        return [
+            'event' => $event,
+            'strDescription' => $strDescription
+        ];
     }
 }

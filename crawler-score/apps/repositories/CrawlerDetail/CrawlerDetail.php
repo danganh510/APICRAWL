@@ -10,7 +10,9 @@ class CrawlerDetail extends Component
     public $url_sf = "https://www.sofascore.com/football";
     public $url_lc = "https://www.livescores.com";
     public $time_plus;
-    public $parentDiv;
+    public $divInfo;
+    public $divStart;
+    public $divTracker;
     public $type_crawl;
     public $url_crawl;
     public $isLive;

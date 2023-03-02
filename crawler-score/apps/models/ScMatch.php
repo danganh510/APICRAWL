@@ -8,6 +8,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_tournament_id;
     protected $match_name;
     protected $match_status;
+    protected $match_crawl_detail;
     protected $match_home_id;
     protected $match_away_id;
     protected $match_home_score;
@@ -86,6 +87,21 @@ class ScMatch extends \Phalcon\Mvc\Model
         $this->match_status = $match_status;
     }
 
+        /**
+     * @return mixed
+     */
+    public function getMatchCrawlDetail()
+    {
+        return $this->match_crawl_detail;
+    }
+
+    /**
+     * @param mixed $match_crawl_detail
+     */
+    public function setMatchCrawlDetail($match_crawl_detail)
+    {
+        $this->match_crawl_detail = $match_crawl_detail;
+    }
     /**
      * @return mixed
      */
