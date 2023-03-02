@@ -68,6 +68,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
     {
         $htmlDivStart = "";
         $button = $this->seleniumDriver->findElement("a[href='#/match-summary/match-statistics']");
+        var_dump($button);exit;
         if(!$button) {
             goto end;
         }
