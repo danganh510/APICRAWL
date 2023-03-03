@@ -16,6 +16,7 @@ class ScTournament extends \Phalcon\Mvc\Model
     protected $tournament_href_flashscore;
     protected $tournament_href_livescore;
     protected $tournament_order;
+    protected $tournament_crawl;
     protected $tournament_active;
 
 
@@ -186,6 +187,21 @@ class ScTournament extends \Phalcon\Mvc\Model
     {
         $this->tournament_order = $tournament_order;
     }
+    /**
+     * @return mixed
+     */
+    public function getTournamentCrawl()
+    {
+        return $this->tournament_crawl;
+    }
+
+    /**
+     * @param mixed $tournament_crawl
+     */
+    public function setTournamentCrawl($tournament_crawl)
+    {
+        $this->tournament_crawl = $tournament_crawl;
+    }
 
     /**
      * @return mixed
@@ -225,5 +241,15 @@ class ScTournament extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+    public static function getTourIdCrawl() {
+        $arr = self::find([
+            'columns' => "tournament_id",
+            'tournament_crawl = "Y"',
+            'orderBy' => "tournament_order ASC"
+        ]);
+      
+        $arr = array_column($arr->toArray(),"tournament_id");
+        return $arr;
     }
 }

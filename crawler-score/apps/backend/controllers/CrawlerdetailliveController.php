@@ -11,6 +11,7 @@ use Score\Repositories\MatchCrawl;
 
 
 use Score\Models\ScMatchInfo;
+use Score\Models\ScTournament;
 
 class CrawlerdetailliveController extends ControllerBase
 {
@@ -23,20 +24,37 @@ class CrawlerdetailliveController extends ControllerBase
         $is_live =  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
         if ($is_live) {
+            //nếu crawl live thì crawl các trận đấu có tournament_crawl = Y;
+            $arrTourNammentCrawlID = ScTournament::getTourIdCrawl();
+            if (empty($arrTourNammentCrawlID)) {
+                echo "Not found tournament";
+                die();
+            }
             $matchCrawl = ScMatch::findFirst([
-                'match_crawl_detail = 0 AND match_status = "S" '
+                ' match_status = "S" AND match_crawl_detail_live = "1" AND  FIND_IN_SET(match_tournament_id,:arrTour:)',
+                'bind' => [
+                    'arrTour' => implode(",",$arrTourNammentCrawlID)
+                ]
             ]);
+            if (!$matchCrawl) {
+                $matchCrawl = ScMatch::findFirst([
+                    ' match_status = "S" AND match_crawl_detail_live = "0" AND  FIND_IN_SET(match_tournament_id,:arrTour:)',
+                    'bind' => [
+                        'arrTour' => implode(",",$arrTourNammentCrawlID)
+                    ]
+                ]);
+            }
         } else {
             $matchCrawl = ScMatch::findFirst([
-                'match_crawl_detail = 0 AND match_status != "W"'
+                'match_crawl_detail = 0 AND match_status != "W" '
             ]);
         }
         if (!$matchCrawl) {
             echo "Not found Match";
             die();
         }
-        echo $matchCrawl->getMatchId()."---";
-        
+        echo $matchCrawl->getMatchId() . "---";
+
         if ($matchCrawl->getMatchLinkDetailFlashscore() == "" || $matchCrawl->getMatchLinkDetailFlashscore() == null) {
             goto end;
         }
@@ -64,13 +82,22 @@ class CrawlerdetailliveController extends ControllerBase
             echo "crawl succes--";
         }
         //lưu thông tin mới của match
-        if (!empty($detail['match']) && isset($detail['match']['homeScore']) && isset($detail['match']['awayScore'])
-        && is_numeric($detail['match']['homeScore']) && is_numeric($detail['match']['homeScore'])) {
+        if (
+            !empty($detail['match']) && isset($detail['match']['homeScore']) && isset($detail['match']['awayScore'])
+            && is_numeric($detail['match']['homeScore']) && is_numeric($detail['match']['homeScore'])
+        ) {
             $matchCrawl->setMatchHomeScore($detail['match']['homeScore']);
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
-        end: 
+        end:
         $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
+        if ($is_live) {
+            if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
+                $matchCrawl->setMatchCrawlDetailLive(0);
+            } else {
+                $matchCrawl->setMatchCrawlDetailLive(1);
+            }
+        }
         $matchCrawl->save();
         echo "---finish in " . (time() - $start_time_cron) . " second";
         die();

@@ -9,6 +9,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_name;
     protected $match_status;
     protected $match_crawl_detail;
+    protected $match_crawl_detail_live;
     protected $match_home_id;
     protected $match_away_id;
     protected $match_home_score;
@@ -40,7 +41,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_id = $match_id;
     }
-   /**
+    /**
      * @return mixed
      */
     public function getMatchTournamentId()
@@ -87,7 +88,7 @@ class ScMatch extends \Phalcon\Mvc\Model
         $this->match_status = $match_status;
     }
 
-        /**
+    /**
      * @return mixed
      */
     public function getMatchCrawlDetail()
@@ -101,6 +102,21 @@ class ScMatch extends \Phalcon\Mvc\Model
     public function setMatchCrawlDetail($match_crawl_detail)
     {
         $this->match_crawl_detail = $match_crawl_detail;
+    }
+    /**
+     * @return mixed
+     */
+    public function getMatchCrawlDetailLive()
+    {
+        return $this->match_crawl_detail_live;
+    }
+
+    /**
+     * @param mixed $match_crawl_detail_live
+     */
+    public function setMatchCrawlDetailLive($match_crawl_detail_live)
+    {
+        $this->match_crawl_detail_live = $match_crawl_detail_live;
     }
     /**
      * @return mixed
@@ -165,7 +181,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_away_score = $match_away_score;
     }
-    
+
     /**
      * @return mixed
      */
@@ -229,7 +245,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_start_time = ceil($match_start_time / 100) * 100;
     }
-        /**
+    /**
      * @return mixed
      */
     public function getMatchStartDay()
@@ -244,7 +260,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_start_day = $match_start_day;
     }
-        /**
+    /**
      * @return mixed
      */
     public function getMatchStartMonth()
@@ -259,7 +275,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_start_month = $match_start_month;
     }
-        /**
+    /**
      * @return mixed
      */
     public function getMatchStartYear()
@@ -291,7 +307,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_order = $match_order;
     }
-   /**
+    /**
      * @return mixed
      */
     public function getMatchLinkDetailFlashscore()
@@ -307,7 +323,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_link_detail_flashscore = $match_link_detail_flashscore;
     }
-   /**
+    /**
      * @return mixed
      */
     public function getMatchLinkDetailSofa()
@@ -323,7 +339,7 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_link_detail_sofa = $match_link_detail_sofa;
     }
-  /**
+    /**
      * @return mixed
      */
     public function getMatchLinkDetailLivescore()
@@ -361,6 +377,4 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-
- 
 }

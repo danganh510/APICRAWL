@@ -347,6 +347,7 @@ class ScCountry extends \Phalcon\Mvc\Model
     }
     public static function findFirstCodeByName($name)
     {
+
         $country =  self::findFirst([
             'columns' => "country_code",
             'country_name = :name:',
@@ -354,6 +355,7 @@ class ScCountry extends \Phalcon\Mvc\Model
                 'name' => $name
             ]
         ]);
+       // $arrCountry = array_column($country->toArray(),'country_code','country_name');
         return $country ? $country->country_code : "";
     }
 }
