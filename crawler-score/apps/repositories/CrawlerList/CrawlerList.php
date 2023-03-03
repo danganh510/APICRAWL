@@ -97,6 +97,7 @@ class CrawlerList extends Component
         $liveMatch->setHrefDetail($data['href_detail']);
         $liveMatch->setRound($this->round);
         $liveMatch->setTournament($this->list_live_tournaments[count($this->list_live_tournaments) - 1]);
+        $liveMatch->setCountryCode($this->list_live_tournaments[count($this->list_live_tournaments) - 1]->getCountryCode());
         if (isset($data['home_image'])) {
             $liveMatch->setHomeImg($data['home_image']);
         }

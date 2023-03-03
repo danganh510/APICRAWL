@@ -24,7 +24,7 @@ class CrawlerdetailliveController extends ControllerBase
         $this->type_crawl = $this->request->get("type");
         if ($is_live) {
             $matchCrawl = ScMatch::findFirst([
-                'match_crawl_detail = 0 AND match_status = "S"'
+                'match_crawl_detail = 0 AND match_status = "S" '
             ]);
         } else {
             $matchCrawl = ScMatch::findFirst([

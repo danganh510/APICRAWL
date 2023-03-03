@@ -299,10 +299,10 @@ class ScCountry extends \Phalcon\Mvc\Model
     /**
      * Initialize method for model.
      */
-//    public function initialize()
-//    {
-//        $this->setSchema("Travelnercom");
-//    }
+    //    public function initialize()
+    //    {
+    //        $this->setSchema("Travelnercom");
+    //    }
 
     /**
      * Returns table name mapped in the model.
@@ -336,4 +336,24 @@ class ScCountry extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public static function findFirstByCode($code)
+    {
+        return self::findFirst([
+            'country_code = :code:',
+            'bind' => [
+                'code' => $code
+            ]
+        ]);
+    }
+    public static function findFirstCodeByName($name)
+    {
+        $country =  self::findFirst([
+            'columns' => "country_code",
+            'country_name = :name:',
+            'bind' => [
+                'name' => $name
+            ]
+        ]);
+        return $country ? $country->country_code : "";
+    }
 }

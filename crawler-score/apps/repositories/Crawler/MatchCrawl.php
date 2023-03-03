@@ -23,6 +23,7 @@ class MatchCrawl extends Component
     private $away_score;
     private $away_img;
     private $href_detail;
+    private $country_code;
     private $tournament;
     private $round; //round or group
     public function getTime() {
@@ -101,6 +102,13 @@ class MatchCrawl extends Component
     public function setRound($round) {
         $this->round = $round;
         return $this->round;
+    }
+    public function getCountryCode() {
+        return $this->country_code;
+    }
+    public function setCountryCode($country_code) {
+        $this->country_code = $country_code;
+        return $this->country_code;
     }
     
 }

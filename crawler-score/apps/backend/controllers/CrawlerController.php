@@ -65,8 +65,8 @@ class CrawlerController extends ControllerBase
             listMatch:
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
-                $home = Team::saveTeam($match->getHome(), $match->getAwayImg(), $this->type_crawl);
-                $away = Team::saveTeam($match->getAway(), $match->getAwayImg(), $this->type_crawl);
+                $home = Team::saveTeam($match->getHome(), $match->getAwayImg(),$match->getCountryCode(), $this->type_crawl);
+                $away = Team::saveTeam($match->getAway(), $match->getAwayImg(),$match->getCountryCode(), $this->type_crawl);
                 $tournament = Tournament::saveTournament($match->getTournament(), $this->type_crawl);
 
                 if (!$home) {

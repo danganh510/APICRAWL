@@ -24,3 +24,4 @@ crawler-score/uploadsitemapcsv/
 crawler-score/apps/library/Google/path/
 crawler-score/test
 crawler-score/test/*
+crawler-score/apps/cache

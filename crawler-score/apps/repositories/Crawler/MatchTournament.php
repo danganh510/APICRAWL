@@ -9,6 +9,7 @@ class MatchTournament extends Component
     private $tournament_name;
     private $tournament_group;
     private $country_name;
+    private $country_code;
     private $country_image;
     private $tournament_href;
     public function getId() {
@@ -25,6 +26,9 @@ class MatchTournament extends Component
     }
     public function getCountryName() {
         return $this->country_name;
+    }
+    public function getCountryCode() {
+        return $this->country_code;
     }
     public function getCountryImage() {
         return $this->country_image;
@@ -48,6 +52,10 @@ class MatchTournament extends Component
     public function setCountryName($country_name) {
         $this->country_name = $country_name;
         return $this->country_name;
+    }
+    public function setCountryCode($country_code) {
+        $this->country_code = $country_code;
+        return $this->country_code;
     }
     public function setCountryImage($country_image) {
         $this->country_image = $country_image;

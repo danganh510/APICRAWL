@@ -19,7 +19,7 @@ class Team extends Component
             ]
         ]);
     }
-    public static function saveTeam($team_name, $image, $type)
+    public static function saveTeam($team_name, $image,$country_code, $type)
     {
         $team = Team::findByName($team_name, MyRepo::create_slug($team_name));
         if (!$team) {
@@ -40,8 +40,12 @@ class Team extends Component
                     break;
             }
             $team->setTeamActive("Y");
-            $team->save();
+           
         }
+        if (!$team->getTeamCountryCode()) {
+            $team->setTeamCountryCode($country_code);
+        }
+        $team->save();
 
         return $team;
     }

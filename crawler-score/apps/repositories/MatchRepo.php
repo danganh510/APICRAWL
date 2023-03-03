@@ -59,6 +59,7 @@ class MatchRepo extends Component
         $matchSave->setMatchHomeScore(is_numeric($match->getHomeScore()) ? $match->getHomeScore() : 0);
         $matchSave->setMatchAwayScore(is_numeric($match->getAwayScore()) ? $match->getAwayScore() : 0);
         $matchSave->setMatchTournamentId($tournament->getTournamentId());
+        $matchSave->setMatchTournamentId($tournament->getTournamentId());
         if ($type_crawl == MatchCrawl::TYPE_FLASH_SCORE) {
             $matchSave->setMatchLinkDetailFlashscore($match->getHrefDetail());
         }

@@ -3,6 +3,7 @@
 namespace Score\Repositories;
 
 use Exception;
+use Score\Models\ScCountry;
 
 class CrawlerFlashScore extends CrawlerList
 {
@@ -161,8 +162,10 @@ class CrawlerFlashScore extends CrawlerList
                     $hrefTour = "/football/" . MyRepo::create_slug($country_name) . "/" . $this->create_slug(strtolower($name));
 
 
+                    $country_code = ScCountry::findFirstCodeByName($country_name);
                     $tournamentModel = new MatchTournament();
                     $tournamentModel->setCountryName(strtolower($country_name));
+                    $tournamentModel->setCountryCode(strtolower($country_code));
                     $tournamentModel->setTournamentName(strtolower($name));
                     $tournamentModel->setTournamentGroup(strtolower($group));
                     $tournamentModel->setId(count($this->list_live_tournaments) + 1);
