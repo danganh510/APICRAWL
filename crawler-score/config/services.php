@@ -202,6 +202,11 @@ $di['router'] = function () {
         "controller" => "crawlerdetaillive",
         "action" => "index"
     ));
+    $router->add("/crawler-logo-small", array(
+        "module" => "backend",
+        "controller" => "crawlimage",
+        "action" => "index"
+    ));
     $router->add("/logout", array(
         "module" => "backend",
         "controller" => "login",

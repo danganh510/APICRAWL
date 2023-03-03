@@ -4,6 +4,7 @@ namespace Score\Models;
 
 class ScTeam extends \Phalcon\Mvc\Model
 {
+    
     protected $team_id;
     protected $team_name;
     protected $team_slug;
@@ -13,6 +14,7 @@ class ScTeam extends \Phalcon\Mvc\Model
 
     protected $team_name_flashscore;
     protected $team_logo;
+    protected $team_logo_small;
     protected $team_active;
 
 
@@ -144,6 +146,21 @@ class ScTeam extends \Phalcon\Mvc\Model
         $this->team_logo = $team_logo;
     }
 
+        /**
+     * @return mixed
+     */
+    public function getTeamLogoSmall()
+    {
+        return $this->team_logo_small;
+    }
+
+    /**
+     * @param mixed $team_logo_small
+     */
+    public function setTeamLogoSmall($team_logo_small)
+    {
+        $this->team_logo_small = $team_logo_small;
+    }
     /**
      * @return mixed
      */
@@ -190,5 +207,11 @@ class ScTeam extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+    public static function findTeamLogoSmallNull($limit) {
+        return self::find([
+            '(team_logo_small = "" OR team_logo_small IS NULL) AND team_logo != ""',
+            "limit" => (int) $limit
+        ]);
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Team extends Component
 {
+    const FOLDER_IMAGE_SMALL = "/images/team/small";
     public static function findByName($name, $name_slug)
     {
         return ScTeam::findFirst([
