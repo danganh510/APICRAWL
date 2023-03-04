@@ -243,7 +243,8 @@ class ScMatch extends \Phalcon\Mvc\Model
      */
     public function setMatchStartTime($match_start_time)
     {
-        $this->match_start_time = ceil($match_start_time / 100) * 100;
+        //làm tròn giờ
+        $this->match_start_time = is_numeric($match_start_time) ?  ceil($match_start_time / 100) * 100 : $match_start_time;
     }
     /**
      * @return mixed

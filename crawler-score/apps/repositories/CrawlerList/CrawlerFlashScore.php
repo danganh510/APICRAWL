@@ -74,7 +74,7 @@ class CrawlerFlashScore extends CrawlerList
 
         foreach ($divClose as $key =>  $div) {
             try {
-                $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
+              //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
                 $div->click();
                 // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
             } catch (Exception $e) {
