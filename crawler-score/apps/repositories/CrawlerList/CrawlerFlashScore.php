@@ -36,7 +36,7 @@ class CrawlerFlashScore extends CrawlerList
                     break;
                 }
             }
-            sleep(2.5);
+            sleep(4);
         } else {
             //  click button LIVE cho lần đầu
             $divFilters = $this->seleniumDriver->findElements(".filters__text--short");
@@ -50,51 +50,24 @@ class CrawlerFlashScore extends CrawlerList
             }
             sleep(1);
         }
-        // echo "time lick button: " . (microtime(true) - $time_1) . "</br>";
 
-
-        // sleep(1);
-        //click close
-        $total = 0;
-        // while(!empty($this->seleniumDriver->findElements(".event__expander--close"))) {
-        //     $divClose = $seleniumDriver->findElements(".event__expander--close");
-        //     foreach ($divClose as $key =>  $div) {
-        //         try {
-        //             $div->click();
-        //             sleep(0.1);
-        //             echo "time click icon $key: ". (microtime(true) - $time_1). "</br>";
-        //             break;
-        //         } catch (Exception $e) {
-        //             echo $e->getMessage();
-        //         }
-        //     }
-        // }
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         $divClose = array_reverse($divClose);
 
+        $click = 0;
         foreach ($divClose as $key =>  $div) {
             try {
-              //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
+                //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
                 $div->click();
-                // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
+                echo "good-79--";
+                sleep(0.1);
+                $click++;
             } catch (Exception $e) {
                 echo "error85:";
             }
         }
-        // $divClose = $this->seleniumDriver->findElements(".event__expander--close");
-        // $divClose = array_reverse($divClose);
-        // foreach ($divClose as $key =>  $div) {
-        //     try {
-        //         $div->click();
-        //         // echo "time click icon $key: " . (microtime(true) - $time_1) . "</br>";
-        //     } catch (Exception $e) {
-        //         echo "--error 90---";
-        //         echo $e->getMessage();
-        //     }
-        // }
 
-        // echo "time click icon: " . (microtime(true) - $time_1) . "</br>";
-        sleep(0.1);
+        sleep($click * 0.05);
         $htmlDiv = "";
         try {
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
@@ -114,17 +87,15 @@ class CrawlerFlashScore extends CrawlerList
             echo "error118:";
             echo $e->getMessage();
         }
-        $this->seleniumDriver->checkRam();
+       // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
         // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
-        return ($htmlDiv);
+        return $htmlDiv;
     }
     public function crawlList()
     {
         $parentDiv = $this->getDivParent();
-        $time_1 = microtime(true);
-
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
         $parentDiv =  str_get_html($parentDiv);
@@ -133,9 +104,7 @@ class CrawlerFlashScore extends CrawlerList
         }
 
         $parentDivs = $parentDiv->find("div");
-        // var_dump(count($parentDiv));
-        // $this->seleniumDriver->quit();
-        // exit;
+
         foreach ($parentDivs as $key => $div) {
             //   goto test;
             try {
@@ -144,9 +113,9 @@ class CrawlerFlashScore extends CrawlerList
 
                 if (!empty($divTuornaments)) {
                     //đây là div chứa tournament
-                    $country_name = $div->find('.event__title--type')[0]->innertext();
+                    $country_name = $div->find('.event__title--type', 0)->innertext();
 
-                    $name = $div->find(".event__title--name")[0]->innertext();
+                    $name = $div->find(".event__title--name", 0)->innertext();
 
                     $country_name =  strtolower($country_name);
                     $group = "";
@@ -160,7 +129,6 @@ class CrawlerFlashScore extends CrawlerList
                         $group = $nameDetail[1];
                     }
                     $hrefTour = "/football/" . MyRepo::create_slug($country_name) . "/" . $this->create_slug(strtolower($name));
-
 
                     $country_code = ScCountry::findFirstCodeByName($country_name);
                     $tournamentModel = new MatchTournament();

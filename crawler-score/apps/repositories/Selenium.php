@@ -42,8 +42,8 @@ class Selenium extends Component
 
         //  $this->driver->manage()->timeouts()->implicitlyWait(100); //to close tab
         //wait javascript load
-        sleep(2);
-        return $this->driver->getWindowHandle();
+        sleep(1);
+        //return $this->driver->getWindowHandle();
     }
     public function waitItemHide($idDoom)
     {
