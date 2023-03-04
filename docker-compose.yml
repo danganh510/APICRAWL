@@ -26,7 +26,7 @@ services:
   #  build: .
     container_name: api
     ports:
-      - 80:80
+      - 81:80
       - "444:443"
     environment:
       XDEBUG_ENABLE: 1
@@ -56,7 +56,7 @@ services:
       NODE_MAX_INSTANCES: 10
       NODE_MAX_SESSION: 10
       SCREEN_WIDTH: 1920
-      SCREEN_HEIGHT: 1200
+      SCREEN_HEIGHT: 1080
   # socket.io:
   #   image: node:alpine
   #   volumes:

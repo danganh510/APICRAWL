@@ -52,20 +52,20 @@ class CrawlerFlashScore extends CrawlerList
             }
             sleep(1);
         }
-        $divOpen = $this->seleniumDriver->findElements(".event__expanderBlock");
-        //  $divClose = array_reverse($divClose);
-        $click = 0;
-        foreach ($divOpen as $key =>  $div) {
-            try {
-                //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
-                $div->click();
-                echo "good-79--";
-                sleep(0.1);
-                $click++;
-            } catch (Exception $e) {
-                echo "error68:";
-            }
-        }
+        // $divOpen = $this->seleniumDriver->findElements(".event__expanderBlock");
+        // //  $divClose = array_reverse($divClose);
+        // $click = 0;
+        // foreach ($divOpen as $key =>  $div) {
+        //     try {
+        //         //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
+        //         $div->click();
+        //         echo "good-79--";
+        //         sleep(0.1);
+        //         $click++;
+        //     } catch (Exception $e) {
+        //         echo "error68:";
+        //     }
+        // }
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         //  $divClose = array_reverse($divClose);
 
@@ -108,10 +108,9 @@ class CrawlerFlashScore extends CrawlerList
             echo $e->getMessage();
         }
         var_dump(microtime(true) - $time_1);
-  //      exit;
+        exit;
         // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
-        exit;
         // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
         //      MyRepo::saveText($htmlDiv, "crawl");
@@ -133,19 +132,19 @@ class CrawlerFlashScore extends CrawlerList
         // var_dump(count($parentDivs));exit;
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
-        $div =  str_get_html($parentDiv);
-        // if ($parentDiv === false) {
-        //     $error = error_get_last();
-        //     error_log($error['message']);
-        //     die();
-        // }
-        // if (!$parentDiv) {
-        //     return [];
-        // }
+        $parentDiv =  str_get_html($parentDiv);
+        if ($parentDiv === false) {
+            $error = error_get_last();
+            error_log($error['message']);
+            die();
+        }
+        if (!$parentDiv) {
+            return [];
+        }
 
-        // $parentDivs = $parentDiv->find("div");
+        $parentDivs = $parentDiv->find("div");
 
-        // foreach ($parentDivs as $key => $div) {
+        foreach ($parentDivs as $key => $div) {
             //   goto test;
             try {
                 //check tournament
@@ -182,6 +181,7 @@ class CrawlerFlashScore extends CrawlerList
 
                     $this->list_live_tournaments[] = $tournamentModel;
 
+                    continue;
                 }
 
                 //match
@@ -195,11 +195,12 @@ class CrawlerFlashScore extends CrawlerList
             } catch (Exception $e) {
                 echo "1-";
 
+                continue;
             }
             test:
             // $text = $div->getAttribute("outerHTML");
             // $this->saveText($text, $key);
-        // }
+        }
         return $list_live_match;
     }
     public function getMatch($divMatch)
