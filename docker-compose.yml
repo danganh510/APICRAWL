@@ -34,7 +34,7 @@ services:
       ENABLE_SSL: true
     volumes:
       - ./crawler-score:/var/www/html
-      - ./ssl:/etc/nginx/ssl
+ #     - ./ssl:/etc/nginx/ssl
     links:
       - db:db
       - selenium-hub:selenium-hub
