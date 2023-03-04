@@ -2,7 +2,9 @@
 
 namespace Score\Repositories;
 
+use DOMDocument;
 use Exception;
+use Goutte\Client;
 use Score\Models\ScCountry;
 
 class CrawlerFlashScore extends CrawlerList
@@ -87,7 +89,7 @@ class CrawlerFlashScore extends CrawlerList
             echo "error118:";
             echo $e->getMessage();
         }
-       // $this->seleniumDriver->checkRam();
+        // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
         // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
@@ -95,24 +97,38 @@ class CrawlerFlashScore extends CrawlerList
     }
     public function crawlList()
     {
-        $parentDiv = $this->getDivParent();
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
-        $list_live_match = [];
-        $parentDiv =  str_get_html($parentDiv);
-        if (!$parentDiv) {
-            return [];
-        }
+        $parentDiv = $this->getDivParent();
+        // $list_live_match = [];
+        // // Tạo một instance của DOMDocument
+        // $doc = new DOMDocument();
 
-        $parentDivs = $parentDiv->find("div");
+        // // Tắt các cảnh báo và thông báo lỗi khi phân tích HTML
+        // libxml_use_internal_errors(true);
 
-        foreach ($parentDivs as $key => $div) {
+        // // Load tài liệu HTML vào DOMDocument
+        // $doc->loadHTML($parentDiv);
+
+
+        // // Lấy tất cả các thẻ div trong tài liệu HTML
+        // $parentDivs = $doc->getElementsByTagName('div > div');
+        $client = new Client();
+        $crawler = $client->request('GET', 'http://localhost:81', [], [], [], $parentDiv);
+        $parentDivs =  $crawler->filter('div');
+        var_dump(count($parentDivs));exit;
+        foreach ($parentDivs as $key => $divDOM) {
             //   goto test;
             try {
-                //check tournament
-                $divTuornaments = $div->find('.event__title--type');
+                // $divDOM = $doc->saveHTML($divDOM);
+                $divDOM = $divDOM->html();
 
+                MyRepo::saveText($divDOM, $key);
+
+                //sử dụng simple_html_php để đọc từng div nhỏ
+                $div =  str_get_html($divDOM);
+
+                $divTuornaments = $div->find('.event__title--type');
                 if (!empty($divTuornaments)) {
-                    //đây là div chứa tournament
                     $country_name = $div->find('.event__title--type', 0)->innertext();
 
                     $name = $div->find(".event__title--name", 0)->innertext();
@@ -141,7 +157,6 @@ class CrawlerFlashScore extends CrawlerList
                     $tournamentModel->setTournamentHref($hrefTour);
 
                     $this->list_live_tournaments[] = $tournamentModel;
-
                     continue;
                 }
 
@@ -162,6 +177,8 @@ class CrawlerFlashScore extends CrawlerList
             // $text = $div->getAttribute("outerHTML");
             // $this->saveText($text, $key);
         }
+        var_dump($list_live_match);
+        exit;
         return $list_live_match;
     }
     public function getMatch($divMatch)

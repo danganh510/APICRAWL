@@ -2,10 +2,8 @@
 
 namespace Score\Repositories;
 
-use DOMDocument;
 use Exception;
 use Score\Models\ScCountry;
-use XMLReader;
 
 class CrawlerFlashScore extends CrawlerList
 {
@@ -52,22 +50,9 @@ class CrawlerFlashScore extends CrawlerList
             }
             sleep(1);
         }
-        $divOpen = $this->seleniumDriver->findElements(".event__expanderBlock");
-        //  $divClose = array_reverse($divClose);
-        $click = 0;
-        foreach ($divOpen as $key =>  $div) {
-            try {
-                //  $this->seleniumDriver->waitItemHide("onetrust-accept-btn-handler");
-                $div->click();
-                echo "good-79--";
-                sleep(0.1);
-                $click++;
-            } catch (Exception $e) {
-                echo "error68:";
-            }
-        }
+
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
-        //  $divClose = array_reverse($divClose);
+        $divClose = array_reverse($divClose);
 
         $click = 0;
         foreach ($divClose as $key =>  $div) {
@@ -77,7 +62,6 @@ class CrawlerFlashScore extends CrawlerList
                 echo "good-79--";
                 sleep(0.1);
                 $click++;
-                break;
             } catch (Exception $e) {
                 echo "error85:";
             }
@@ -88,64 +72,41 @@ class CrawlerFlashScore extends CrawlerList
         try {
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
             // echo "time before find parent div: " . (microtime(true) - $time_1) . "</br>";
-            $parentDivs = $this->seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
-          //  $this->seleniumDriver->quit();
+            $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
 
             // echo "time after find parent div: " . (microtime(true) - $time_1) . "</br>";
-            var_dump(microtime(true) - $time_1);
-            var_dump(count($parentDivs));
-            $htmlDiv = $parentDivs[count($parentDivs) - 1]->getAttribute("outerHTML");
-                MyRepo::saveText($htmlDiv, "crawl" );
 
+            $htmlDiv = $parentDiv->getAttribute("outerHTML");
             // echo "time get html parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
             //khai bao cho the svg
-            //   $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
+            $htmlDiv = str_replace("<svg ", "<svg xmlns='http://www.w3.org/2000/svg'", $htmlDiv);
             // echo "time replace: " . (microtime(true) - $time_1) . "</br>";
         } catch (Exception $e) {
             echo "error118:";
             echo $e->getMessage();
         }
-        var_dump(microtime(true) - $time_1);
-  //      exit;
-        // $this->seleniumDriver->checkRam();
+       // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
-        exit;
         // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
-        //      MyRepo::saveText($htmlDiv, "crawl");
-        //  var_dump(strlen($htmlDiv));exit;
         return $htmlDiv;
     }
     public function crawlList()
     {
+        define('MAX_FILE_SIZE', 18000000);
         $parentDiv = $this->getDivParent();
-        //         $list_live_match = [];
-        //         $list_live_tournaments = [];
-        //         $index = 0;
-        //         $tournaments = [];
-        //         $dom = new DOMDocument();
-        //         libxml_use_internal_errors(true); // Tắt thông báo lỗi
-        //         $dom->loadHTML($parentDiv);
-        //         libxml_use_internal_errors(false); // Bật lại thông báo lỗi
-        //         $parentDivs = $dom->getElementsByTagName("div");
-        // var_dump(count($parentDivs));exit;
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
-        $div =  str_get_html($parentDiv);
-        // if ($parentDiv === false) {
-        //     $error = error_get_last();
-        //     error_log($error['message']);
-        //     die();
-        // }
-        // if (!$parentDiv) {
-        //     return [];
-        // }
+        $parentDiv =  str_get_html($parentDiv);
+        if (!$parentDiv) {
+            return [];
+        }
 
-        // $parentDivs = $parentDiv->find("div");
+        $parentDivs = $parentDiv->find("div");
 
-        // foreach ($parentDivs as $key => $div) {
+        foreach ($parentDivs as $key => $div) {
             //   goto test;
             try {
                 //check tournament
@@ -182,6 +143,7 @@ class CrawlerFlashScore extends CrawlerList
 
                     $this->list_live_tournaments[] = $tournamentModel;
 
+                    continue;
                 }
 
                 //match
@@ -195,11 +157,12 @@ class CrawlerFlashScore extends CrawlerList
             } catch (Exception $e) {
                 echo "1-";
 
+                continue;
             }
             test:
             // $text = $div->getAttribute("outerHTML");
             // $this->saveText($text, $key);
-        // }
+        }
         return $list_live_match;
     }
     public function getMatch($divMatch)
