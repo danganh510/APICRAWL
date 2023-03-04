@@ -31,7 +31,7 @@ services:
     environment:
       XDEBUG_ENABLE: 1
       XDEBUG_PORT: 9200
-      ENABLE_SSL: true
+   #   ENABLE_SSL: true
     volumes:
       - ./crawler-score:/var/www/html
  #     - ./ssl:/etc/nginx/ssl
