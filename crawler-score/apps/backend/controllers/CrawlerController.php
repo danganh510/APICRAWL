@@ -30,7 +30,7 @@ class CrawlerController extends ControllerBase
     public function indexAction()
     {
 
-        //  ini_set('max_execution_time', 20);
+         ini_set('max_execution_time', -1);
 
         $time_plus = $this->request->get("timePlus");
         $is_live =  $this->request->get("isLive");

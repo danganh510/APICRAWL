@@ -7,7 +7,7 @@ use Exception;
 use Goutte\Client;
 use Score\Models\ScCountry;
 
-class CrawlerFlashScore extends CrawlerList
+class CrawlerFlashScore2 extends CrawlerList
 {
     public function __construct($seleniumDriver, $url_crawl, $day_time, $isLive)
     {

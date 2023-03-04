@@ -5,7 +5,7 @@ namespace Score\Repositories;
 use Exception;
 use Score\Models\ScCountry;
 
-class CrawlerFlashScore extends CrawlerList
+class CrawlerFlashScore2 extends CrawlerList
 {
     public function __construct($seleniumDriver, $url_crawl, $day_time, $isLive)
     {
@@ -87,7 +87,7 @@ class CrawlerFlashScore extends CrawlerList
             echo "error118:";
             echo $e->getMessage();
         }
-        // $this->seleniumDriver->checkRam();
+       // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
         // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
 
@@ -95,14 +95,12 @@ class CrawlerFlashScore extends CrawlerList
     }
     public function crawlList()
     {
+        define('MAX_FILE_SIZE', 1800000);
         $parentDiv = $this->getDivParent();
-      
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
-     //   define('MAX_FILE_SIZE', 1800000);
-
         $list_live_match = [];
         $parentDiv =  str_get_html($parentDiv);
-     
+        echo $parentDiv;exit;
         if (!$parentDiv) {
             return [];
         }
