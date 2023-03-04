@@ -3,6 +3,7 @@
 namespace Score\Repositories;
 
 use Exception;
+use Goutte\Client;
 use Score\Models\ScCountry;
 
 class CrawlerFlashScore extends CrawlerList
@@ -69,14 +70,17 @@ class CrawlerFlashScore extends CrawlerList
 
         sleep($click * 0.05);
         $htmlDiv = "";
+        $arrDiv = [];
         try {
             //  $this->seleniumDriver->clickButton('.filters__tab > .filters');
             // echo "time before find parent div: " . (microtime(true) - $time_1) . "</br>";
-            $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
-
+            $parentDivs = $this->seleniumDriver->findElements('div[id="live-table"] > section > div > div >div');
+var_dump(count($parentDivs));
             // echo "time after find parent div: " . (microtime(true) - $time_1) . "</br>";
-
-            $htmlDiv = $parentDiv->getAttribute("outerHTML");
+            foreach ($parentDivs as $key =>  $parentDiv) {
+                $htmlDiv = $parentDiv->getAttribute("outerHTML");
+                $arrDiv[] = $htmlDiv;
+            }
             // echo "time get html parent div: " . (microtime(true) - $time_1) . "</br>";
 
             $htmlDiv = "<!DOCTYPE html>" . $htmlDiv;
@@ -89,27 +93,23 @@ class CrawlerFlashScore extends CrawlerList
         }
         // $this->seleniumDriver->checkRam();
         $this->seleniumDriver->quit();
-        // echo "time get button: " . (microtime(true) - $time_1) . "</br>";
-
-        return $htmlDiv;
+         echo "time get button: " . (microtime(true) - $time_1) . "</br>";
+        var_dump(2);
+        return $arrDiv;
     }
     public function crawlList()
     {
         $parentDiv = $this->getDivParent();
-      
+        var_dump(1);
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
-     //   define('MAX_FILE_SIZE', 1800000);
+var_dump(count($parentDiv));exit;
 
-        $list_live_match = [];
-        $parentDiv =  str_get_html($parentDiv);
-     
-        if (!$parentDiv) {
-            return [];
-        }
+        //  $parentDivs = $parentDiv->find("div");
 
-        $parentDivs = $parentDiv->find("div");
+        foreach ($parentDiv as $key => $divDOM) {
+            $div =  str_get_html("<div>" . $divDOM . "</div>");
+            $div = $div->find("div",0);
 
-        foreach ($parentDivs as $key => $div) {
             //   goto test;
             try {
                 //check tournament
