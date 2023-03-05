@@ -99,6 +99,8 @@ class CrawlerdetailliveController extends ControllerBase
             } else {
                 $matchCrawl->setMatchCrawlDetailLive(1);
             }
+        } else {
+            $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
         }
         //save logo team:
         $homeTeam = ScTeam::findFirstById($matchCrawl->getMatchHomeId());
