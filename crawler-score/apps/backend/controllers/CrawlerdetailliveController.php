@@ -34,14 +34,14 @@ class CrawlerdetailliveController extends ControllerBase
             // }
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
             $matchCrawl = ScMatch::findFirst([
-                ' match_status = "S" AND match_crawl_detail_live = "1" ',
+                ' match_status = "S" AND match_crawl_detail_live = "0" ',
                 // 'bind' => [
                 //     'arrTour' => implode(",", $arrTourNammentCrawlID)
                 // ]
             ]);
             if (!$matchCrawl) {
                 $matchCrawl = ScMatch::findFirst([
-                    ' match_status = "S" AND match_crawl_detail_live = "0"',
+                    ' match_status = "S" AND match_crawl_detail_live = "1"',
                     // 'bind' => [
                     //     'arrTour' => implode(",", $arrTourNammentCrawlID)
                     // ]
