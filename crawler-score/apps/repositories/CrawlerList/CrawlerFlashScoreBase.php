@@ -26,7 +26,9 @@ class CrawlerFlashScoreBase extends CrawlerList
             $divTimes = $this->seleniumDriver->findElements(".calendar__day");
             foreach ($divTimes as $div) {
                 $text = $div->getText();
-                if (explode(' ', $text)[0] == strftime('%d/%m', strtotime($this->day_time))) {
+                $data_click = strftime('%d/%m', strtotime($this->day_time));
+                if (strpos($text,$data_click) !== false) {
+                    sleep(0.5);
                     try {
                         $div->click();
                     } catch (Exception $e) {
