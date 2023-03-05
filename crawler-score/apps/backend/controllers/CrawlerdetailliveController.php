@@ -35,7 +35,7 @@ class CrawlerdetailliveController extends ControllerBase
             //     die();
             // }
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
-            $sql = 'UPDATE `sc_match` SET `match_crawl_detail_live` = "1" WHERE `match_status` = "S"';
+            $sql = 'UPDATE Score\Models\ScMatch SET match_crawl_detail_live = "1" WHERE match_status = "S"';
             $a = $this->modelsManager->executeQuery($sql);
             var_dump($a);exit;
             exit;
