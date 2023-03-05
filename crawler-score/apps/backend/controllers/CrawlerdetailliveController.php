@@ -93,7 +93,6 @@ class CrawlerdetailliveController extends ControllerBase
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
         end:
-        $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
         if ($is_live) {
             if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
                 $matchCrawl->setMatchCrawlDetailLive(0);
