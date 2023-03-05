@@ -13,7 +13,9 @@ use Score\Repositories\MatchCrawl;
 use Score\Models\ScMatchInfo;
 use Score\Models\ScTeam;
 use Score\Models\ScTournament;
+use Score\Repositories\MyRepo;
 use Score\Repositories\Team;
+use Travelnercom\Repositories\CacheTeam;
 
 class CrawlerdetailliveController extends ControllerBase
 {
@@ -33,6 +35,10 @@ class CrawlerdetailliveController extends ControllerBase
             //     die();
             // }
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
+            $sql = 'UPDATE `sc_match` SET `match_crawl_detail_live` = "1" WHERE `match_status` = "S"';
+            $a = $this->modelsManager->executeQuery($sql);
+            var_dump($a);exit;
+            exit;
             $matchCrawl = ScMatch::findFirst([
                 ' match_status = "S" AND match_crawl_detail_live = "0" ',
                 // 'bind' => [
@@ -40,12 +46,9 @@ class CrawlerdetailliveController extends ControllerBase
                 // ]
             ]);
             if (!$matchCrawl) {
-                $matchCrawl = ScMatch::findFirst([
-                    ' match_status = "S" AND match_crawl_detail_live = "1"',
-                    // 'bind' => [
-                    //     'arrTour' => implode(",", $arrTourNammentCrawlID)
-                    // ]
-                ]);
+                $sql = 'UPDATE `sc_match` SET `match_crawl_detail_live` = "0" WHERE `match_status` = "S"';
+                $this->modelsManager->executeQuery($sql);
+
             }
         } else {
             $matchCrawl = ScMatch::findFirst([
@@ -94,7 +97,6 @@ class CrawlerdetailliveController extends ControllerBase
         }
         end:
         if ($is_live) {
-            var_dump($matchCrawl->getMatchCrawlDetailLive());
             if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
                 $matchCrawl->setMatchCrawlDetailLive(0);
             } else {
@@ -116,7 +118,6 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
-        var_dump($matchCrawl->getMatchCrawlDetailLive());
 
         echo "---finish in " . (time() - $start_time_cron) . " second";
         die();
