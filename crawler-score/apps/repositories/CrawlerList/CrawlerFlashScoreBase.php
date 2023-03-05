@@ -108,6 +108,7 @@ class CrawlerFlashScoreBase extends CrawlerList
     }
     public function getMatch($divMatch)
     {
+
         $dataMatch = [];
         $id_insite = $divMatch->getAttribute("id");
         $id_insite = explode("_", $id_insite);
