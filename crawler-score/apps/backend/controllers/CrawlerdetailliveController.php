@@ -35,6 +35,7 @@ class CrawlerdetailliveController extends ControllerBase
             //     die();
             // }
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
+            $this->db->begin();
             $matchCrawl = ScMatch::findFirst([
                 ' match_status = "S" AND match_crawl_detail_live = "0" ',
                 // 'bind' => [
@@ -116,7 +117,7 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
-
+        $this->db->commit();
         echo "---finish in " . (time() - $start_time_cron) . " second";
         die();
     }
