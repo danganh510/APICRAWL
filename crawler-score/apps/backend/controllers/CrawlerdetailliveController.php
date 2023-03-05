@@ -27,11 +27,11 @@ class CrawlerdetailliveController extends ControllerBase
         $this->type_crawl = $this->request->get("type");
         if ($is_live) {
             //nếu crawl live thì crawl các trận đấu có tournament_crawl = Y;
-            $arrTourNammentCrawlID = ScTournament::getTourIdCrawl();
-            if (empty($arrTourNammentCrawlID)) {
-                echo "Not found tournament";
-                die();
-            }
+            // $arrTourNammentCrawlID = ScTournament::getTourIdCrawl();
+            // if (empty($arrTourNammentCrawlID)) {
+            //     echo "Not found tournament";
+            //     die();
+            // }
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
             $matchCrawl = ScMatch::findFirst([
                 ' match_status = "S" AND match_crawl_detail_live = "1" ',
