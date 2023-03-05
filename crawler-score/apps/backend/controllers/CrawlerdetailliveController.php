@@ -94,6 +94,7 @@ class CrawlerdetailliveController extends ControllerBase
         }
         end:
         if ($is_live) {
+            var_dump($matchCrawl->getMatchCrawlDetailLive());
             if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
                 $matchCrawl->setMatchCrawlDetailLive(0);
             } else {
@@ -115,6 +116,8 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
+        var_dump($matchCrawl->getMatchCrawlDetailLive());
+
         echo "---finish in " . (time() - $start_time_cron) . " second";
         die();
     }
