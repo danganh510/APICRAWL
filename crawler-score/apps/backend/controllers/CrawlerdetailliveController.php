@@ -121,7 +121,7 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
-        echo "---finish in " . (time() - $start_time_cron) . " second";
+        echo "---finish in " . (time() - $start_time_cron) . " second ---- \n\r";
         die();
     }
 }
