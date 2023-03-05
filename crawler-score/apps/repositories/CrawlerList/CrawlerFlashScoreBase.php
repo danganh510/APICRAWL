@@ -18,6 +18,13 @@ class CrawlerFlashScoreBase extends CrawlerList
     {
         $this->runSelenium();
 
+        //k lưu cokkie
+        try {
+            $this->seleniumDriver->clickButton("#onetrust-reject-all-handler");
+        } catch (Exception $e) {
+            echo "not found cookie";
+        }
+
         if (!$this->isLive) {
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
             //click button time cho lần đầu
@@ -27,12 +34,12 @@ class CrawlerFlashScoreBase extends CrawlerList
             foreach ($divTimes as $div) {
                 $text = $div->getText();
                 $data_click = strftime('%d/%m', strtotime($this->day_time));
-                if (strpos($text,$data_click) !== false) {
+                if (strpos($text, $data_click) !== false) {
                     sleep(0.5);
                     try {
                         $div->click();
                     } catch (Exception $e) {
-                        echo "33";  
+                        echo "33";
                     }
                     break;
                 }
@@ -52,12 +59,6 @@ class CrawlerFlashScoreBase extends CrawlerList
             sleep(1);
         }
 
-        //k lưu cokkie
-        try {
-            $this->seleniumDriver->clickButton("#onetrust-reject-all-handler");
-        } catch (Exception $e) {
-            echo "not found cookie";
-        }
 
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         $divClose = array_reverse($divClose);

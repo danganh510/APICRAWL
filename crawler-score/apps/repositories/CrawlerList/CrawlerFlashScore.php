@@ -23,7 +23,7 @@ class CrawlerFlashScore extends CrawlerFlashScoreBase
 
         if (!$cronModel) {
             $cronModel = new ScCron();
-            $cronModel->setCronTime($this->my->formatDateYMD(time()));
+            $cronModel->setCronTime($this->day_time);
             $cronModel->setCronStatus("Y");
             $cronModel->Save();
         }
@@ -74,7 +74,7 @@ class CrawlerFlashScore extends CrawlerFlashScoreBase
         $cronModel = ScCron::findFirst([
             'cron_time = :date:',
             'bind' => [
-                'date' => $this->my->formatDateYMD(time())
+                'date' => $this->day_time
             ]
         ]);
         if (!$cronModel || $cronModel->getCronStatus() == "Y") {
