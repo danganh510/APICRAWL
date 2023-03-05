@@ -80,7 +80,7 @@ class CrawlerFlashScore extends CrawlerFlashScoreBase
         $cronModelNo = ScCron::findFirst([
             'cron_status = "Y"'
         ]);
-        if ($cronModelNo->getCronTime() != $this->day_time) {
+        if ($cronModelNo && $cronModelNo->getCronTime() != $this->day_time) {
             $cronModelNo->setCronStatus("N");
             $cronModelNo->save();
         }
