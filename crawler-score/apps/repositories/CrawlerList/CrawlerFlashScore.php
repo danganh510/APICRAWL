@@ -79,6 +79,11 @@ class CrawlerFlashScore extends CrawlerFlashScoreBase
         ]);
         if (!$cronModel || $cronModel->getCronStatus() == "Y") {
             $this->saveFile($cronModel);
+            echo "Cache Match";
+            return [];
+        }
+        if (!$this->checkFileCache()) {
+            echo "No has cache Match";
             return [];
         }
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
@@ -113,6 +118,7 @@ class CrawlerFlashScore extends CrawlerFlashScoreBase
             // $text = $div->getAttribute("outerHTML");
             // $this->saveText($text, $key);
         }
+        $this->deleteFolder();
         return $list_live_match;
     }
 }

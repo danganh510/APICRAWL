@@ -69,11 +69,24 @@ class CrawlerList extends Component
         fwrite($fp, $div);
         fclose($fp);
     }
+    public function deleteFolder()
+    {
+        $dir_div = __DIR__ . "/match";
+        if (is_dir($dir_div)) {
+            $objects = scandir($dir_div);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    unlink($dir_div . "/" . $object);
+                }
+            }
+            rmdir($dir_div);
+        }
+    }
     public function openDivfromFile($div, $key)
     {
         $dir_div = __DIR__ . "/match";
         if (!is_dir($dir_div)) {
-           return false;
+            return false;
         }
         $fp = fopen($dir_div . "/div_$key.html", 'w'); //mở file ở chế độ write-only
         return $fp;
@@ -81,7 +94,7 @@ class CrawlerList extends Component
     public function checkFileCache()
     {
         $dir_div = __DIR__ . "/match";
-       
+
         return is_dir($dir_div);
     }
     public function getDivHtml($key)
