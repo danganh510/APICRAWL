@@ -58,6 +58,18 @@ class CrawlerdetailliveController extends ControllerBase
             echo "Not found Match";
             die();
         }
+        if ($is_live) {
+            if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
+                $matchCrawl->setMatchCrawlDetailLive(0);
+            } else {
+                $matchCrawl->setMatchCrawlDetailLive(1);
+            }
+        } else {
+            $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
+        }
+        $matchCrawl->save();
+        $this->db->commit();
+
         echo $matchCrawl->getMatchId() . "---";
 
         if ($matchCrawl->getMatchLinkDetailFlashscore() == "" || $matchCrawl->getMatchLinkDetailFlashscore() == null) {
@@ -95,15 +107,7 @@ class CrawlerdetailliveController extends ControllerBase
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
         end:
-        if ($is_live) {
-            if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
-                $matchCrawl->setMatchCrawlDetailLive(0);
-            } else {
-                $matchCrawl->setMatchCrawlDetailLive(1);
-            }
-        } else {
-            $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
-        }
+       
         //save logo team:
         $homeTeam = ScTeam::findFirstById($matchCrawl->getMatchHomeId());
         if ($homeTeam && !$homeTeam->getTeamLogoCrawl() && !empty($detail['match']['homeLogo'])) {
@@ -117,7 +121,6 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
-        $this->db->commit();
         echo "---finish in " . (time() - $start_time_cron) . " second";
         die();
     }
