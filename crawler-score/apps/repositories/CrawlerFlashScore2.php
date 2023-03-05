@@ -95,12 +95,10 @@ class CrawlerFlashScore2 extends CrawlerList
     }
     public function crawlList()
     {
-        define('MAX_FILE_SIZE', 1800000);
         $parentDiv = $this->getDivParent();
         require_once(__DIR__ . "/../../library/simple_html_dom.php");
         $list_live_match = [];
         $parentDiv =  str_get_html($parentDiv);
-        echo $parentDiv;exit;
         if (!$parentDiv) {
             return [];
         }

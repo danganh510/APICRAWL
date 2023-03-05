@@ -42,7 +42,6 @@ class CrawlerList extends Component
         switch ($this->type_crawl) {
             case MatchCrawl::TYPE_FLASH_SCORE:
                 $this->url_crawl = $this->url_fl;
-                $this->runSelenium();
                 $crawler = new CrawlerFlashScore($this->seleniumDriver, $this->url_crawl, $day_time, $this->isLive);
                 break;
             case MatchCrawl::TYPE_SOFA:
@@ -60,8 +59,36 @@ class CrawlerList extends Component
         }
         return $crawler->crawlList();
     }
-    public function getDivParent()
+    public function saveDivToFile($div, $key)
     {
+        $dir_div = __DIR__ . "/match";
+        if (!is_dir($dir_div)) {
+            mkdir($dir_div);
+        }
+        $fp = fopen($dir_div . "/div_$key.html", 'w'); //mở file ở chế độ write-only
+        fwrite($fp, $div);
+        fclose($fp);
+    }
+    public function openDivfromFile($div, $key)
+    {
+        $dir_div = __DIR__ . "/match";
+        if (!is_dir($dir_div)) {
+           return false;
+        }
+        $fp = fopen($dir_div . "/div_$key.html", 'w'); //mở file ở chế độ write-only
+        return $fp;
+    }
+    public function checkFileCache()
+    {
+        $dir_div = __DIR__ . "/match";
+       
+        return is_dir($dir_div);
+    }
+    public function getDivHtml($key)
+    {
+        $dir_div = __DIR__ . "/match";
+        $div_html = file_get_contents($dir_div . "/div_$key.html");
+        return $div_html;
     }
     public function getTournament($div)
     {
