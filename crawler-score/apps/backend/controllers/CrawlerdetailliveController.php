@@ -44,7 +44,8 @@ class CrawlerdetailliveController extends ControllerBase
             if (!$matchCrawl) {
                 $sql = 'UPDATE Score\Models\ScMatch SET match_crawl_detail_live = "0" WHERE match_status = "S"';
                 $this->modelsManager->executeQuery($sql);
-                echo "All restart";
+                echo "--All restart: ";
+                echo strftime(' %H:%M', time()).
                 die();
             }
         } else {
