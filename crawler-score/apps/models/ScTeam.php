@@ -4,7 +4,7 @@ namespace Score\Models;
 
 class ScTeam extends \Phalcon\Mvc\Model
 {
-    
+
     protected $team_id;
     protected $team_name;
     protected $team_slug;
@@ -15,6 +15,8 @@ class ScTeam extends \Phalcon\Mvc\Model
     protected $team_name_flashscore;
     protected $team_logo;
     protected $team_logo_small;
+    protected $team_logo_medium;
+    protected $team_logo_crawl;
     protected $team_active;
 
 
@@ -146,7 +148,7 @@ class ScTeam extends \Phalcon\Mvc\Model
         $this->team_logo = $team_logo;
     }
 
-        /**
+    /**
      * @return mixed
      */
     public function getTeamLogoSmall()
@@ -160,6 +162,36 @@ class ScTeam extends \Phalcon\Mvc\Model
     public function setTeamLogoSmall($team_logo_small)
     {
         $this->team_logo_small = $team_logo_small;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTeamLogoMedium()
+    {
+        return $this->team_logo_medium;
+    }
+
+    /**
+     * @param mixed $team_logo_medium
+     */
+    public function setTeamLogoMedium($team_logo_medium)
+    {
+        $this->team_logo_medium = $team_logo_medium;
+    }
+    /**
+     * @return mixed
+     */
+    public function getTeamLogoCrawl()
+    {
+        return $this->team_logo_crawl;
+    }
+
+    /**
+     * @param mixed $team_logo_crawl
+     */
+    public function setTeamLogoCrawl($team_logo_crawl)
+    {
+        $this->team_logo_crawl = $team_logo_crawl;
     }
     /**
      * @return mixed
@@ -208,10 +240,20 @@ class ScTeam extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
-    public static function findTeamLogoSmallNull($limit) {
+    public static function findTeamLogoSmallNull($limit)
+    {
         return self::find([
             '(team_logo_small = "" OR team_logo_small IS NULL) AND team_logo != ""',
             "limit" => (int) $limit
+        ]);
+    }
+    public static function findFirstById($id)
+    {
+        return self::findFirst([
+            'team_id = :id:',
+            'bind' => [
+                'id' => $id
+            ]
         ]);
     }
 }

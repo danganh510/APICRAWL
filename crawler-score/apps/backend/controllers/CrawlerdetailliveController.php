@@ -11,7 +11,9 @@ use Score\Repositories\MatchCrawl;
 
 
 use Score\Models\ScMatchInfo;
+use Score\Models\ScTeam;
 use Score\Models\ScTournament;
+use Score\Repositories\Team;
 
 class CrawlerdetailliveController extends ControllerBase
 {
@@ -33,14 +35,14 @@ class CrawlerdetailliveController extends ControllerBase
             $matchCrawl = ScMatch::findFirst([
                 ' match_status = "S" AND match_crawl_detail_live = "1" AND  FIND_IN_SET(match_tournament_id,:arrTour:)',
                 'bind' => [
-                    'arrTour' => implode(",",$arrTourNammentCrawlID)
+                    'arrTour' => implode(",", $arrTourNammentCrawlID)
                 ]
             ]);
             if (!$matchCrawl) {
                 $matchCrawl = ScMatch::findFirst([
                     ' match_status = "S" AND match_crawl_detail_live = "0" AND  FIND_IN_SET(match_tournament_id,:arrTour:)',
                     'bind' => [
-                        'arrTour' => implode(",",$arrTourNammentCrawlID)
+                        'arrTour' => implode(",", $arrTourNammentCrawlID)
                     ]
                 ]);
             }
@@ -97,6 +99,18 @@ class CrawlerdetailliveController extends ControllerBase
             } else {
                 $matchCrawl->setMatchCrawlDetailLive(1);
             }
+        }
+        //save logo team:
+        $homeTeam = ScTeam::findFirstById($matchCrawl->getMatchHomeId());
+        if ($homeTeam && !$homeTeam->getTeamLogoCrawl() && !empty($detail['match']['homeLogo'])) {
+            $homeTeam->setTeamLogoCrawl($detail['match']['homeLogo']);
+            $homeTeam->save();
+        }
+        //save logo team:
+        $awayTeam = ScTeam::findFirstById($matchCrawl->getMatchAwayId());
+        if ($awayTeam && !$awayTeam->getTeamLogoCrawl() && !empty($detail['match']['awayLogo'])) {
+            $awayTeam->setTeamLogoCrawl($detail['match']['awayLogo']);
+            $awayTeam->save();
         }
         $matchCrawl->save();
         echo "---finish in " . (time() - $start_time_cron) . " second";

@@ -230,13 +230,14 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         if (isset($divScore[3])) {
             $time = $divScore[3]->innertext();
         }
-        $logo = $divCrawl->find("participant__image");
-var_dump($logo);exit;
+        $logo = $divCrawl->find(".participant__image");
         return [
             'info' => $info,
             'match' => [
                 'homeScore' => $homeScore,
                 'awayScore' => $awayScore,
+                'homeLogo' => $logo[0]->getAttribute("src"),
+                'awayLogo' => $logo[1]->getAttribute("src"),
                 'timeNow' => $time
             ]
         ];
