@@ -26,5 +26,6 @@ crawler-score/test
 crawler-score/test/*
 crawler-score/apps/cache
 crawler-score/public/images
+crawler-score/public/images/*
 crawler-score/apps/repositories/CrawlerList/match/*
 crawler-score/apps/repositories/CrawlerList/match
