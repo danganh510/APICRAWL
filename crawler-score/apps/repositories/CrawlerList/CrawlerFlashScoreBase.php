@@ -27,7 +27,11 @@ class CrawlerFlashScoreBase extends CrawlerList
             foreach ($divTimes as $div) {
                 $text = $div->getText();
                 if (explode(' ', $text)[0] == strftime('%d/%m', strtotime($this->day_time))) {
-                    $div->click();
+                    try {
+                        $div->click();
+                    } catch (Exception $e) {
+                        echo "33";  
+                    }
                     break;
                 }
             }
@@ -47,7 +51,11 @@ class CrawlerFlashScoreBase extends CrawlerList
         }
 
         //k lưu cokkie
-        $this->seleniumDriver->clickButton("#onetrust-reject-all-handler");
+        try {
+            $this->seleniumDriver->clickButton("#onetrust-reject-all-handler");
+        } catch (Exception $e) {
+            echo "not found cookie";
+        }
 
         $divClose = $this->seleniumDriver->findElements(".event__expander--close");
         $divClose = array_reverse($divClose);
@@ -65,7 +73,8 @@ class CrawlerFlashScoreBase extends CrawlerList
         }
         sleep($click * 0.05);
     }
-    public function getTournament($div) {
+    public function getTournament($div)
+    {
         $country_name = $div->find('.event__title--type', 0)->innertext();
 
         $name = $div->find(".event__title--name", 0)->innertext();
