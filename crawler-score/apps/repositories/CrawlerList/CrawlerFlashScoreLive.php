@@ -24,7 +24,6 @@ class CrawlerFlashScoreLive extends CrawlerFlashScoreBase
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
         } catch (Exception $e) {
-            echo "error118:";
             echo $e->getMessage();
         }
         $this->seleniumDriver->quit();

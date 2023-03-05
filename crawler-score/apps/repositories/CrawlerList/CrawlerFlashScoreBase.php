@@ -76,7 +76,6 @@ class CrawlerFlashScoreBase extends CrawlerList
 
             && strpos($name, " - ")
         ) {
-            echo $name;
             $nameDetail = explode(" - ", $name);
             $name = $nameDetail[0];
             $group = $nameDetail[1];

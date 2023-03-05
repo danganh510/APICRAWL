@@ -42,6 +42,10 @@ class CrawlerList extends Component
         switch ($this->type_crawl) {
             case MatchCrawl::TYPE_FLASH_SCORE:
                 $this->url_crawl = $this->url_fl;
+                if ($this->isLive) {
+                    $crawler = new CrawlerFlashScoreLive($this->seleniumDriver, $this->url_crawl, $day_time, $this->isLive);
+                    break;
+                }
                 $crawler = new CrawlerFlashScore($this->seleniumDriver, $this->url_crawl, $day_time, $this->isLive);
                 break;
             case MatchCrawl::TYPE_SOFA:
