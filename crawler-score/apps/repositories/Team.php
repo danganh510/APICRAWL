@@ -42,7 +42,7 @@ class Team extends Component
         if (empty($arrTeam[$team])) {
             return false;
         }
-        if ($country_code && $arrTeam[$team]->team_country_code &&  $country_code != $arrTeam[$team]->team_country_code) {
+        if ($country_code && $arrTeam[$team]['team_country_code'] &&  $country_code != $arrTeam[$team]['team_country_code']) {
             return false;
         }
         $teamModel = new ScTeam();

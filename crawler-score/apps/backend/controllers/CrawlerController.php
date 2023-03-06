@@ -8,9 +8,11 @@ use Score\Repositories\Team;
 
 
 use Score\Models\ScTeam;
+use Score\Models\ScTournament;
 use Score\Repositories\CacheMatch;
 use Score\Repositories\CacheMatchLive;
 use Score\Repositories\CacheTeam;
+use Score\Repositories\CacheTour;
 use Score\Repositories\CrawlerList;
 use Score\Repositories\MatchCrawl;
 use Score\Repositories\MatchRepo;
@@ -108,6 +110,16 @@ class CrawlerController extends ControllerBase
             }
             $teamCache = new CacheTeam();
             $teamCache->setCache(json_encode($arrTeamCache));
+
+            //cache tour
+            $arrTour = ScTournament::find("tournament_active = 'Y'");
+            $arrTour = $arrTour->toArray();
+            $arrTourCache = [];
+            foreach ($arrTour as $tour) {
+                $arrTourCache[$tour['tournament_id']] = $tour;
+            }
+            $tourCache = new CacheTour();
+            $tourCache->setCache(json_encode($arrTourCache));
 
             //cache match trong vòng 14 ngày
             $timestamp_before_7 = time() - 7 * 24 * 60 * 60 + 60 * 60; //backup 1h

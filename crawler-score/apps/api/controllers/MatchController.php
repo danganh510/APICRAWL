@@ -4,9 +4,13 @@ namespace Score\Api\Controllers;
 
 use Score\Models\ScMatch;
 use Score\Models\ScTeam;
+use Score\Models\ScTournament;
 use Score\Repositories\Article;
 use Score\Repositories\Banner;
+use Score\Repositories\CacheMatch;
+use Score\Repositories\CacheMatchLive;
 use Score\Repositories\CacheTeam;
+use Score\Repositories\CacheTour;
 use Score\Repositories\Career;
 use Score\Repositories\MatchRepo;
 use Score\Repositories\Page;
@@ -17,23 +21,52 @@ class MatchController extends ControllerBase
     public function listAction()
     {
         //get các trận cần lấy theo thời gian
-    
 
-        $time = $this->requestParams['time'];
+
+        $time_request = isset($this->requestParams['time']) ? $this->requestParams['time'] : "";
+        $status = isset($this->requestParams['status']) ?  $this->requestParams['status'] : "";
         //live
-        if (!$time || $time == "live") {
+        $isLive = false;
+        if (!$time_request || $time_request == "live") {
+            $isLive = true;
             $time = time();
+            $cacheMatch = new CacheMatchLive();
+        } else {
+            $time = strtotime($time_request);
+            $cacheMatch = new CacheMatch();
         }
         $events = [];
         $cacheTeam = new CacheTeam();
         $arrTeam = $cacheTeam->getCache();
-        $matchRepo = new MatchRepo();
-        $arrMatch = $matchRepo->getMatch($time, "S");
 
+        $cacheTour = new CacheTour();
+        $arrTournament = $cacheTour->getCache();
+        // $matchRepo = new MatchRepo();
+        // $arrMatch = $matchRepo->getMatch($time, $status);
+        $arrMatch = $cacheMatch->getCache();
         foreach ($arrMatch as $key => $match) {
+            if (!is_array($match)) {
+                $match = (array) $match;
+            }
             if (empty($arrTeam[$match['match_home_id']]) || empty($arrTeam[$match['match_away_id']])) {
                 continue;
             }
+            if (empty($arrTournament[$match['match_tournament_id']])) {
+                continue;
+            }
+            if (!$isLive) {
+                if ($this->my->getDays($time, $match['match_start_time']) != 0) {
+                    continue;
+                }
+            }
+            if ($status) {
+                if ($status != $match['match_status']) {
+                    continue;
+                }
+            }
+
+            //con check điều kiện
+
             $homeModel = new ScTeam();
             $home = $homeModel->setData($arrTeam[$match['match_home_id']]);
 
@@ -72,23 +105,23 @@ class MatchController extends ControllerBase
                         'time' => [$match['match_home_score']]
                     ]
                 ],
+                'roundInfo' => $match['match_round'],
             ];
-            if (isset($events[$match['tournament_id']])) {
-                $events[$match['tournament_id']]['match'][$match['match_id']] = $matchInfo;
+            if (isset($events[$match['match_tournament_id']])) {
+                $events[$match['match_tournament_id']]['match'][$match['match_id']] = $matchInfo;
             } else {
-                $events[$match['tournament_id']] = [
+                $events[$match['match_tournament_id']] = [
                     'tournament' => [
-                        'name' => $match['tournament_name'],
-                        'slug' => $this->create_slug($match['tournament_name']),
-                        'roundInfo' => $match['tournament_round'],
+                        'name' => $arrTournament[$match['match_tournament_id']]['tournament_name'],
+                        'slug' => $this->create_slug($arrTournament[$match['match_tournament_id']]['tournament_name']),
                         'category' => [
-                            'name' => $match['tournament_country'],
-                            'slug' => $match['tournament_country'],
+                            'name' => $arrTournament[$match['match_tournament_id']]['tournament_country'],
+                            'slug' => $arrTournament[$match['match_tournament_id']]['tournament_country'],
                             'sport' => [
                                 'name' => "football",
                                 'slug' => "football"
                             ],
-                            'flag' => $match['tournament_country'],
+                            'flag' => $arrTournament[$match['match_tournament_id']]['tournament_country'],
                             'countryCode' => "countryCode"
                         ]
                     ],

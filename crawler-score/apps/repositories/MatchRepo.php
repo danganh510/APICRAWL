@@ -179,4 +179,31 @@ class MatchRepo extends Component
             ->execute();
         return $match->toArray();
     }
+    public function getOnlyMatch($time, $status = "", $tournament = "")
+    {
+        $day = date('d', $time);
+        $month = date('m', $time);
+        $year = date('Y', $time);
+        $status = "S";
+
+        $match = ScMatch::query()
+            ->columns("match_id,match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,
+            match_insert_time,match_time,match_start_time,match_order,match_status")
+            ->andWhere(
+                "(match_start_day = :day: OR match_start_day = :day2: OR match_start_day = :day3:) AND match_start_month = :month: AND match_start_year = :year:",
+                [
+                    'day' => $day,
+                    'day2' => $day - 1,
+                    'day3' => $day + 1,
+                    'month' => $month,
+                    'year' => $year
+                ]
+            );
+        if ($status) {
+            $match = $match->andWhere("match_status = :status:", ['status' => $status]);
+        }
+        $match = $match->orderBy("match_order")
+            ->execute();
+        return $match->toArray();
+    }
 }

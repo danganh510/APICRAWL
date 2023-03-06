@@ -6,10 +6,10 @@ use Phalcon\Mvc\User\Component;
 use Phalcon\Cache\Backend\File as BackFile;
 use Phalcon\Cache\Frontend\Data as FrontData;
 
-class CacheTeam extends Component
+class CacheTour extends Component
 {
     const PRE_SESSION_CACHE = "";
-    const filePath = __DIR__ . "/../Cache/Team/";
+    const filePath = __DIR__ . "/../Cache/Tour/";
     static $frontCache = null;
     static $backCache = null;
     public function __construct()
@@ -33,7 +33,7 @@ class CacheTeam extends Component
     }
     public  function getCache()
     {
-        $sessionId = self::PRE_SESSION_CACHE . "_Team";
+        $sessionId = self::PRE_SESSION_CACHE . "_Tour";
 
         $cache = self::getBackCache();
         $cacheKey = self::cacheKeyClients($sessionId);
@@ -43,7 +43,7 @@ class CacheTeam extends Component
     }
     public  function deleteCache()
     {
-        $sessionId = self::PRE_SESSION_CACHE . "_Team";
+        $sessionId = self::PRE_SESSION_CACHE . "_Tour";
         $cache = self::getBackCache();
         $cacheKey = $this->cacheKeyClients($sessionId);
 
@@ -61,7 +61,7 @@ class CacheTeam extends Component
     }
     public function setCache($arrTeam)
     {
-        $sessionId = self::PRE_SESSION_CACHE . "_Team";
+        $sessionId = self::PRE_SESSION_CACHE . "_Tour";
         $cache = self::getBackCache();
         $cacheKey = $this->cacheKeyClients($sessionId);
         try {

@@ -12,7 +12,8 @@ class My extends Phalcon\Mvc\User\Component
      * Using for add external JS sources
      * @param mixed $src
      */
-    public function addJsSource($src) {
+    public function addJsSource($src)
+    {
         $jsSources = isset($this->view->jsSources) ? $this->view->jsSources : array();
         array_push($jsSources, $src);
         $this->view->jsSources = $jsSources;
@@ -48,7 +49,7 @@ class My extends Phalcon\Mvc\User\Component
     }
 
     //send email
-    public function sendEmail($fromEmail, $toEmail, $subject, $message, $fromFullName, $toFullName, $reply_to_email, $reply_to_name,$attachment = [])
+    public function sendEmail($fromEmail, $toEmail, $subject, $message, $fromFullName, $toFullName, $reply_to_email, $reply_to_name, $attachment = [])
     {
         if (defined('EMAIL_TEST_MODE') && EMAIL_TEST_MODE && defined('EMAIL_TEST_EMAIL')) {
             $toEmail = EMAIL_TEST_EMAIL;
@@ -62,8 +63,8 @@ class My extends Phalcon\Mvc\User\Component
             $mail->AddReplyTo($reply_to_email, $reply_to_name);
             //
             //$mail->SetFrom($fromEmail, $fromFullName); //from (verified email address)
-            $mail->SetFrom($fromEmail, '=?utf-8?B?'.base64_encode($fromFullName).'?='); //from (verified email address)
-            $mail->Subject = '=?utf-8?B?'.base64_encode((defined('EMAIL_SUBJECT_PREFIX') ? EMAIL_SUBJECT_PREFIX : '') .  htmlspecialchars_decode($subject,ENT_QUOTES)).'?='; //subject
+            $mail->SetFrom($fromEmail, '=?utf-8?B?' . base64_encode($fromFullName) . '?='); //from (verified email address)
+            $mail->Subject = '=?utf-8?B?' . base64_encode((defined('EMAIL_SUBJECT_PREFIX') ? EMAIL_SUBJECT_PREFIX : '') .  htmlspecialchars_decode($subject, ENT_QUOTES)) . '?='; //subject
             //message
             $body = $message;
             //$body = preg_replace("/\\/i",'',$body);
@@ -86,18 +87,16 @@ class My extends Phalcon\Mvc\User\Component
             if ($isSent) {
                 $result['success'] = true;
                 $result['message'] = "Message sent!";
-            }
-            else
-            {
+            } else {
                 $result['success'] = false;
                 $result['message'] = "Mailer Error: " . $mail->ErrorInfo;
             }
         } catch (phpmailerException $e) {
             $result['success'] = false;
-            $result['message'] = "Mailer Error: " . $e->errorMessage();//Pretty error messages from PHPMailer
+            $result['message'] = "Mailer Error: " . $e->errorMessage(); //Pretty error messages from PHPMailer
         } catch (Exception $e) {
             $result['success'] = false;
-            $result['message'] = "Mailer Error: " . $e->getMessage();//Boring error messages from anything else!
+            $result['message'] = "Mailer Error: " . $e->getMessage(); //Boring error messages from anything else!
         }
         $mail->ClearAllRecipients();
         $mail->ClearReplyTos();
@@ -237,7 +236,7 @@ class My extends Phalcon\Mvc\User\Component
     {
         $insertYear = date('Y', $insertTime);
         $y = substr($insertYear, strlen($insertYear) - 1);
-        return "1" . sprintf("%s%s%04d%s", $idType, $y, $id, $suffix);//6 is site number
+        return "1" . sprintf("%s%s%04d%s", $idType, $y, $id, $suffix); //6 is site number
     }
 
     //format User ID
@@ -272,7 +271,7 @@ class My extends Phalcon\Mvc\User\Component
     //format Payment ID
     public function formatPaymentID($insertTime, $id)
     {
-        return $this->formatID(3,$insertTime, $id);
+        return $this->formatID(3, $insertTime, $id);
     }
     //format USD
     public function formatUSD($number)
@@ -281,10 +280,11 @@ class My extends Phalcon\Mvc\User\Component
     }
     function formatTimeArDetail($time)
     {
-        return strftime('%b %d, %Y | %H:%M', $time). " (".$this->globalVariable->timeZoneStr.")";
+        return strftime('%b %d, %Y | %H:%M', $time) . " (" . $this->globalVariable->timeZoneStr . ")";
     }
-    public function replaceQuotes($string) {
-        return html_entity_decode(str_replace(array('"','&#34;','&quot;'),"'",preg_replace( "/\r|\n/", "", strip_tags($string))),ENT_QUOTES);
+    public function replaceQuotes($string)
+    {
+        return html_entity_decode(str_replace(array('"', '&#34;', '&quot;'), "'", preg_replace("/\r|\n/", "", strip_tags($string))), ENT_QUOTES);
     }
     public function frontendPagination($url, $page, $totalPages, $limit = 0, $attributes = array())
     {
@@ -310,9 +310,9 @@ class My extends Phalcon\Mvc\User\Component
         $html = '<ul class="list-inline d-flex justify-content-center ' . (isset($attributes['class']) ? $attributes['class'] : '') . '" ' . $attributeString . '>';
 
         if ($disablePrevious) {
-            $html .= '<li class="disabled"><a target="_self">'.$txt_prev.'</a></li>';
+            $html .= '<li class="disabled"><a target="_self">' . $txt_prev . '</a></li>';
         } else {
-            $html .= '<li><a href="' . $url . ($page - 1) . '" target="_self">'.$txt_prev.'</a></li>';
+            $html .= '<li><a href="' . $url . ($page - 1) . '" target="_self">' . $txt_prev . '</a></li>';
         }
 
         if ($limit == 0) {
@@ -339,13 +339,19 @@ class My extends Phalcon\Mvc\User\Component
         }
 
         if ($disableNext) {
-            $html .= '<li class="disabled"><a target="_self">'.$txt_next.'</a></li>';
+            $html .= '<li class="disabled"><a target="_self">' . $txt_next . '</a></li>';
         } else {
-            $html .= '<li><a target="_self" href="' . $url . ($page + 1) . '" >'.$txt_next.'</a></li>';
+            $html .= '<li><a target="_self" href="' . $url . ($page + 1) . '" >' . $txt_next . '</a></li>';
         }
 
         $html .= '</ul>';
         return $html;
     }
+    public function getDays($start_date, $end_date)
+    {
+        $startDate = new DateTime($this->formatDateYMD($start_date));
+        $endDate = new DateTime($this->formatDateYMD($end_date));
+       
+        return $startDate->diff($endDate)->days;
+    }
 }
-
