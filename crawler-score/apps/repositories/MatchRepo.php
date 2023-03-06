@@ -15,9 +15,10 @@ class MatchRepo extends Component
     const MATH_STATUS_FINSH = "F";
 
 
-    public  function saveMatch($match, $home, $away, $tournament, $type_crawl)
+    public  function saveMatch($match, $home, $away, $tournament,$time_plus, $type_crawl)
     {
 
+        
         $matchSave = ScMatch::findFirst([
             "match_home_id = :home_id: AND match_away_id = :away_id: AND match_status != 'F'",
             'bind' => [
@@ -25,7 +26,7 @@ class MatchRepo extends Component
                 'away_id' => $away->getTeamId(),
             ]
         ]);
-        $timeInfo = $this->getTime($match->getTime());
+        $timeInfo = $this->getTime($match->getTime(),$time_plus);
 
         if (!$matchSave) {
             $matchSave = new ScMatch();
@@ -78,7 +79,7 @@ class MatchRepo extends Component
         var_dump($match);
         return false;
     }
-    public function getTime($match_time)
+    public function getTime($match_time,$time_plus)
     {
         switch ($match_time) {
             case is_numeric($match_time):
@@ -142,8 +143,8 @@ class MatchRepo extends Component
         }
         return [
             "status" => $status,
-            'start_time' => $start_time,
-            'time_live' => $time_live
+            'start_time' => $start_time + $time_plus * 24 * 60 * 60,
+            'time_live' => $time_live + $time_plus * 24 * 60 * 60
         ];
     }
     public function getMatch($time, $status = "", $tournament = "")

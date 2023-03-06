@@ -80,7 +80,7 @@ class CrawlerController extends ControllerBase
                     echo "can't save tournament team";
                     continue;
                 }
-                $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
+                $result =  $matchRepo->saveMatch($match, $home, $away, $tournament,$time_plus, $this->type_crawl);
                 if ($result) {
                     $arrMatchCrawl[] = $result;
                     $total++;
