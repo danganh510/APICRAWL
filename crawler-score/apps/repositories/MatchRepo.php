@@ -144,7 +144,7 @@ class MatchRepo extends Component
         return [
             "status" => $status,
             'start_time' => $start_time + $time_plus * 24 * 60 * 60,
-            'time_live' => $time_live + $time_plus * 24 * 60 * 60
+            'time_live' => $time_live
         ];
     }
     public function getMatch($time, $status = "", $tournament = "")
