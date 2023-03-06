@@ -3,24 +3,18 @@
 namespace Score\Backend\Controllers;
 
 use Exception;
-use Goutte\Client;
-use GuzzleHttp\Psr7\Request;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-
-use Score\Repositories\CrawlerApiSofa;
-use Score\Repositories\CrawlerScore;
+use Score\Models\ScMatch;
 use Score\Repositories\Team;
 
-use Score\Models\ScMatch;
-use Score\Repositories\CrawlerFlashScore;
+
+use Score\Models\ScTeam;
+use Score\Repositories\CacheMatch;
+use Score\Repositories\CacheMatchLive;
+use Score\Repositories\CacheTeam;
 use Score\Repositories\CrawlerList;
-use Score\Repositories\CrawlerSofa;
 use Score\Repositories\MatchCrawl;
 use Score\Repositories\MatchRepo;
-use Score\Repositories\MyRepo;
-use Score\Repositories\Selenium;
 use Score\Repositories\Tournament;
-
 
 class CrawlerController extends ControllerBase
 {
@@ -30,10 +24,10 @@ class CrawlerController extends ControllerBase
     public function indexAction()
     {
 
-         ini_set('max_execution_time', -1);
+        ini_set('max_execution_time', -1);
 
         $time_plus = $this->request->get("timePlus");
-        $is_live =  $this->request->get("isLive");
+        $is_live = (bool)  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
 
         if (!$this->type_crawl) {
@@ -56,7 +50,10 @@ class CrawlerController extends ControllerBase
             // $seleniumDriver->quit();
             die();
         }
+        $cacheTeam = new CacheTeam();
+        $arrTeamOb = $cacheTeam->getCache();
 
+        $arrMatchCrawl = [];
         //start crawler
         try {
             statCrawler:
@@ -65,8 +62,8 @@ class CrawlerController extends ControllerBase
             listMatch:
             $matchRepo = new MatchRepo();
             foreach ($list_match as $match) {
-                $home = Team::saveTeam($match->getHome(), $match->getAwayImg(),$match->getCountryCode(), $this->type_crawl);
-                $away = Team::saveTeam($match->getAway(), $match->getAwayImg(),$match->getCountryCode(), $this->type_crawl);
+                $home = Team::saveTeam($match->getHome(), $match->getAwayImg(), $match->getCountryCode(), $arrTeamOb, $this->type_crawl);
+                $away = Team::saveTeam($match->getAway(), $match->getAwayImg(), $match->getCountryCode(), $arrTeamOb, $this->type_crawl);
                 $tournament = Tournament::saveTournament($match->getTournament(), $this->type_crawl);
 
                 if (!$home) {
@@ -83,8 +80,9 @@ class CrawlerController extends ControllerBase
                 }
                 $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $this->type_crawl);
                 if ($result) {
+                    $arrMatchCrawl[] = $result;
                     $total++;
-                  //  echo "Save match success --- ";
+                    //  echo "Save match success --- ";
                 } else {
                     echo "Save match false ---";
                 }
@@ -101,22 +99,34 @@ class CrawlerController extends ControllerBase
         // $seleniumDriver->quit();
         // echo (microtime(true) - $start_time) . "</br>";
         end:
+        if ($is_live !== true) {
+            $arrTeam = ScTeam::find("team_active = 'Y'");
+            $arrTeam = $arrTeam->toArray();
+            $arrTeamCache = [];
+            foreach ($arrTeam as $team) {
+                $arrTeamCache[$team['team_id']] = $team;
+            }
+            $teamCache = new CacheTeam();
+            $teamCache->setCache(json_encode($arrTeamCache));
+
+            //cache match trong vòng 14 ngày
+            $timestamp_before_7 = time() - 7 * 24 * 60 * 60 + 60 * 60; //backup 1h
+            $timestamp_affter_7 = time() + 7 * 24 * 60 * 60 + 60 * 60; //backup 1h
+            $arrMatch = ScMatch::find(
+                "match_start_time > $timestamp_before_7 AND match_start_time < $timestamp_affter_7"
+            );
+            $arrMatch = $arrMatch->toArray();
+            $matchCache = new CacheMatch();
+            $matchCache->setCache(json_encode($arrMatch));
+        } else {
+            //cache match trong vòng 1 ngày
+            $matchCache = new CacheMatchLive();
+            $matchCache->setCache(json_encode($arrMatchCrawl));
+        }
+
         echo "---total: " . $total;
 
-        echo "---finish in " . (time() - $start_time_cron) . " second";
-        die();
-    }
-    public function detailAction()
-    {
-        echo "Start crawl data in " . $this->my->formatDateTime(time()) . "/n/r";
-        $link =  'https://www.livescores.com';
-        $param_live = "/football/germany/bundesliga/mainz-vs-borussia-dortmund/704822/?tz=7&tab=tracker";
-        $url = $link . $param_live;
-
-        $client = new client();
-        $crawler = $client->request('GET', $url);
-        $list_match = CrawlerScore::CrawlDetailTracker($crawler);
-
+        echo "---finish in " . (time() - $start_time_cron) . " second \n\r";
         die();
     }
 

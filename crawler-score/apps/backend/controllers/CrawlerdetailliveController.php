@@ -15,7 +15,6 @@ use Score\Models\ScTeam;
 use Score\Models\ScTournament;
 use Score\Repositories\MyRepo;
 use Score\Repositories\Team;
-use Travelnercom\Repositories\CacheTeam;
 
 class CrawlerdetailliveController extends ControllerBase
 {

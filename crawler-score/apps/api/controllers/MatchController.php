@@ -3,8 +3,10 @@
 namespace Score\Api\Controllers;
 
 use Score\Models\ScMatch;
+use Score\Models\ScTeam;
 use Score\Repositories\Article;
 use Score\Repositories\Banner;
+use Score\Repositories\CacheTeam;
 use Score\Repositories\Career;
 use Score\Repositories\MatchRepo;
 use Score\Repositories\Page;
@@ -23,13 +25,20 @@ class MatchController extends ControllerBase
             $time = time();
         }
         $events = [];
+        $cacheTeam = new CacheTeam();
+        $arrTeam = $cacheTeam->getCache();
         $matchRepo = new MatchRepo();
         $arrMatch = $matchRepo->getMatch($time, "S");
 
         foreach ($arrMatch as $key => $match) {
+            if (empty($arrTeam[$match['match_home_id']]) || empty($arrTeam[$match['match_away_id']])) {
+                continue;
+            }
+            $homeModel = new ScTeam();
+            $home = $homeModel->setData($arrTeam[$match['match_home_id']]);
 
-            $home = Team::getTeamById($match['match_home_id']);
-            $away = Team::getTeamById($match['match_away_id']);
+            $awayModel = new ScTeam();
+            $away = $awayModel->setData($arrTeam[$match['match_away_id']]);
 
             $matchInfo = [
                 'status' => [

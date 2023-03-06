@@ -19,7 +19,15 @@ class ScTeam extends \Phalcon\Mvc\Model
     protected $team_logo_crawl;
     protected $team_active;
 
-
+    public function setData($data = null)
+    {
+        if ($data) {
+            foreach ($data as $key => $value) {
+                $this->$key = $value;
+            }
+        }
+        return $this;
+    }
 
     /**
      * @return mixed

@@ -26,7 +26,7 @@ class MatchRepo extends Component
             ]
         ]);
         $timeInfo = $this->getTime($match->getTime());
-    
+
         if (!$matchSave) {
             $matchSave = new ScMatch();
             $matchSave->setMatchName($home->getTeamSlug() . "-vs-" . $away->getTeamSlug());
@@ -55,7 +55,7 @@ class MatchRepo extends Component
         $matchSave->setMatchTime($timeInfo['time_live']);
         $matchSave->setMatchStatus($timeInfo['status']);
         $matchSave->setMatchRound($match->getRound());
-   
+
         $matchSave->setMatchHomeScore(is_numeric($match->getHomeScore()) ? $match->getHomeScore() : 0);
         $matchSave->setMatchAwayScore(is_numeric($match->getAwayScore()) ? $match->getAwayScore() : 0);
         $matchSave->setMatchTournamentId($tournament->getTournamentId());
@@ -67,12 +67,12 @@ class MatchRepo extends Component
             $matchSave->setMatchLinkDetailSofa($match->getHrefDetail());
         }
 
-          if ($type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
+        if ($type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
             $matchSave->setMatchLinkDetailLivescore($match->getHrefDetail());
         }
         $matchSave->setMatchOrder(1);
         if ($matchSave->save()) {
-            return true;
+            return $matchSave;
         }
         var_dump($matchSave->getMessages());
         var_dump($match);
@@ -162,7 +162,7 @@ class MatchRepo extends Component
                 "(match_start_day = :day: OR match_start_day = :day2: OR match_start_day = :day3:) AND match_start_month = :month: AND match_start_year = :year:",
                 [
                     'day' => $day,
-                    'day2' => $day -1,
+                    'day2' => $day - 1,
                     'day3' => $day + 1,
                     'month' => $month,
                     'year' => $year
