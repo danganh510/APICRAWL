@@ -143,7 +143,7 @@ class MatchRepo extends Component
         }
         return [
             "status" => $status,
-            'start_time' => $start_time ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
+            'start_time' => $start_time && is_numeric($start_time) ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
             'time_live' => $time_live 
         ];
     }
