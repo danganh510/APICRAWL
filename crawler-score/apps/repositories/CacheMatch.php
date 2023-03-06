@@ -39,7 +39,7 @@ class CacheMatch extends Component
         $cacheKey = self::cacheKeyClients($sessionId);
         $clients = $cache->get($cacheKey);
 
-        return json_decode($clients);
+        return json_decode($clients) ? json_decode($clients) : [];
     }
     public  function deleteCache()
     {
