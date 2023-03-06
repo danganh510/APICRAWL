@@ -351,7 +351,6 @@ class My extends Phalcon\Mvc\User\Component
     {
         $startDate = new DateTime($this->formatDateYMD($start_date));
         $endDate = new DateTime($this->formatDateYMD($end_date));
-       var_dump($startDate,$endDate);exit;
         return $startDate->diff($endDate)->days;
     }
 }
