@@ -44,6 +44,9 @@ class MatchController extends ControllerBase
         // $matchRepo = new MatchRepo();
         // $arrMatch = $matchRepo->getMatch($time, $status);
         $arrMatch = $cacheMatch->getCache();
+        if (!$arrMatch) {
+            goto end;
+        }
         foreach ($arrMatch as $key => $match) {
             if (!is_array($match)) {
                 $match = (array) $match;
@@ -132,6 +135,7 @@ class MatchController extends ControllerBase
                 ];
             }
         }
+        end:
         return $events;
         //get match and tournament
 
