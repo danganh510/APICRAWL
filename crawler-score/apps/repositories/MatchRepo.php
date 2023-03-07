@@ -141,6 +141,7 @@ class MatchRepo extends Component
                 $status = self::MATH_STATUS_WAIT;
                 break;
         }
+        var_dump($start_time,$time_live);exit;
         return [
             "status" => $status,
             'start_time' => $start_time && is_numeric($start_time) ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
