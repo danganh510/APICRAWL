@@ -15,9 +15,10 @@ class MatchRepo extends Component
     const MATH_STATUS_FINSH = "F";
 
 
-    public  function saveMatch($match, $home, $away, $tournament, $type_crawl)
+    public  function saveMatch($match, $home, $away, $tournament,$time_plus, $type_crawl)
     {
 
+        
         $matchSave = ScMatch::findFirst([
             "match_home_id = :home_id: AND match_away_id = :away_id: AND match_status != 'F'",
             'bind' => [
@@ -25,8 +26,8 @@ class MatchRepo extends Component
                 'away_id' => $away->getTeamId(),
             ]
         ]);
-        $timeInfo = $this->getTime($match->getTime());
-    
+        $timeInfo = $this->getTime($match->getTime(),$time_plus);
+
         if (!$matchSave) {
             $matchSave = new ScMatch();
             $matchSave->setMatchName($home->getTeamSlug() . "-vs-" . $away->getTeamSlug());
@@ -55,7 +56,7 @@ class MatchRepo extends Component
         $matchSave->setMatchTime($timeInfo['time_live']);
         $matchSave->setMatchStatus($timeInfo['status']);
         $matchSave->setMatchRound($match->getRound());
-   
+
         $matchSave->setMatchHomeScore(is_numeric($match->getHomeScore()) ? $match->getHomeScore() : 0);
         $matchSave->setMatchAwayScore(is_numeric($match->getAwayScore()) ? $match->getAwayScore() : 0);
         $matchSave->setMatchTournamentId($tournament->getTournamentId());
@@ -67,18 +68,18 @@ class MatchRepo extends Component
             $matchSave->setMatchLinkDetailSofa($match->getHrefDetail());
         }
 
-          if ($type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
+        if ($type_crawl == MatchCrawl::TYPE_LIVE_SCORES) {
             $matchSave->setMatchLinkDetailLivescore($match->getHrefDetail());
         }
         $matchSave->setMatchOrder(1);
         if ($matchSave->save()) {
-            return true;
+            return $matchSave;
         }
         var_dump($matchSave->getMessages());
         var_dump($match);
         return false;
     }
-    public function getTime($match_time)
+    public function getTime($match_time,$time_plus)
     {
         switch ($match_time) {
             case is_numeric($match_time):
@@ -142,8 +143,8 @@ class MatchRepo extends Component
         }
         return [
             "status" => $status,
-            'start_time' => $start_time,
-            'time_live' => $time_live
+            'start_time' => $start_time && is_numeric($start_time) ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
+            'time_live' => $time_live 
         ];
     }
     public function getMatch($time, $status = "", $tournament = "")
@@ -162,7 +163,7 @@ class MatchRepo extends Component
                 "(match_start_day = :day: OR match_start_day = :day2: OR match_start_day = :day3:) AND match_start_month = :month: AND match_start_year = :year:",
                 [
                     'day' => $day,
-                    'day2' => $day -1,
+                    'day2' => $day - 1,
                     'day3' => $day + 1,
                     'month' => $month,
                     'year' => $year
@@ -175,6 +176,33 @@ class MatchRepo extends Component
             $match = $match->andWhere("t.tournament_id = :tournament:", ['tournament' => $tournament]);
         }
 
+        $match = $match->orderBy("match_order")
+            ->execute();
+        return $match->toArray();
+    }
+    public function getOnlyMatch($time, $status = "", $tournament = "")
+    {
+        $day = date('d', $time);
+        $month = date('m', $time);
+        $year = date('Y', $time);
+        $status = "S";
+
+        $match = ScMatch::query()
+            ->columns("match_id,match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,
+            match_insert_time,match_time,match_start_time,match_order,match_status")
+            ->andWhere(
+                "(match_start_day = :day: OR match_start_day = :day2: OR match_start_day = :day3:) AND match_start_month = :month: AND match_start_year = :year:",
+                [
+                    'day' => $day,
+                    'day2' => $day - 1,
+                    'day3' => $day + 1,
+                    'month' => $month,
+                    'year' => $year
+                ]
+            );
+        if ($status) {
+            $match = $match->andWhere("match_status = :status:", ['status' => $status]);
+        }
         $match = $match->orderBy("match_order")
             ->execute();
         return $match->toArray();
