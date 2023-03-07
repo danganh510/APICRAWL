@@ -133,23 +133,14 @@ class MatchRepo extends Component
                 $time_live = "AET";
                 $status = self::MATH_STATUS_FINSH;
                 break;
-            case "AET":
-                $time = 90;
-                $start_time = time() - $time * 60;
-
-                $time_live = "AET";
-                $status = self::MATH_STATUS_FINSH;
-                break;
             default:
-                $start_time = $this->my->formatDateTimeSendEmail(time()) . " " . $match_time;
+                $start_time = $match_time;
                 $start_time = strtotime($start_time);
 
-                $time_live = 0;
+                $time_live = $match_time;
                 $status = self::MATH_STATUS_WAIT;
                 break;
         }
-        var_dump($match_time,$start_time, $time_live);
-        exit;
         return [
             "status" => $status,
             'start_time' => $start_time && is_numeric($start_time) ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
