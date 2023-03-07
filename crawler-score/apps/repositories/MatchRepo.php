@@ -133,6 +133,12 @@ class MatchRepo extends Component
                 $time_live = "AET";
                 $status = self::MATH_STATUS_FINSH;
                 break;
+            case "Interrupted":
+                $time = 90;
+                $start_time = time() - $time * 60;
+                $time_live = "Interrupted";
+                $status = self::MATH_STATUS_FINSH;
+                break;
             default:
                 $start_time = $match_time;
                 $start_time = strtotime($start_time);
