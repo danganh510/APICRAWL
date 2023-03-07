@@ -45,6 +45,7 @@ class MatchController extends ControllerBase
         // $matchRepo = new MatchRepo();
         // $arrMatch = $matchRepo->getMatch($time, $status);
         $arrMatch = $cacheMatch->getCache();
+        var_dump($arrMatch);exit;
         if (!$arrMatch) {
             goto end;
         }
