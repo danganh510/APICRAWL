@@ -45,7 +45,6 @@ class MatchController extends ControllerBase
         // $matchRepo = new MatchRepo();
         // $arrMatch = $matchRepo->getMatch($time, $status);
         $arrMatch = $cacheMatch->getCache();
-        var_dump($arrMatch);exit;
         if (!$arrMatch) {
             goto end;
         }
@@ -53,6 +52,7 @@ class MatchController extends ControllerBase
             if (!is_array($match)) {
                 $match = (array) $match;
             }
+            var_dump($arrTeam[$match['match_home_id']],$arrTeam[$match['match_away_id']]);exit;
             if (empty($arrTeam[$match['match_home_id']]) || empty($arrTeam[$match['match_away_id']])) {
                 continue;
             }
