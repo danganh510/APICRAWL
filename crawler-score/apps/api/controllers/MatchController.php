@@ -103,7 +103,7 @@ class MatchController extends ControllerBase
                     'slug' => $this->create_slug(
                         $away->getTeamName(),
                     ),
-                    'svg' => $away->getTeamLogo(),
+                    'logo' => $away->getTeamLogoSmall(),
                     'score' => [
                         'score' => $match['match_away_score'],
                         'time' => [$match['match_home_score']]
