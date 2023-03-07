@@ -15,10 +15,10 @@ class MatchRepo extends Component
     const MATH_STATUS_FINSH = "F";
 
 
-    public  function saveMatch($match, $home, $away, $tournament,$time_plus, $type_crawl)
+    public  function saveMatch($match, $home, $away, $tournament, $time_plus, $type_crawl)
     {
 
-        
+
         $matchSave = ScMatch::findFirst([
             "match_home_id = :home_id: AND match_away_id = :away_id: AND match_status != 'F'",
             'bind' => [
@@ -26,7 +26,7 @@ class MatchRepo extends Component
                 'away_id' => $away->getTeamId(),
             ]
         ]);
-        $timeInfo = $this->getTime($match->getTime(),$time_plus);
+        $timeInfo = $this->getTime($match->getTime(), $time_plus);
 
         if (!$matchSave) {
             $matchSave = new ScMatch();
@@ -79,7 +79,7 @@ class MatchRepo extends Component
         var_dump($match);
         return false;
     }
-    public function getTime($match_time,$time_plus)
+    public function getTime($match_time, $time_plus)
     {
         switch ($match_time) {
             case is_numeric($match_time):
@@ -133,6 +133,13 @@ class MatchRepo extends Component
                 $time_live = "AET";
                 $status = self::MATH_STATUS_FINSH;
                 break;
+            case "AET":
+                $time = 90;
+                $start_time = time() - $time * 60;
+
+                $time_live = "AET";
+                $status = self::MATH_STATUS_FINSH;
+                break;
             default:
                 $start_time = $this->my->formatDateTimeSendEmail(time()) . " " . $match_time;
                 $start_time = strtotime($start_time);
@@ -141,11 +148,12 @@ class MatchRepo extends Component
                 $status = self::MATH_STATUS_WAIT;
                 break;
         }
-        var_dump($start_time,$time_live);exit;
+        var_dump($match_time,$start_time, $time_live);
+        exit;
         return [
             "status" => $status,
             'start_time' => $start_time && is_numeric($start_time) ? $start_time + $time_plus * 24 * 60 * 60 : $start_time,
-            'time_live' => $time_live 
+            'time_live' => $time_live
         ];
     }
     public function getMatch($time, $status = "", $tournament = "")
