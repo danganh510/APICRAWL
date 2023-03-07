@@ -53,6 +53,9 @@ class Team extends Component
     {
         $team = Team::findByNameArray($team_name, MyRepo::create_slug($team_name),$arrTeam,$country_code);
         if (!$team) {
+            $team = Team::findByName($team_name, MyRepo::create_slug($team_name),$country_code);
+        }
+        if (!$team) {
             $team = new ScTeam();
             $team->setTeamName($team_name);
             $team->setTeamLogo($image);
