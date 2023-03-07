@@ -55,7 +55,6 @@ class MatchController extends ControllerBase
             if (empty($arrTeam[$match['match_home_id']]) || empty($arrTeam[$match['match_away_id']])) {
                 continue;
             }
-            var_dump($match,$arrTeam[$match['match_home_id']],$arrTeam[$match['match_away_id']]);exit;
             if (empty($arrTournament[$match['match_tournament_id']])) {
                 continue;
             }
