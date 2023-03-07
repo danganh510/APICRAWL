@@ -51,10 +51,11 @@ class Team extends Component
     }
     public static function saveTeam($team_name, $image,$country_code,$arrTeam, $type)
     {
-        $team = Team::findByNameArray($team_name, MyRepo::create_slug($team_name),$arrTeam,$country_code);
-        if (!$team) {
-            $team = Team::findByName($team_name, MyRepo::create_slug($team_name),$country_code);
-        }
+        // $team = Team::findByNameArray($team_name, MyRepo::create_slug($team_name),$arrTeam,$country_code);
+        // if (!$team) {
+           
+        // }
+        $team = Team::findByName($team_name, MyRepo::create_slug($team_name),$country_code);
         if (!$team) {
             $team = new ScTeam();
             $team->setTeamName($team_name);
