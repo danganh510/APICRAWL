@@ -101,7 +101,7 @@ class CrawlerController extends ControllerBase
         // $seleniumDriver->quit();
         // echo (microtime(true) - $start_time) . "</br>";
         end:
-        if ($is_live !== true) {
+        if ($is_live !== true && $total > 1) {
             $arrTeam = ScTeam::find("team_active = 'Y'");
             $arrTeam = $arrTeam->toArray();
             $arrTeamCache = [];
