@@ -111,6 +111,7 @@ class CrawlerController extends ControllerBase
             $teamCache = new CacheTeam();
             $teamCache->setCache(json_encode($arrTeamCache));
 
+            echo "cache total: ".count($arrTeamCache)." team /r/n";
             //cache tour
             $arrTour = ScTournament::find("tournament_active = 'Y'");
             $arrTour = $arrTour->toArray();
