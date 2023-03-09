@@ -153,7 +153,7 @@ class MatchController extends ControllerBase
             ->where("match_id = :id:",  [
                 'id' => $id
             ])->execute();
-        if (!$matchInfo) {
+        if (!$matchInfo->toArray()) {
             return [
                 'status' => false,
                 'messages' => "match id: ".$id." error"
