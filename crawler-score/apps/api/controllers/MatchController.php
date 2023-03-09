@@ -147,18 +147,12 @@ class MatchController extends ControllerBase
         $id = $this->request->get('id');
         $matchInfo = ScMatch::query()
             ->innerJoin('Score\Models\ScTournament', 'match_tournament_id = t.tournament_id', 't')
-            ->innerJoin('Score\Models\ScMatchInfo', 'match_id  = i.info_match_id', 'i')
+            ->leftJoin('Score\Models\ScMatchInfo', 'match_id  = i.info_match_id', 'i')
             ->columns("match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,match_id,
         i.info_summary,i.info_time,i.info_stats,t.tournament_name")
             ->where("match_id = :id:",  [
                 'id' => $id
             ])->execute();
-        if (!$matchInfo->toArray()) {
-            return [
-                'status' => false,
-                'messages' => "match id: ".$id." notfound info"
-            ];
-        }
         $matchInfo = $matchInfo->toArray()[0];
         $home = Team::getTeamById($matchInfo['match_home_id']);
         $away = Team::getTeamById($matchInfo['match_away_id']);
