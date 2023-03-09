@@ -353,4 +353,15 @@ class My extends Phalcon\Mvc\User\Component
         $endDate = new DateTime($this->formatDateYMD($end_date));
         return $startDate->diff($endDate)->days;
     }
+    function isweekend($date){
+        $date = strtotime($date);
+        $date = date("l", $date);
+        $date = strtolower($date);
+        echo $date;
+        if($date == "saturday" || $date == "sunday") {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
 }
