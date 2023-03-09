@@ -156,7 +156,7 @@ class MatchController extends ControllerBase
         if (!$matchInfo->toArray()) {
             return [
                 'status' => false,
-                'messages' => "match id: ".$id." error"
+                'messages' => "match id: ".$id." notfound info"
             ];
         }
         $matchInfo = $matchInfo->toArray()[0];
