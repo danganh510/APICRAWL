@@ -126,7 +126,7 @@ class MatchController extends ControllerBase
                                 'slug' => "football"
                             ],
                             'flag' => $arrTournament[$match['match_tournament_id']]['tournament_country'],
-                            'countryCode' => "countryCode"
+                            'countryCode' => $arrTournament[$match['match_tournament_id']]['tournament_country_code']
                         ]
                     ],
                     'match' => [
