@@ -153,6 +153,7 @@ class MatchController extends ControllerBase
             ->where("match_id = :id:",  [
                 'id' => $id
             ])->execute();
+            var_dump($matchInfo);exit;
         $matchInfo = $matchInfo->toArray()[0];
         $home = Team::getTeamById($matchInfo['match_home_id']);
         $away = Team::getTeamById($matchInfo['match_away_id']);
