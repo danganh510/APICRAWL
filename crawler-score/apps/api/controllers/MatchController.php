@@ -156,8 +156,8 @@ class MatchController extends ControllerBase
         if (!$matchInfo) {
             return [
                 'status' => false,
-                'messages' => "match id: ".$id." error";
-            ]
+                'messages' => "match id: ".$id." error"
+            ];
         }
         $matchInfo = $matchInfo->toArray()[0];
         $home = Team::getTeamById($matchInfo['match_home_id']);
