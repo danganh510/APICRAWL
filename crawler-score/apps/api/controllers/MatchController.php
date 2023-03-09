@@ -91,7 +91,7 @@ class MatchController extends ControllerBase
                     'id' => $home->getTeamId(),
                     'name' => $home->getTeamName(),
                     'slug' => $this->create_slug($home->getTeamName()),
-                    'svg' => $home->getTeamLogo(),
+                    'logo' => $home->getTeamLogoSmall(),
                     'score' => [
                         'score' => $match['match_home_score'],
                         'time' => [$match['match_home_score']]
@@ -167,7 +167,9 @@ class MatchController extends ControllerBase
             'name' => $matchInfo['match_name'],
             'tournament' => $matchInfo['tournament_name'],
             'home' => $home->getTeamName(),
+            'homeLogo' => $home->getTeamLogoMedium(),
             'away' => $away->getTeamName(),
+            'awayLogo' => $away->getTeamLogoMedium(),
             'homeSlug' => $home->getTeamSlug(),
             'awaySlug' => $away->getTeamSlug(),
             'homeScore' => $matchInfo['match_home_score'],
