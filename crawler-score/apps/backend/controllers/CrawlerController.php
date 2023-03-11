@@ -32,6 +32,7 @@ class CrawlerController extends ControllerBase
         $is_live = (bool)  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
         $isDeleteCache = (bool) $this->request->get("deleteCache");
+        var_dump($isDeleteCache);exit;
         if ($isDeleteCache == true) {
             goto delete_cache;
         }
