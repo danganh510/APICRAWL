@@ -31,6 +31,10 @@ class CrawlerController extends ControllerBase
         $time_plus = $this->request->get("timePlus");
         $is_live = (bool)  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
+        $isDeleteCache = (bool) $this->request->get("deleteCache");
+        if ($isDeleteCache == true) {
+            goto delete_cache;
+        }
 
         if (!$this->type_crawl) {
             $this->type_crawl = MatchCrawl::TYPE_SOFA;
@@ -100,8 +104,8 @@ class CrawlerController extends ControllerBase
         }
         // $seleniumDriver->quit();
         // echo (microtime(true) - $start_time) . "</br>";
-        end:
-        if ($is_live !== true && $total > 1) {
+        delete_cache:
+        if (($is_live !== true && $total > 1) || $isDeleteCache == true) {
             $arrTeam = ScTeam::find("team_active = 'Y'");
             $arrTeam = $arrTeam->toArray();
             $arrTeamCache = [];
