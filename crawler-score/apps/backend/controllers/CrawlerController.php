@@ -32,7 +32,7 @@ class CrawlerController extends ControllerBase
         $is_live = (bool)  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
         $isDeleteCache = (bool) $this->request->get("deleteCache");
-        var_dump($isDeleteCache);exit;
+        $total = 0;
         if ($isDeleteCache == true) {
             goto delete_cache;
         }
@@ -42,7 +42,6 @@ class CrawlerController extends ControllerBase
         }
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl data in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
-        $total = 0;
         $start_time = microtime(true);
         try {
             $crawler = new CrawlerList($this->type_crawl, $time_plus, $is_live);
@@ -85,7 +84,7 @@ class CrawlerController extends ControllerBase
                     echo "can't save tournament team";
                     continue;
                 }
-                $result =  $matchRepo->saveMatch($match, $home, $away, $tournament,$time_plus, $this->type_crawl);
+                $result =  $matchRepo->saveMatch($match, $home, $away, $tournament, $time_plus, $this->type_crawl);
                 if ($result) {
                     $arrMatchCrawl[] = $result;
                     $total++;
@@ -116,7 +115,7 @@ class CrawlerController extends ControllerBase
             $teamCache = new CacheTeam();
             $teamCache->setCache(json_encode($arrTeamCache));
 
-            echo "cache total: ".count($arrTeamCache)." team /r/n";
+            echo "cache total: " . count($arrTeamCache) . " team /r/n";
             //cache tour
             $arrTour = ScTournament::find("tournament_active = 'Y'");
             $arrTour = $arrTour->toArray();
