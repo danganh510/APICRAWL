@@ -36,10 +36,7 @@ class CrawlerdetailliveController extends ControllerBase
             //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
             $this->db->begin();
             $matchCrawl = ScMatch::findFirst([
-                ' match_status = "S" AND match_crawl_detail_live = "0" ',
-                // 'bind' => [
-                //     'arrTour' => implode(",", $arrTourNammentCrawlID)
-                // ]
+                ' match_status = "S" AND match_crawl_detail_live = "0" AND match_crawl_detail = 1'
             ]);
             if (!$matchCrawl) {
                 $sql = 'UPDATE Score\Models\ScMatch SET match_crawl_detail_live = "0" WHERE match_status = "S"';
