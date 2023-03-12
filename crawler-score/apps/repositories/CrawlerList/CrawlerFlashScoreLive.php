@@ -27,7 +27,6 @@ class CrawlerFlashScoreLive extends CrawlerFlashScoreBase
             echo $e->getMessage();
         }
         $this->seleniumDriver->quit();
-        var_dump(microtime(true) - $time);
         return $htmlDiv;
     }
     public function crawlList()

@@ -78,7 +78,6 @@ class CrawlerFlashScoreBase extends CrawlerList
                     echo "error85:";
                 }
             }
-            sleep($click * 0.05);
         }
         var_dump(microtime(true) - $time);
 
