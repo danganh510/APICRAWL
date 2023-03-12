@@ -28,7 +28,6 @@ class CrawlerdetailliveController extends ControllerBase
         $this->type_crawl = $this->request->get("type");
         if ($is_live) {
             $arrTourKey = ScTournament::getTourIdCrawl();
-            $this->db->begin();
             $matchCrawl = ScMatch::findFirst([
                 ' match_status = "S" AND match_crawl_detail_live = "0" AND FIND_IN_SET(match_tournament_id,:arrTour:)',
                 'bind' => [
@@ -57,19 +56,15 @@ class CrawlerdetailliveController extends ControllerBase
             die();
         }
         if ($is_live) {
-            if ($matchCrawl->getMatchCrawlDetailLive() == 1) {
-                $matchCrawl->setMatchCrawlDetailLive(0);
-            } else {
-                $matchCrawl->setMatchCrawlDetailLive(1);
-            }
+            $matchCrawl->setMatchCrawlDetailLive(1);
         } else {
-            $matchCrawl->setMatchCrawlDetail($matchCrawl->getMatchCrawlDetail() + 1);
+            $flag_crawl = $matchCrawl->getMatchCrawlDetail() + 1;
+            $flag_crawl = (int) $flag_crawl;
+            $matchCrawl->setMatchCrawlDetail($flag_crawl);
         }
         $matchCrawl->save();
-        $this->db->commit();
 
         echo $matchCrawl->getMatchId() . "---";
-
         if ($matchCrawl->getMatchLinkDetailFlashscore() == "" || $matchCrawl->getMatchLinkDetailFlashscore() == null) {
             goto end;
         }
@@ -104,7 +99,7 @@ class CrawlerdetailliveController extends ControllerBase
             $matchCrawl->setMatchHomeScore($detail['match']['homeScore']);
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
-        end:
+
 
         //save logo team:
         $homeTeam = ScTeam::findFirstById($matchCrawl->getMatchHomeId());
@@ -119,6 +114,7 @@ class CrawlerdetailliveController extends ControllerBase
             $awayTeam->save();
         }
         $matchCrawl->save();
+        end:
         echo "---finish in " . (time() - $start_time_cron) . " second ---- \n\r";
         die();
     }
