@@ -24,7 +24,7 @@ crawler-score/uploadsitemapcsv/
 crawler-score/apps/library/Google/path/
 crawler-score/test
 crawler-score/test/*
-crawler-score/apps/cache
+crawler-score/apps/Cache
 crawler-score/public/images
 crawler-score/public/images/*
 crawler-score/apps/repositories/CrawlerList/match/*
