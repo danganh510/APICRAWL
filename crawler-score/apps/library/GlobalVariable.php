@@ -42,7 +42,7 @@ class GlobalVariable extends Component
 
         $this->preg_match = "[/^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z.]{2,5}$/]";
         date_default_timezone_set('UTC');//default for Application - NOT ONLY for current script
-        $this->timeZone = -4*3600;
+        $this->timeZone = 7*3600;
         $this->curTime = time();
         $this->localTime = time() + $this->timeZone;
         //$this->timeZoneStr = 'UTC -04:00';
