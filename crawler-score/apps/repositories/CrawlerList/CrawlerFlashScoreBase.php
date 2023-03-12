@@ -59,6 +59,7 @@ class CrawlerFlashScoreBase extends CrawlerList
             sleep(1);
         }
         $isWeekend = $this->my->isweekend($this->day_time);
+        var_dump(strftime('%d/%m', strtotime($this->day_time)));exit;
         if (!$isWeekend) {
             $divClose = $this->seleniumDriver->findElements(".event__expander--close");
             $divClose = array_reverse($divClose);
