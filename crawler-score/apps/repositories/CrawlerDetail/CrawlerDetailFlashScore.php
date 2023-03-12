@@ -277,7 +277,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
             $arrTemp = [
                 'description' => $description,
                 'event' => $event,
-                'time' => $div->find(".soccer__time", 0)->getAttribute("title"),
+                'time' => $div->find(".soccer__time", 0)->text(),
             ];
             $tracker[] = $arrTemp;
         }
