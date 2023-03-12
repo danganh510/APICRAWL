@@ -20,7 +20,6 @@ class CrawlerFlashScoreLive extends CrawlerFlashScoreBase
         $htmlDiv = "";
         try {
 
-            $time = microtime(true);
             $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");

@@ -16,14 +16,18 @@ class CrawlerFlashScoreBase extends CrawlerList
     }
     public function setupSite()
     {
+        $time = microtime(true);
+
         $this->runSelenium();
 
+        var_dump(microtime(true) - $time);
         //k lưu cokkie
         try {
             $this->seleniumDriver->clickButton("#onetrust-reject-all-handler");
         } catch (Exception $e) {
             echo "not found cookie";
         }
+        var_dump(microtime(true) - $time);
 
         if (!$this->isLive) {
             //  $parentDiv = $seleniumDriver->findElements('div[id="live-table"] > section > div > div > div');
@@ -59,6 +63,8 @@ class CrawlerFlashScoreBase extends CrawlerList
             sleep(1);
         }
         $isWeekend = $this->my->isweekend($this->day_time);
+        var_dump(microtime(true) - $time);
+
         if (true) {
             $divClose = $this->seleniumDriver->findElements(".event__expander--close");
             $divClose = array_reverse($divClose);
@@ -74,6 +80,8 @@ class CrawlerFlashScoreBase extends CrawlerList
             }
             sleep($click * 0.05);
         }
+        var_dump(microtime(true) - $time);
+
     }
     public function getTournament($div)
     {
