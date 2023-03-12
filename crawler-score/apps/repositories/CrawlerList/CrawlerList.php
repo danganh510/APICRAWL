@@ -148,6 +148,12 @@ class CrawlerList extends Component
         if (isset($data['away_image'])) {
             $liveMatch->setAwayImg($data['away_image']);
         }
+        if (isset($data['home_card_red'])) {
+            $liveMatch->setHomeCardRed($data['home_card_red']);
+        }
+        if (isset($data['away_card_red'])) {
+            $liveMatch->setAwayCardRed($data['away_card_red']);
+        }
         return $liveMatch;
     }
 

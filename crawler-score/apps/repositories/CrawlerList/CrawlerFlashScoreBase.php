@@ -132,11 +132,18 @@ class CrawlerFlashScoreBase extends CrawlerList
 
         $home_score = $divMatch->find(".event__score--home");
         $dataMatch['home_score'] = isset($home_score[0]) ? $home_score[0]->innertext() : 0;
+      
+        //find card red
+        $home_card = $divMatch->find(".event__participant--home > .icon--redCard");
+        $dataMatch['home_card_red'] = count($home_card);
+
+        $away_card = $divMatch->find(".event__participant--away > .icon--redCard");
+        $dataMatch['away_card_red'] = count($away_card);
 
         $dataMatch['away'] = $divMatch->find(".event__participant--away")[0]->text();
         $away_image = $divMatch->find(".event__logo--away");
         $dataMatch['away_image'] = isset($away_image[0]) ? $away_image[0]->getAttribute("src") : '';
-
+   
         $away_score = $divMatch->find(".event__score--away");
         $dataMatch['away_score'] = isset($away_score[0]) ? $away_score[0]->innertext() : 0;
 

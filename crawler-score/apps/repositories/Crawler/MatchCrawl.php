@@ -18,9 +18,12 @@ class MatchCrawl extends Component
 
     private $home;
     private $home_score;
+    private $home_card_red;
     private $home_img;
     private $away;
     private $away_score;
+    private $away_card_red;
+
     private $away_img;
     private $href_detail;
     private $country_code;
@@ -38,6 +41,9 @@ class MatchCrawl extends Component
     public function getHomeScore() {
         return $this->home_score;
     }
+    public function getHomeCardRed() {
+        return $this->home_card_red;
+    }
     public function getHomeImg() {
         return $this->home_img;
     }
@@ -46,6 +52,9 @@ class MatchCrawl extends Component
     }
     public function getAwayScore() {
         return $this->away_score;
+    }
+    public function getAwayCardRed() {
+        return $this->away_card_red;
     }
     public function getAwayImg() {
         return $this->away_img;
@@ -72,6 +81,10 @@ class MatchCrawl extends Component
         $this->home_score = $home_score;
         return $this->home_score;
     }
+    public function setHomeCardRed($home_card_red) {
+        $this->home_card_red = $home_card_red;
+        return $this->home_card_red;
+    }
     public function setHomeImg($home_img) {
         $this->home_img = $home_img;
         return $this->home_img;
@@ -83,6 +96,10 @@ class MatchCrawl extends Component
     public function setAwayScore($away_score) {
         $this->away_score = $away_score;
         return $this->away_score;
+    }
+    public function setAwayCardRed($away_card_red) {
+        $this->away_card_red = $away_card_red;
+        return $this->away_card_red;
     }
     public function setAwayImg($away_img) {
         $this->away_img = $away_img;

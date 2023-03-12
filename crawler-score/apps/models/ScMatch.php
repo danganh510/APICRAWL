@@ -14,6 +14,8 @@ class ScMatch extends \Phalcon\Mvc\Model
     protected $match_away_id;
     protected $match_home_score;
     protected $match_away_score;
+    protected $match_home_card_red;
+    protected $match_away_card_red;
     protected $match_round;
     protected $match_insert_time;
     protected $match_time;
@@ -157,6 +159,14 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         return $this->match_home_score;
     }
+    /**
+     * @return mixed
+     */
+    public function getMatchHomeHomeCardRed()
+    {
+        return $this->match_home_card_red;
+    }
+
 
     /**
      * @param mixed $match_home_score
@@ -165,7 +175,13 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_home_score = $match_home_score;
     }
-
+    /**
+     * @param mixed $match_home_card_red
+     */
+    public function setMatchHomeCardRed($match_home_card_red)
+    {
+        $this->match_home_card_red = $match_home_card_red;
+    }
     /**
      * @return mixed
      */
@@ -181,7 +197,21 @@ class ScMatch extends \Phalcon\Mvc\Model
     {
         $this->match_away_score = $match_away_score;
     }
+   /**
+     * @return mixed
+     */
+    public function getMatchAwayCardRed()
+    {
+        return $this->match_away_card_red;
+    }
 
+    /**
+     * @param mixed $match_away_card_red
+     */
+    public function setMatchAwayCardRed($match_away_card_red)
+    {
+        $this->match_away_card_red = $match_away_card_red;
+    }
     /**
      * @return mixed
      */
