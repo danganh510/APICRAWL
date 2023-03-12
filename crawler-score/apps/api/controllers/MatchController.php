@@ -167,6 +167,8 @@ class MatchController extends ControllerBase
         $info = [
             'id' => $matchInfo['match_id'],
             'name' => $matchInfo['match_name'],
+            'startTime' => $matchInfo['match_start_time'],
+            'time' => $matchInfo['match_time'],
             'tournament' => $matchInfo['tournament_name'],
             'home' => $home->getTeamName(),
             'homeLogo' => $home->getTeamLogoMedium(),
