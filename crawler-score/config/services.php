@@ -207,6 +207,11 @@ $di['router'] = function () {
         "controller" => "crawlimage",
         "action" => "index"
     ));
+    $router->add("/crawler-logo-medium", array(
+        "module" => "backend",
+        "controller" => "crawlimage",
+        "action" => "logomedium"
+    ));
     $router->add("/logout", array(
         "module" => "backend",
         "controller" => "login",

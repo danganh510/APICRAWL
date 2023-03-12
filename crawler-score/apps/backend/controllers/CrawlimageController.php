@@ -34,13 +34,13 @@ class CrawlimageController extends ControllerBase
     {
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl logo team small in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
-        $arrTeam = ScTeam::findTeamLogoSmallNull(10);
+        $arrTeam = ScTeam::findTeamLogoMediumNull(10);
         $crawlImage = new CrawlImage();
         $total = 0;
         foreach ($arrTeam as $team) {
-            $url_logo = "https://www.flashscore.com" . $team->getTeamLogo();
-            $crawl = $crawlImage->getImage($url_logo, Team::FOLDER_IMAGE_SMALL . "/" . $team->getTeamId());
-            $team->setTeamLogoSmall($crawl['uploadFiles']);
+            $url_logo = "https://www.flashscore.com" . $team->getTeamLogoCrawl();
+            $crawl = $crawlImage->getImage($url_logo, Team::FOLDER_IMAGE_MEDIUM . "/" . $team->getTeamId());
+            $team->setTeamLogoMedium($crawl['uploadFiles']);
             $result = $team->save();
             if ($crawl['status'] == "success") {
                 $total++;

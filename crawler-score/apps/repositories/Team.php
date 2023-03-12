@@ -11,6 +11,7 @@ use Travelnercom\Repositories\CacheTeam;
 class Team extends Component
 {
     const FOLDER_IMAGE_SMALL = "/images/team/small";
+    const FOLDER_IMAGE_MEDIUM = "/images/team/medium";
     public static function findByName($name, $name_slug, $country_code = "")
     {
         if ($country_code) {

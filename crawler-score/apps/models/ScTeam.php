@@ -255,6 +255,13 @@ class ScTeam extends \Phalcon\Mvc\Model
             "limit" => (int) $limit
         ]);
     }
+    public static function findTeamLogoMediumNull($limit)
+    {
+        return self::find([
+            '(team_logo_medium = "" OR team_logo_medium IS NULL) AND team_logo_crawl != ""',
+            "limit" => (int) $limit
+        ]);
+    }
     public static function findFirstById($id)
     {
         return self::findFirst([
