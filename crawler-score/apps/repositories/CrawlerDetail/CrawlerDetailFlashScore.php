@@ -4,11 +4,7 @@ namespace Score\Repositories;
 
 use DOMDocument;
 use Exception;
-use Facebook\WebDriver\WebDriver;
-use Facebook\WebDriver\WebDriverBy;
-use Phalcon\Mvc\User\Component;
 
-use Symfony\Component\DomCrawler\Crawler;
 
 class CrawlerDetailFlashScore extends CrawlerDetail
 {

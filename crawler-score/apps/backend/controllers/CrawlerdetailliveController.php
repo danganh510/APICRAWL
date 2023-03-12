@@ -27,27 +27,29 @@ class CrawlerdetailliveController extends ControllerBase
         $is_live =  $this->request->get("isLive");
         $this->type_crawl = $this->request->get("type");
         if ($is_live) {
-            //nếu crawl live thì crawl các trận đấu có tournament_crawl = Y;
-            // $arrTourNammentCrawlID = ScTournament::getTourIdCrawl();
-            // if (empty($arrTourNammentCrawlID)) {
-            //     echo "Not found tournament";
-            //     die();
-            // }
-            //AND  FIND_IN_SET(match_tournament_id,:arrTour:)
+            $arrTourKey = ScTournament::getTourIdCrawl();
             $this->db->begin();
             $matchCrawl = ScMatch::findFirst([
-                ' match_status = "S" AND match_crawl_detail_live = "0" AND match_crawl_detail = 1'
+                ' match_status = "S" AND match_crawl_detail_live = "0" AND FIND_IN_SET(match_tournament_id,:arrTour:)',
+                'bind' => [
+                    'arrTour' => implode(",", $arrTourKey)
+                ]
             ]);
             if (!$matchCrawl) {
                 $sql = 'UPDATE Score\Models\ScMatch SET match_crawl_detail_live = "0" WHERE match_status = "S"';
                 $this->modelsManager->executeQuery($sql);
-                echo "--All restart: ";
-                echo strftime(' %H:%M', time()).
-                die();
+                echo "--All restart: \r\n";
+                $matchCrawl = ScMatch::findFirst([
+                    ' match_status = "S" AND match_crawl_detail_live = "0" AND FIND_IN_SET(match_tournament_id,:arrTour:)',
+                    'bind' => [
+                        'arrTour' => implode(",", $arrTourKey)
+                    ]
+                ]);
+                
             }
         } else {
             $matchCrawl = ScMatch::findFirst([
-                'match_crawl_detail = 0 AND match_status != "W" '
+                'match_crawl_detail = 0 '
             ]);
         }
         if (!$matchCrawl) {
@@ -103,7 +105,7 @@ class CrawlerdetailliveController extends ControllerBase
             $matchCrawl->setMatchAwayScore($detail['match']['awayScore']);
         }
         end:
-       
+
         //save logo team:
         $homeTeam = ScTeam::findFirstById($matchCrawl->getMatchHomeId());
         if ($homeTeam && !$homeTeam->getTeamLogoCrawl() && !empty($detail['match']['homeLogo'])) {
