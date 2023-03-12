@@ -94,6 +94,7 @@ class MatchController extends ControllerBase
                     'logo' => $home->getTeamLogoSmall(),
                     'score' => [
                         'score' => $match['match_home_score'],
+                        'redCard' => $match['match_home_card_red'],
                         'time' => [$match['match_home_score']]
                     ]
                 ],
@@ -106,6 +107,7 @@ class MatchController extends ControllerBase
                     'logo' => $away->getTeamLogoSmall(),
                     'score' => [
                         'score' => $match['match_away_score'],
+                        'redCard' => $match['match_away_card_red'],
                         'time' => [$match['match_home_score']]
                     ]
                 ],
