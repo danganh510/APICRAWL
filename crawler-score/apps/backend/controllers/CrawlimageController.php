@@ -13,8 +13,7 @@ class CrawlimageController extends ControllerBase
     {
         $start_time_cron = time() + 0 * 24 * 60 * 60;
         echo "Start crawl logo team small in " . $this->my->formatDateTime($start_time_cron) . "/n/r";
-        $arrTeam = ScTeam::findTeamLogoSmallNull(10);
-        var_dump($arrTeam);exit;
+        $arrTeam = ScTeam::findTeamLogoSmallNull(30);
         $crawlImage = new CrawlImage();
         $total = 0;
         foreach ($arrTeam as $team) {
