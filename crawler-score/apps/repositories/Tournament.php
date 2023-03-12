@@ -12,7 +12,7 @@ class Tournament extends Component
     public static function findByName($name, $country_code = "", $slug = "")
     {
         return ScTournament::findFirst([
-            '(tournament_name = :name: OR tournament_slug = :slug: OR tournament_name_flash_score = :name:) AND tournament_country_code = countryCode',
+            '(tournament_name = :name: OR tournament_slug = :slug: OR tournament_name_flash_score = :name:) AND tournament_country_code = :countryCode:',
             'bind' => [
                 'name' => $name,
                 'slug' => $slug,
