@@ -23,7 +23,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $info = $this->crawlDetailInfo();
         $start = $this->crawlDetailStarts();
         $tracker = $this->crawlDetailTracker();
-       
+
         $result = [
             'match' => $info['match'],
             'info' => $info['info'],
@@ -121,6 +121,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
             $assistHome = "";
             $homeSubIncident = "";
             $homeincidentSubOut = "";
+            $homeScore = "";
 
             $awayEvent = "";
             $awayDescription = "";
@@ -128,6 +129,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
             $assistAway = "";
             $awaySubIncident = "";
             $awayincidentSubOut = "";
+            $awayScore = "";
             $classDiv = $div->getAttribute('class');
 
             if (strpos($classDiv, 'smv__homeParticipant') !== false) {
@@ -136,9 +138,14 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                     $timeNow = $time->text();
                 }
 
-                $description = $div->find("div > div", 0);
+                $description = $div->find("div > .smv__incidentIcon", 0);
+                if (!$description) {
+                    $description = $div->find("div > .smv__incidentIconSub", 0);
+                }
                 if ($description) {
+
                     $arrEvent = $this->getEvent($description);
+
                     $homeEvent = $arrEvent['event'];
                     $homeDescription = $arrEvent['strDescription'];
                 }
@@ -158,6 +165,10 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                 $incidentSubOut = $div->find(".smv__incidentSubOut", 0);
                 if ($incidentSubOut) {
                     $homeincidentSubOut = $incidentSubOut->text();
+                }
+                $homeScoreDiv = $div->find(".smv__incidentHomeScore", 0);
+                if ($homeScoreDiv) {
+                    $homeScore = $homeScoreDiv->text();
                 }
             }
             if (strpos($classDiv, 'smv__awayParticipant') !== false) {
@@ -190,6 +201,10 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                 if ($incidentSubOut) {
                     $awayincidentSubOut = $incidentSubOut->text();
                 }
+                $awayScoreDiv = $div->find(".smv__incidentAwayScore", 0);
+                if ($awayScoreDiv) {
+                    $awayScore = $awayScoreDiv->text();
+                }
             }
 
             if ($timeNow) {
@@ -201,6 +216,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                     'homeDescription' => $homeDescription,
                     'homeSubIncident' => str_replace(["(", ")"], ["", ""], $homeSubIncident),
                     'homeincidentSubOut' => str_replace(["(", ")"], ["", ""], $homeincidentSubOut),
+                    'homeScore' => $homeScore,
 
                     'awayText' => $awayText,
                     'awayAssist' => str_replace(["(", ")"], ["", ""], $assistAway),
@@ -208,6 +224,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                     'awayDescription' => $awayDescription,
                     'awaySubIncident' => str_replace(["(", ")"], ["", ""], $awaySubIncident),
                     'awayincidentSubOut' => str_replace(["(", ")"], ["", ""], $awayincidentSubOut),
+                    'awayScore' => $awayScore,
                 ];
             }
         }
@@ -294,12 +311,16 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         $svg = $description->find("svg", 0);
         //get event
         if ($svg) {
-            $hrefIcon = $svg->find("use", 0)->getAttribute("xlink:href");
+            $hrefIcon = $description->find("use", 0)->getAttribute("xlink:href");
             if (strpos($hrefIcon, "card") !== false) {
-                if ($svg->text() == "Red Card") {
-                    $event = "Red Card";
+                if (strpos($hrefIcon, "red-yellow-card") !== false) {
+                    $event = "RedYellowCard";
                 } else {
-                    $event = "Yellow Card";
+                    if ($svg->text() == "Red Card") {
+                        $event = "RedCard";
+                    } else {
+                        $event = "YellowCard";
+                    }
                 }
             } else {
                 $event = substr($hrefIcon, strpos($hrefIcon, "#") + 1);
@@ -307,14 +328,21 @@ class CrawlerDetailFlashScore extends CrawlerDetail
         }
         $strDescription = $description->getAttribute("title");
         if (!$strDescription) {
-            $divDescription = $description->find("svg > title", 0);
+            $divDescription = $description->find('div', 0);
             if ($divDescription) {
-                $strDescription = $divDescription->text();
+                $strDescription = $divDescription->getAttribute("title");
+            }
+            if (!$strDescription) {
+                $divDescription = $description->find("svg > title", 0);
+                if ($divDescription) {
+                    $strDescription = $divDescription->text();
+                }
             }
         }
+
         return [
             'event' => $event,
-            'strDescription' => $strDescription
+            'strDescription' => $strDescription,
         ];
     }
 }
