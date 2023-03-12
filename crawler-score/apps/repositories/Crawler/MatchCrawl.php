@@ -72,9 +72,9 @@ class MatchCrawl extends Component
         $this->home_score = $home_score;
         return $this->home_score;
     }
-    public function setHomeImg($away_img) {
-        $this->away_img = $away_img;
-        return $this->away_img;
+    public function setHomeImg($home_img) {
+        $this->home_img = $home_img;
+        return $this->home_img;
     }
     public function setAway($away) {
         $this->away = $away;
