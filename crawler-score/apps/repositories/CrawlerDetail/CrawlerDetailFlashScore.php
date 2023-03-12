@@ -136,8 +136,7 @@ class CrawlerDetailFlashScore extends CrawlerDetail
                     $timeNow = $time->text();
                 }
 
-                $description = $div->find("div > div > div", 0);
-
+                $description = $div->find("div > div", 0);
                 if ($description) {
                     $arrEvent = $this->getEvent($description);
                     $homeEvent = $arrEvent['event'];

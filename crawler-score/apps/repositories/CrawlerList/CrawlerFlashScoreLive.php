@@ -20,6 +20,7 @@ class CrawlerFlashScoreLive extends CrawlerFlashScoreBase
         $htmlDiv = "";
         try {
 
+            $time = microtime(true);
             $parentDiv = $this->seleniumDriver->findElement('div[id="live-table"] > section > div > div');
 
             $htmlDiv = $parentDiv->getAttribute("outerHTML");
@@ -27,6 +28,7 @@ class CrawlerFlashScoreLive extends CrawlerFlashScoreBase
             echo $e->getMessage();
         }
         $this->seleniumDriver->quit();
+        var_dump(microtime(true) - $time);
         return $htmlDiv;
     }
     public function crawlList()
