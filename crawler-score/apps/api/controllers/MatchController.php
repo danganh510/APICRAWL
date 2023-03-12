@@ -150,7 +150,7 @@ class MatchController extends ControllerBase
         $matchInfo = ScMatch::query()
             ->innerJoin('Score\Models\ScTournament', 'match_tournament_id = t.tournament_id', 't')
             ->leftJoin('Score\Models\ScMatchInfo', 'match_id  = i.info_match_id', 'i')
-            ->columns("match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,match_id,
+            ->columns("match_tournament_id,match_name,match_home_id,match_away_id,match_home_score,match_away_score,match_id,match_start_time,match_time,
         i.info_summary,i.info_time,i.info_stats,t.tournament_name")
             ->where("match_id = :id:",  [
                 'id' => $id
