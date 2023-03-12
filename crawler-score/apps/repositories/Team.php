@@ -16,7 +16,7 @@ class Team extends Component
     {
         if ($country_code) {
             return ScTeam::findFirst([
-                'team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name: AND team_country_code = :countryCode:',
+                '(team_name_flashscore = :name: OR team_name = :name: OR team_slug= :slug: OR team_name_livescore = :name:) AND team_country_code = :countryCode:',
                 'bind' => [
                     'countryCode' => $country_code,
                     'name' => $name,

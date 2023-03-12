@@ -9,20 +9,21 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Tournament extends Component
 {
-    public static function findByName($name, $slug = "")
+    public static function findByName($name, $country_code = "", $slug = "")
     {
         return ScTournament::findFirst([
-            'tournament_name = :name: OR tournament_slug = :slug: OR tournament_name_flash_score = :name:',
+            '(tournament_name = :name: OR tournament_slug = :slug: OR tournament_name_flash_score = :name:) AND tournament_country_code = countryCode',
             'bind' => [
                 'name' => $name,
-                'slug' => $slug
+                'slug' => $slug,
+                'countryCode' => $country_code
             ]
         ]);
     }
     public static function saveTournament($tournamentInfo, $type_crawl)
     {
         $slug = MyRepo::create_slug($tournamentInfo->getTournamentName());
-        $tournament = self::findByName($tournamentInfo->getTournamentName(), $slug);
+        $tournament = self::findByName($tournamentInfo->getTournamentName(), $tournamentInfo->getCountryCode(), $slug);
         if (!$tournament) {
             $tournament = new ScTournament();
             $tournament->setTournamentName($tournamentInfo->getTournamentName());
